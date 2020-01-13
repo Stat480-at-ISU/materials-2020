@@ -326,5 +326,4 @@ Have a look at:
 ---
 ## Now vote
 
-Go to Wufoo Site to let me know your favorites and make suggestions:
-http://heike.wufoo.com/forms/topics-of-interest/ 
+Go to Wufoo Site to let me know your favorites and make suggestions: https://stat480.wufoo.com/forms/topics-of-interest/ 
