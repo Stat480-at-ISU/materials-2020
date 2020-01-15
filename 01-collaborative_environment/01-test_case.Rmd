@@ -58,8 +58,7 @@ class: inverse
 
 Introduce yourself to the team closest to you.
 
-1. Swap instructions / documentation with the other team, and try to reproduce
-their work, first **without talking to each oher**.
+1. Swap instructions / documentation with the other team, and try to reproduce their work, first **without talking to each oher**.
 
 > If your collaborator does not have/know the software they need to reproduce your work,  walk them through it on your computer in a way that would emulate the experience. (Remember, this could be part of the irreproducibility problem!)
 

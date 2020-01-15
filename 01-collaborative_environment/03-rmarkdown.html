@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>R, RStudio, and RMarkdown</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../extras/x-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# R, RStudio, and RMarkdown
+
+---
+
+
+
+
+
+## R is ...
+
+- **Free** to use
+
+- **Extensible**: Over 15,000 user contributed add-on packages currently on CRAN!
+
+- **Powerful**: With the right tools, get more work done, faster.
+
+- **Flexible**: Not a question of *can*, but *how*.
+
+- **Frustrating**: Flexibility comes at a cost (easy to shoot yourself in the foot!).
+
+&lt;br/&gt;
+
+
+```r
+# devtools::install_github("metacran/crandb")
+pkgs &lt;- crandb::list_packages(limit = 999999)
+length(pkgs)
+```
+
+---
+background-image: url(images/airport.png)
+background-position: 20% 30%
+background-size: 450px
+
+## RStudio is ... 
+
+&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+
+[From Julie Lowndes](http://jules32.github.io/resources/RStudio_intro/):  
+
+&gt; If R were an airplane, RStudio would be the airport, providing many, many supporting services that make it easier for you, the pilot, to take off and go to awesome places. &lt;br&gt;&lt;br&gt; Sure, you can fly an airplane without an airport, but having those runways and supporting infrastructure is a game-changer.
+
+---
+background-image: url("images/rstudio-panes.png")
+background-size: 900px
+background-position: 0% 90%
+
+## The RStudio IDE
+
+---
+## The RStudio IDE
+
+
+1. **Source editor:** Docking station for multiple files, Useful shortcuts ("Knit"), Highlighting/Tab-completion, Code-checking (R, HTML, JS), Debugging features  
+
+2. **Console window:** Highlighting/Tab-completion, Search recent commands
+
+3. **Environment pane:** Tools for package development, git, etc
+
+4. **Other tabs/panes:** Graphics, R documentation, File system navigation/access
+
+
+.footnote[
+&gt; Protip: save yourself the headaches figuring out file paths and instead work in an RStudio R project (popup menu at the top left)
+]
+---
+## Markdown
+
+- Markdown is a particular type of **markup** language.
+
+- Markup languages are designed to **produce documents from plain text**.
+
+- Some of you may be familiar with **LaTeX**. This is another (less human friendly) markup language for creating pdf documents.
+
+- LaTeX gives you much greater control, but it is restricted to pdf and has a much greater learning curve.
+
+- **Markdown** is becoming a **standard**. Many websites will generate HTML from Markdown (e.g. GitHub, Stack Overflow, reddit, ...).
+
+---
+## Markdown is easy
+
+```
+*italic*
+**bold**
+
+# Header 1
+## Header 2
+### Header 3
+
+- List item 1
+- List item 2
+    - item 2a
+    - item 2b
+
+1. Numbered list item 1
+1. Numbered list item 2
+    - item 2a
+    - item 2b
+```
+
+.footnote[
+Have a look at RStudio's [RMarkdown cheat sheet](https://www.rstudio.com/resources/cheatsheets/)
+]
+
+---
+## What is RMarkdown?
+
+- ... an authoring format that enables easy creation of dynamic documents, presentations, and reports from R. 
+
+- it combines the core syntax of markdown with embedded R code chunks that are run so their output can be included in the final document.
+
+- R Markdown documents are fully reproducible (they are automatically regenerated whenever underlying R code or data changes).
+
+---
+background-image: url("images/rmarkdown.png")
+background-size: 900px
+background-position: 0% 90%
+
+## 
+
+---
+## Why R Markdown?
+
+- **It's simple.** Focus on writing, rather than debugging silly errors.
+
+- **It's flexible.** Markdown was created to simplify writing HTML, but thanks to pandoc, Markdown converts to many different formats!
+
+- **It's dynamic.** Find a critical error? Get a new dataset? Regenerate your report without copy/paste hell!
+
+- **Encourages transparency.** Collaborators (including your future self) will thank you for integrating your analysis &amp; report.
+
+- **Enables interactivity/reactivity.** Allow your audience to explore the analysis (rather than passively read it).
+
+---
+background-image: url("images/hello-rmarkdown.png")
+background-size: 900px
+background-position: 0% 90%
+
+
+---
+class: inverse
+
+## Your Turn (5 min)
+
+
+1. Open RStudio, create a new project.
+
+2. Create a new RMarkdown file and knit it.
+
+3. Navigate to the RMarkdown cheat sheet and download a copy (Google for the link!)
+
+4. Make changes to the markdown formatting and knit again.
+
+5. Export output to different files.
+
+6. If you feel adventurous, change some of the R code and knit again.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": false,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

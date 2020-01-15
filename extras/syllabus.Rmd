@@ -1,0 +1,120 @@
+---
+title: "STAT 480 - Applied Statistical Computing"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Course Description: Modern statistical computing. Data management; spread sheets, verifying data
+accuracy, transferring data between software packages. Data and graphical analysis with statistical software
+packages. Algorithmic programming concepts and applications. Simulation. Software reliability.  
+
+Prerequisite: STAT 301 or STAT 326 or STAT 401
+
+Meeting times: TR 9:30 - 10:50
+
+Location: Gilman 2272
+
+Instructor: Haley Jeppson
+
+Contact: hjeppson@iastate.edu
+
+Reading: Garrett Grolemund and Hadley Wickham: *R for Data Science*, http://r4ds.had.co.nz/;
+Hadley Wickham: *Advanced R*, https://adv-r.hadley.nz/; Yihui Xie: *Dynamic Documents with R and
+knitr*, and a selection of other readings as needed.
+
+
+Course Objectives:  
+  - be able to deal with complex, messy, real data  
+  - gain familiarity with basic data collection, storage and manipulation  
+  - fluently reshape data into the most convenient form for analysis or reporting  
+  - automate cleaning and analysis in R  
+  - use graphics to explore and understand data  
+  - communicate your findings in a reproducible form  
+  - program a shiny web-app
+
+
+Computing: Software primarily used will be R (www.R-project.org).
+
+
+Course Grades: Lab work, homework assignments. One midterm exam. One small-scale project and a
+final project. Final grades will be calculated based on the following weights:
+
+| Component     | Weight |
+|---------------|--------|
+| Homework      | 30.0%  |
+| Midterm       |        |
+| Exam          | 25.0%  |
+| Project       | 15.0%  |
+| Final Project |        |
+| Report        | 22.5%  |
+| Presentation  | 7.5%   |
+
+Academic Misconduct: All acts of dishonesty in any work constitute academic misconduct. The Student Disciplinary Regulations (http://policy.iastate.edu/policy/SDR) will be followed in the event of
+academic misconduct. Depending on the act, a student could receive an F grade on the test/assignment, F
+grade for the course, and could be suspended or expelled from the University. Academic misconduct includes
+all acts of dishonesty in any academically related matter and any knowing attempt to help another student
+commit an act of academic dishonesty. Academic dishonesty includes, but is not limited to each of the
+following acts when performed in any type of academic or academically related matter, exercise, or activity:
+Plagiarism: Plagiarism is the act of representing directly or indirectly another persons work as your own.
+It can involve presenting someones speech, wholly or partially, as your; quoting without acknowledging the
+true source of the quoted material; copying and handing in another persons work with your name on it;
+and similar infractions. Even indirect quotations, paraphrasing, etc., can be considered plagiarism unless
+sources are properly cited. Plagiarism will not be tolerated, and students could receive an F grade on the
+test/assignment or an F grade for the course. The Iowa State University policy for academic misconduct
+can be found in the Student Disciplinary Regulations.
+
+
+Obtaining Unauthorized Information: Information is obtained dishonesty, for example, by copying
+graded homework assignments from another student, by working with another student on a take-??home
+test or homework when not specifically permitted to do so by the instructor, or by looking at your notes or
+other written work during an examination when not specifically permitted to do so.
+Tendering of Information: Students may not give or sell their work to another person who plans to
+submit it as his or her own work. This includes giving their work to another student to be copied, giving
+someone answers to exam question during the exam, taking an exam and discussing its contents with students
+who will be taking the same exam, or giving or selling a term paper to another student.
+Misrepresentation: Students misrepresent their work by handing in the work of someone else. The
+following are examples: purchasing a paper from a term paper service; reproducing another persons paper
+(even with modifications) and submitting it as their own; having another student do their computer program
+or having someone else take their exam.
+
+
+Bribery: Offering money or any item or service to a faculty member or any other person to gain academic
+advantage for yourself or another is dishonest.
+
+
+Special Accommodations Please address any special needs or special accommodations with your instructor
+the first day of class or as soon as you become aware of your needs. Those seeking accommodations based
+on disabilities should obtain a Student Academic Accommodation Request (SAAR) from the Disability
+Resources Office.
+
+
+Student Disability Resources:
+1076 Student Services Building
+Ames, IA 50011–2222
+Phone: 515 294–7220
+Fax: 515 294–2397
+TTY: 515 294–6635
+E-mail: disabilityresources@iastate.edu
+Website: http://www.dso.iastate.edu/dr/
+
+
+Dead Week: This class follows the Iowa State University Dead Week guidelines as outlined in http:
+//catalog.iastate.edu/academiclife/#deadweek.
+
+
+Harassment and Discrimination: Iowa State University strives to maintain our campus as a place of work
+and study for faculty, staff, and students that is free of all forms of prohibited discrimination and harassment based upon race, ethnicity, sex (including sexual assault), pregnancy, color, religion, national origin, physical or mental disability, age, marital status, sexual orientation, gender identity, genetic information, or status as a U.S. veteran. Any student who has concerns about such behavior should contact his/her instructor, Student Assistance at 515-294-1020 or email dsosas@iastate.edu, or the Office of Equal Opportunity and Compliance at 515-294-7612.
+
+
+Religious Accommodation: If an academic or work requirement conflicts with your religious practices
+and/or observances, you may request reasonable accommodations. Your request must be in writing, and
+your instructor or supervisor will review the request. You or your instructor may also seek assistance from
+the Dean of Students Office or the Office of Equal Opportunity and Compliance.
+
+
+Contact Information: If you are experiencing, or have experienced, a problem with any of the above
+issues, email academicissues@iastate.edu.

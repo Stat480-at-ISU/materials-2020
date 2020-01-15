@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Tools for collaborating in teams</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../extras/x-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Tools for collaborating in teams
+## (sample solution for the test case)
+
+---
+
+
+
+
+## A test case
+
+Using the gapminder data provided, we are asked to:
+
+1. Visualize life expectancy over time for Canada in the 1950s and 1960s using a line plot.
+
+2. Something is clearly wrong with this plot! Turns out there's a data error  in the data file: life expectancy for Canada in the year 1957 is coded as `999999`, it should actually be `69.96`. Make this correction.
+
+3. Visualize life expectancy over time for Canada again, with the corrected data.
+
+---
+## Step-by-step plan of work
+
+1. Read the data
+
+2. Focus on values of Canada
+
+3. Visualize the values for Canada
+
+4. See whether we can find the problem
+
+5. ... then we'll see ...
+
+---
+## Reading the data 
+
+
+```r
+life5060 &lt;- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials/master/01_collaborative-environment/data/gapminder-5060.csv")
+head(life5060)
+```
+
+```
+##       country continent year lifeExp      pop gdpPercap
+## 1 Afghanistan      Asia 1952  28.801  8425333  779.4453
+## 2 Afghanistan      Asia 1957  30.332  9240934  820.8530
+## 3 Afghanistan      Asia 1962  31.997 10267083  853.1007
+## 4 Afghanistan      Asia 1967  34.020 11537966  836.1971
+## 5     Albania    Europe 1952  55.230  1282697 1601.0561
+## 6     Albania    Europe 1957  59.280  1476505 1942.2842
+```
+
+---
+## Focus on the values for Canada
+
+
+```r
+canada &lt;- life5060 %&gt;% filter(country == "Canada")
+head(canada)
+```
+
+```
+##   country continent year   lifeExp      pop gdpPercap
+## 1  Canada  Americas 1952     68.75 14785584  11367.16
+## 2  Canada  Americas 1957 999999.00 17010154  12489.95
+## 3  Canada  Americas 1962     71.30 18985849  13462.49
+## 4  Canada  Americas 1967     72.13 20819767  16076.59
+```
+
+---
+## Visualize 
+
+Draw a line for the life expectancy in Canada
+
+```r
+canada %&gt;% 
+  ggplot(aes(x = year, y = lifeExp)) +
+  geom_line()
+```
+
+![](02-test_case_solution_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+## Find the problematic value and fix it
+
+
+```r
+canada %&gt;% filter(year == 1957)
+```
+
+```
+##   country continent year lifeExp      pop gdpPercap
+## 1  Canada  Americas 1957  999999 17010154  12489.95
+```
+
+```r
+canada_fixed &lt;- canada %&gt;% mutate(
+  lifeExp = replace(lifeExp, year==1957, 69.96)  
+)
+```
+
+---
+## visualize the fixed data
+
+
+```r
+canada_fixed %&gt;% ggplot(aes(x = year, y = lifeExp)) +
+  geom_line()
+```
+
+![](02-test_case_solution_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+## ... on to the stretch goal ... 
+
+Add lines for Mexico and the US
+
+
+```r
+canada_fixed %&gt;% 
+  ggplot(aes(x = year, y = lifeExp, group=country)) + geom_line() +
+  geom_line(data = life5060 %&gt;% 
+              filter(country %in% c("United States", "Mexico")))
+```
+
+![](02-test_case_solution_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+## ... on to the stretch goal ... 
+
+Add lines for Mexico and the US, color lines by country and add a legend
+
+
+```r
+canada_fixed %&gt;% 
+  ggplot(aes(x = year, y = lifeExp, colour=country)) + geom_line() +
+  geom_line(data = life5060 %&gt;% 
+              filter(country %in% c("United States", "Mexico")))
+```
+
+![](02-test_case_solution_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+---
+## How reproducible is this solution?
+
+1. Navigate to https://github.com/stat480-at-isu/materials
+
+2. Open the folder `01-collaborative_environment` 
+
+3. Download the file `02-test-case_solution.Rmd`
+
+3. Open the file in RStudio.
+
+4. "Knit" the file.
+
+---
+## R Markdown
+
+- code and text/documentation are interwoven: reproducible and self-documenting.
+
+- extend or refine analyses by copying and modifying code blocks.
+
+- disseminate your work by sharing the RMarkdown file
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -119,6 +119,14 @@ strong{color:#283747;}
   float: left;
   width: 47%;
 }
+.indent-left {
+  float: left;
+  width: 5%;
+}
+.indent-right {
+  float: right;
+  width: 95%;
+}
 .pull-right {
   float: right;
   width: 47%;
