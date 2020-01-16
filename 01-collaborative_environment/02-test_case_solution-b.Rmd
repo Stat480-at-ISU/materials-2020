@@ -3,6 +3,11 @@ title: "Tools for collaborating in teams"
 subtitle: "(sample solution for the test case)"
 output: pdf_document
 ---
+---
+title: "Tools for collaborating in teams"
+subtitle: "(sample solution for the test case)"
+output: pdf_document
+---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.height=5)
