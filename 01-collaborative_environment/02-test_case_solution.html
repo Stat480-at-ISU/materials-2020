@@ -45,7 +45,7 @@ Using the gapminder data provided, we are asked to:
 
 
 ```r
-life5060 &lt;- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials/master/01_collaborative-environment/data/gapminder-5060.csv")
+life5060 &lt;- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/01-collaborative_environment/data/gapminder-5060.csv")
 head(life5060)
 ```
 
@@ -87,7 +87,7 @@ canada %&gt;%
   geom_line()
 ```
 
-![](02-test_case_solution_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](02-test_case_solution_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 
 ---
 ## Find the problematic value and fix it
@@ -117,7 +117,7 @@ canada_fixed %&gt;% ggplot(aes(x = year, y = lifeExp)) +
   geom_line()
 ```
 
-![](02-test_case_solution_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+![](02-test_case_solution_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 
 ---
 ## ... on to the stretch goal ... 
@@ -132,7 +132,7 @@ canada_fixed %&gt;%
               filter(country %in% c("United States", "Mexico")))
 ```
 
-![](02-test_case_solution_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](02-test_case_solution_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
 ---
 ## ... on to the stretch goal ... 
@@ -147,7 +147,7 @@ canada_fixed %&gt;%
               filter(country %in% c("United States", "Mexico")))
 ```
 
-![](02-test_case_solution_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+![](02-test_case_solution_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 
 ---
 ## How reproducible is this solution?

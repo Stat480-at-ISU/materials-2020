@@ -43,7 +43,7 @@ Using the gapminder data provided, we are asked to:
 ## Reading the data 
 
 ```{r}
-life5060 <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials/master/01_collaborative-environment/data/gapminder-5060.csv")
+life5060 <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/01-collaborative_environment/data/gapminder-5060.csv")
 head(life5060)
 ```
 

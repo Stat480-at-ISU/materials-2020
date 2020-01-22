@@ -1,0 +1,328 @@
+---
+title: "Graphics in ggplot2"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, cache = TRUE)
+#xaringan::inf_mr(cast_from = '..')
+```
+class: inverse, center, middle
+
+## Questions for the fbi data
+
+---
+## Plan for answers
+
+Explore how one (or more) variables are distributed: 
+  - barchart or histogram
+
+Explore how two variables are related:  
+  - scatterplot, boxplot, tile plot
+
+Explore how two variables are related, conditioned on other variables:  
+  - facetting, color & other aesthetics
+
+---
+## Different version of the data
+
+We will use a different shape of the `fbi` data - a wide form:
+
+```{r}
+library(classdata)
+str(fbiwide)
+```
+
+---
+## Scatterplots
+
+- need two continuous variables
+
+- we'll be using the `ggplot2` framework for plotting
+
+---
+class: inverse, center, middle
+# Why `ggplot2`?
+
+---
+## Why `ggplot2`
+
+- Wildly popular package for statistical graphics: over 2.5 million downloads from CRAN in 2017 (several thousand times per day)
+
+- Developed by Hadley Wickham (An ISU Alumni)
+
+- Designed to adhere to good graphical practices (uses the grammar graphics)
+
+- Constructs plots using the concept of layers
+
+- Supports a wide variety plot types and extensions
+
+- http://ggplot2.org/book/ or Hadley's book *ggplot2: Elegant Graphics for Data Analysis* for reference 
+
+---
+## Grammar of graphics
+
+- Developed by Leland Wilkinson
+
+- Think about graphical forms rather than a limited set of graphs
+
+- Different types of graphs may appear completely distinct, but share many common elements.
+
+- By making different visual choices, you can use graphs to highlight different aspects of the same data.
+
+For example, here are three ways of displaying the same data:
+
+```{r plots-3, echo = FALSE, fig.align='bottom', fig.height=5, fig.width=15}
+library(ggplot2)
+data(diamonds)
+p1 <- ggplot(diamonds, aes(cut, fill=cut)) + geom_bar() + labs(title = "Bar Chart", subtitle = "Cartesian coordinates") + scale_fill_viridis_d(begin = .1, end = .9)
+p2 <- ggplot(diamonds, aes(factor(1), fill=cut)) + geom_bar(width=1) + labs(x="", title = "Fill-Bar", subtitle = "Cartesian coordinates") + scale_fill_viridis_d(begin = .1, end = .9)
+p3 <- ggplot(diamonds, aes(factor(1), fill=cut)) + geom_bar(width=1) + coord_polar(theta= "y") + labs(x="", title = "Fill-Bar", subtitle = "Polar coordinates") + scale_fill_viridis_d(begin = .1, end = .9)
+
+gridExtra::grid.arrange(p1, p2, p3, ncol = 3, nrow = 1)
+```
+
+
+???
+
+- Charts are instances of much more general objects
+
+- An abstraction which makes thinking, reasoning, and communicating graphics easier
+
+
+---
+## ggplot2: A layered grammar of graphics
+
+A graphical representation (plot) consists of:
+
+1. **default data and mappings** (`aes`):  data variables are mapped to visual properties of the graphical elements
+
+2. **one or more layers**:  
+  - geometric element (`geom`, such as point, line, rectangle, text, ...), 
+  - statistical transformation (`stat`, such as identity, counts, bins, ...), 
+  - position adjustment,  
+  - (optional) one dataset and set of aesthetic mappings
+
+3. **scales**: map values in the data space to values in an aesthetic space 
+
+4. **coordinate system** (`coord`): normally Cartesian, but could use polar coordinates for pie charts or different mapping coordinates
+
+5. **facetting**: for small multiples (subsets) and their arrangement
+
+6. **theme**: fine-tune display items, such as font and its size, color of background, margins, ...
+
+---
+## Scatterplots in `ggplot2`
+
+- `aes` allows us to specify mappings
+
+- scatterplots need a mapping for `x` and a mapping for `y`:
+
+<br/>
+
+```
+ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
+  geom_point()
+```  
+
+```
+ggplot(data = fbiwide, aes(x = log(Burglary), y = log(Murder))) +
+  geom_point()
+```  
+
+```
+ggplot(data = fbiwide, aes(x = log(Burglary), y = log(Motor.vehicle.theft))) +
+  geom_point()
+```  
+
+
+---
+## Revision - Interpreting Scatterplots
+
+- Big patterns
+
+  - Form and direction
+
+  - Strength
+
+- Small patterns
+
+- Deviations from the pattern
+
+  - Outliers
+    
+---
+<br/><br/>
+ 
+#### **Form**
+
+Is the plot linear?  Is the plot curved?  Is there a distinct pattern in the plot? Are there multiple groups?
+
+#### **Strength**
+
+Does the plot follow the form very closely?  Or is there a lot of variation?   
+
+#### **Direction**
+
+Is the pattern increasing?  Is the plot decreasing?
+
+- **Positively**: Above (below) average in one variable tends to be associated with above (below) average in another variable.
+
+- **Negatively**: Opposite pattern.
+
+---
+background-image: url("images/positive.png")
+background-size: width=2000
+<br/><br/>
+--
+.indent-left[]
+.indent-right[
+#### 1. <font color="darkorange">Form: Linear</font>  
+
+#### 2. <font color="darkorange">Strength: Strong, very close to a straight line.</font>  
+
+#### 3. <font color="darkorange">Direction: Two variables are positively associated.</font>  
+
+#### 4. <font color="darkorange">No outliers.</font>  
+]
+
+
+---
+background-image: url("images/negative.png")
+background-size: width=2000
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+--
+.indent-left[]
+.indent-right[
+#### 1. <font color="darkorange">Form: Roughly linear, two distinct groups (more than 40% and less than 40%.)</font>
+
+#### 2. <font color="darkorange">Strength: not strong.  Data points are scattered.
+</font>
+
+#### 3. <font color="darkorange">Direction: Negatively Associated.
+</font>
+
+#### 4. <font color="darkorange">Outliers: None.</font>
+]
+
+---
+## Aesthetics
+
+Can map other variables to size or colour
+<br/>
+
+```
+ggplot(aes(x = log(Burglary), y = log(Motor.vehicle.theft),
+           colour=State), data=fbiwide) + geom_point()
+
+ggplot(aes(x = log(Burglary), y = log(Motor.vehicle.theft),
+           colour=Year), data=fbiwide) + geom_point()
+```
+
+```
+ggplot(aes(x = log(Burglary), y = log(Motor.vehicle.theft),
+           size=Population), data=fbiwide) + geom_point()
+```
+
+<br/>
+other aesthetics: shape
+
+---
+class: inverse, center, middle
+# Make your first figure
+
+---
+
+## We begin with the data
+
+```{r, fig.width=10, fig.height=6, echo = TRUE}
+ggplot(data = fbiwide)
+```
+
+---
+
+## Then we specify the aesthetic mappings
+
+```{r, fig.height=6, fig.width=10, echo = TRUE}
+ggplot(data = fbiwide, aes(x = Burglary, y = Murder))
+```
+
+???
+or what relationships we want to see
+---
+
+## Then we choose a geom
+
+```{r, fig.width=10, fig.height=5, echo = TRUE}
+ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
+    geom_point()
+```
+
+---
+
+## We can add additional aesthetics
+
+```{r, eval=FALSE, fig.width=10, fig.height=5, echo = TRUE}
+ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
+    geom_point(aes(color = State)) 
+```
+
+```{r, echo=FALSE, fig.width=10, fig.height=5}
+ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
+    geom_point(aes(color = State)) + theme(legend.position = "none")
+```
+
+???
+we could add another layer
+---
+## Mapping aesthetics vs setting aesthetics
+
+```{r, fig.width=10, fig.height=5, echo = TRUE}
+ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
+    geom_point(color = "orange", alpha = .4) 
+```
+
+---
+## Transform coordinates
+
+```{r, fig.width=10, fig.height=5, echo = TRUE}
+ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
+    geom_point(color = "orange", alpha = .4) +
+    scale_x_log10() + 
+    scale_y_log10()
+```
+
+---
+## Add faceting
+
+```{r echo = FALSE}
+state_subset <- c("Alabama","Alaska", "Arizona", "Arkansas", "California", "Colorado")
+library(dplyr)
+fbiwide_subset <- fbiwide %>% filter(State %in% state_subset)
+```
+
+```{r, fig.width=10, fig.height=5, echo = TRUE}
+ggplot(data = fbiwide_subset, aes(x = Burglary, y = Murder)) +
+    geom_point(color = "orange", alpha = .5) +
+    scale_x_log10() + 
+    scale_y_log10() + 
+    facet_wrap(~State)
+```
+
+
+---
+class: inverse
+## Your turn 
+
+- Work through each of the example plots (from slides 10 & 15)
+
+- Try variations to answer your questions

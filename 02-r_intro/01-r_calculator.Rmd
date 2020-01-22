@@ -54,7 +54,7 @@ background-position: 0% 90%
 
 - Applying a function is similar 
 
-- Making a variable, use `<-` or `=`
+- Making and saving a variable, use `<-` or `=`
 
 - Everything in R is a vector
 
