@@ -184,6 +184,15 @@ Check the R help on the dataset `fbi`<br>
 What happens if you just type in the name of the dataset?
 
 ---
+## Alternative method 
+
+... not able to install devtools or the classdata package?
+
+```{r}
+fbi <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02-r_intro/data/fbi.csv")
+```
+
+---
 ## Inspecting objects
 
 for object `x`, we can try out the following commands:

@@ -54,7 +54,7 @@ background-position: 0% 90%
 
 - Applying a function is similar 
 
-- Making a variable, use `&lt;-` or `=`
+- Making and saving a variable, use `&lt;-` or `=`
 
 - Everything in R is a vector
 
@@ -191,6 +191,16 @@ Check the R help on the dataset `fbi`&lt;br&gt;
 What happens if you just type in the name of the dataset?
 
 ---
+## Alternative method 
+
+... not able to install devtools or the classdata package?
+
+
+```r
+fbi &lt;- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02-r_intro/data/fbi.csv")
+```
+
+---
 ## Inspecting objects
 
 for object `x`, we can try out the following commands:
@@ -221,8 +231,8 @@ str(fbi)
 
 ```
 ## 'data.frame':	23256 obs. of  7 variables:
-##  $ State        : chr  "Alabama" "Alabama" "Alabama" "Alabama" ...
-##  $ Abb          : chr  "AL" "AL" "AL" "AL" ...
+##  $ State        : Factor w/ 52 levels "Alabama","Alaska",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ Abb          : Factor w/ 52 levels "AK","AL","AR",..: 2 2 2 2 2 2 2 2 2 2 ...
 ##  $ Year         : int  1961 1962 1963 1964 1965 1966 1967 1968 1969 1970 ...
 ##  $ Population   : int  3302000 3358000 3347000 3407000 3462000 3517000 3540000 3566000 3531000 3444165 ...
 ##  $ Type         : Factor w/ 8 levels "Aggravated.assault",..: 6 6 6 6 6 6 6 6 6 6 ...
