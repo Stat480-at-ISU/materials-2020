@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Graphics in ggplot2</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../extras/x-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Graphics in ggplot2
+
+---
+
+
+
+
+## Plan for answers
+
+1. Explore how one (or more) variables are distributed: 
+  - barchart or histogram
+
+2. Explore how two variables are related:  
+  - scatterplot, boxplot, tile plot
+
+3. Explore how two variables are related, conditioned on other variables:  
+  - facetting, color &amp; other aesthetics
+
+&lt;br/&gt;
+
+Look at 3 next, then come back to 1 and 2.
+
+---
+## Getting ready
+
+Load libraries:
+
+
+```r
+library(ggplot2) 
+# not found? run install.packages("ggplot2")
+
+library(classdata) 
+# not found? run devtools::install_github("haleyjeppson/classdata")
+```
+
+---
+class: inverse, center, middle
+# Facetting
+
+---
+## Facetting
+
+Can facet to display plots for different subsets: `facet_wrap`, `facet_grid`
+
+
+```r
+ggplot(data=fbiwide, aes(x = Year, y = Murder)) + geom_point() + facet_wrap(~State)
+```
+
+![](03-r_graphics_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+## Setup of `facet_wrap` and `facet_grid`
+
+- `facet_grid` has formula specification: `rows ~ cols`
+
+- `facet_wrap` has specification `~ variables` 
+
+- multiple variables (in either specification) are included in the form of a sum  
+  - i.e. `rowvar1 + rowvar2 ~ colvar1+ colvar2`
+
+- no variable (in `facet_grid`) is written as `.`  
+  - i.e. `rowvar ~ .` are plots in a single column.
+
+
+
+---
+class: inverse
+## Your turn 
+
+Use the `fbiwide` data from the package `classdata` for this your turn.
+
+- Plot the number of car thefts by year for each state (facet by state).
+
+- The numbers are dominated by the number of thefts in California, New York, and Texas. Use a log-scale for the y-axis. Does that help?
+
+- Another approach to fix the domination by CA, TX and NY: Read up on the parameters in `facet_wrap` to find a way to give each panel its own scale. Comment on the difference in the results.
+
+---
+## Facets vs. aesthetics?
+
+- Will need to experiment as to which one answers your question/tells the story best
+
+- Rule of thumb: comparisons of interest should be close together
+
+---
+class: inverse, center
+## Boxplots
+
+![](03-r_graphics_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+---
+## Boxplot definition
+
+- definition by J.W. Tukey (1960s, EDA 1977)
+
+![](images/boxplots-definition.png)
+
+---
+## Boxplots
+
+- are used for group comparisons and outlier identifications
+
+- usually only make sense in form of side-by-side boxplots.
+
+- `geom_boxplot` in ggplot2 needs `x` and `y` variable (`y` is measurement, `x` is categorical)
+
+```
+ggplot(data = fbi, aes(x = Type, y = log10(Count))) +
+  geom_boxplot() + 
+  coord_flip()
+```
+
+---
+class: inverse
+## Your turn 
+
+
+- Using ggplot2, draw side-by-side boxplots of the number of robberies by state. Use a log transformation on y and compare results.
+
+- **Stretch goal:** Compare rates of robberies by state, i.e. adjust robberies by the state population. Then plot side-by-side boxplots. 
+
+---
+## Boxplots
+
+**Pros**  
+
+  - Symmetry vs Skewness
+    
+  - Outliers
+    
+  - Quick Summary
+    
+  - Comparisons across multiple Treatments (side by side boxplots)
+
+&lt;br/&gt;
+
+**Cons**
+
+  - Boxplots hide multiple modes and gaps in the data
+
+
+---
+class: inverse, center, middle
+# Univariate plots
+## Histograms &amp; barcharts
+
+---
+## Histograms
+
+
+```r
+ggplot(fbiwide, aes(x = Motor.vehicle.theft)) + 
+  geom_histogram(binwidth = 5000) +
+  ggtitle("binwidth = 5000")
+```
+
+![](03-r_graphics_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+## Histograms
+
+
+```r
+ggplot(fbiwide, aes(x = Motor.vehicle.theft)) + 
+  geom_histogram(binwidth=1000) +
+  ggtitle("binwidth = 1000")
+```
+
+![](03-r_graphics_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+## Barchart
+
+
+```r
+ggplot(fbi, aes(x = Type)) + 
+  geom_bar(aes(weight= Count)) +
+  coord_flip()
+```
+
+![](03-r_graphics_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+---
+## Histograms and barcharts
+
+What do we look for?
+
+- Symmetry/Skewness
+- Modes, Groups  (big pattern: where is the bulk of the data?)
+- Gaps &amp; Outliers (deviation from the big pattern: where are the other points?)
+
+
+For the histogram, always choose the binwidth consciously
+
+In a barchart, choose the order of the categories consciously (later)
+
+---
+class:inverse
+## Your turn 
+
+- Use the `fbi` data set to draw a barchart of the variable `Violent Crime`.  
+
+- Make the height of the bars dependent on the number of reports (use `weight`).
+
+- Then facet by type (does the result match your expectation? good! get rid of facetting). 
+
+- Color bars by `Type`. 
+
+- Use the `fbi` data set to draw a histogram of the number of reports. 
+
+- Facet by type, make sure to use individual scales for the panels.
+
+---
+## More on `ggplot2`
+
+- reference/document: http://ggplot2.tidyverse.org/reference/
+
+- RStudio cheat sheet for [ggplot2](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

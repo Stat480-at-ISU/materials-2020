@@ -23,13 +23,13 @@ class: inverse, center, middle
 ---
 ## Plan for answers
 
-Explore how one (or more) variables are distributed: 
+1. Explore how one (or more) variables are distributed: 
   - barchart or histogram
 
-Explore how two variables are related:  
+2. Explore how two variables are related:  
   - scatterplot, boxplot, tile plot
 
-Explore how two variables are related, conditioned on other variables:  
+3. Explore how two variables are related, conditioned on other variables:  
   - facetting, color &amp; other aesthetics
 
 ---
@@ -324,29 +324,19 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
 ![](02-r_graphics_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 ---
-## Add faceting
-
-
-
-
-```r
-ggplot(data = fbiwide_subset, aes(x = Burglary, y = Murder)) +
-    geom_point(color = "orange", alpha = .5) +
-    scale_x_log10() + 
-    scale_y_log10() + 
-    facet_wrap(~State)
-```
-
-![](02-r_graphics_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
-
-
----
 class: inverse
 ## Your turn 
 
 - Work through each of the example plots (from slides 10 &amp; 15)
 
 - Try variations to answer your questions
+
+---
+## More on `ggplot2`
+
+- reference/document: http://ggplot2.tidyverse.org/reference/
+
+- RStudio cheat sheet for [ggplot2](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
