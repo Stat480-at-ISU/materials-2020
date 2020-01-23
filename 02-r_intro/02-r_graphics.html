@@ -32,6 +32,21 @@ class: inverse, center, middle
 3. Explore how two variables are related, conditioned on other variables:  
   - facetting, color &amp; other aesthetics
 
+
+---
+## Getting ready
+
+Load libraries:
+
+
+```r
+library(ggplot2) 
+# not found? run install.packages("ggplot2")
+
+library(classdata) 
+# not found? run devtools::install_github("haleyjeppson/classdata")
+```
+
 ---
 ## Different version of the data
 
@@ -45,8 +60,8 @@ str(fbiwide)
 
 ```
 ## 'data.frame':	2907 obs. of  12 variables:
-##  $ State              : chr  "Alabama" "Alabama" "Alabama" "Alabama" ...
-##  $ Abb                : chr  "AL" "AL" "AL" "AL" ...
+##  $ State              : Factor w/ 52 levels "Alabama","Alaska",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ Abb                : Factor w/ 52 levels "AK","AL","AR",..: 2 2 2 2 2 2 2 2 2 2 ...
 ##  $ Year               : int  1961 1962 1963 1964 1965 1966 1967 1968 1969 1970 ...
 ##  $ Population         : int  3302000 3358000 3347000 3407000 3462000 3517000 3540000 3566000 3531000 3444165 ...
 ##  $ Aggravated.assault : int  4255 3995 4755 5555 5162 6249 6495 6009 6415 7413 ...
@@ -57,6 +72,14 @@ str(fbiwide)
 ##  $ Murder             : int  427 316 340 316 395 384 415 421 485 404 ...
 ##  $ Rape               : int  NA NA NA NA NA NA NA NA NA NA ...
 ##  $ Robbery            : int  630 754 828 992 992 1124 1167 1462 1448 1731 ...
+```
+
+&lt;br/&gt;
+... not able to install devtools or the classdata package?
+
+
+```r
+fbiwide &lt;- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02-r_intro/data/fbiwide.csv")
 ```
 
 ---
@@ -258,7 +281,7 @@ class: inverse, center, middle
 ggplot(data = fbiwide)
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -269,7 +292,7 @@ ggplot(data = fbiwide)
 ggplot(data = fbiwide, aes(x = Burglary, y = Murder))
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 
 ???
 or what relationships we want to see
@@ -283,7 +306,7 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
     geom_point()
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -295,7 +318,7 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
     geom_point(aes(color = State)) 
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 ???
 we could add another layer
@@ -308,7 +331,7 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
     geom_point(color = "orange", alpha = .4) 
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 ---
 ## Transform coordinates
@@ -321,7 +344,7 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
     scale_y_log10()
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 ---
 class: inverse

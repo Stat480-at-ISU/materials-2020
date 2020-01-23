@@ -13,7 +13,7 @@ output:
 
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE, cache = TRUE)
+options(htmltools.dir.version = FALSE, message = FALSE, warning = FALSE)
 #xaringan::inf_mr(cast_from = '..')
 ```
 class: inverse, center, middle
@@ -32,6 +32,20 @@ class: inverse, center, middle
 3. Explore how two variables are related, conditioned on other variables:  
   - facetting, color & other aesthetics
 
+
+---
+## Getting ready
+
+Load libraries:
+
+```{r}
+library(ggplot2) 
+# not found? run install.packages("ggplot2")
+
+library(classdata) 
+# not found? run devtools::install_github("haleyjeppson/classdata")
+```
+
 ---
 ## Different version of the data
 
@@ -40,6 +54,13 @@ We will use a different shape of the `fbi` data - a wide form:
 ```{r}
 library(classdata)
 str(fbiwide)
+```
+
+<br/>
+... not able to install devtools or the classdata package?
+
+```{r}
+fbiwide <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02-r_intro/data/fbiwide.csv")
 ```
 
 ---
