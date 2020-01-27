@@ -29,7 +29,7 @@ options(htmltools.dir.version = FALSE, cache = TRUE)
 
 <br/>
 
-Look at 3 next, then come back to 1 and 2.
+> Look at 3 next, then come back to 1 and 2.
 
 ---
 ## Getting ready
@@ -42,6 +42,13 @@ library(ggplot2)
 
 library(classdata) 
 # not found? run devtools::install_github("haleyjeppson/classdata")
+```
+
+<br/><br/>
+... not able to install devtools or the classdata package?
+
+```{r}
+fbiwide <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02-r_intro/data/fbiwide.csv")
 ```
 
 ---
@@ -115,13 +122,17 @@ ggplot(data = fbi, aes(x = Type, y = log10(Count))) + geom_boxplot() + coord_fli
 
 - usually only make sense in form of side-by-side boxplots.
 
-- `geom_boxplot` in ggplot2 needs `x` and `y` variable (`y` is measurement, `x` is categorical)
+- `geom_boxplot` in ggplot2 needs `x` and `y` variable  
+  - `y` is measurement,  
+  - `x` is categorical  
 
-```
-ggplot(data = fbi, aes(x = Type, y = log10(Count))) +
-  geom_boxplot() + 
-  coord_flip()
-```
+<br/>
+
+  ```
+  ggplot(data = fbi, aes(x = Type, y = log10(Count))) +
+    geom_boxplot() + 
+    coord_flip()
+  ```
 
 ---
 class: inverse

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
   <head>
     <title>Graphics in ggplot2</title>
     <meta charset="utf-8" />
@@ -29,7 +29,7 @@ class: center, middle, inverse, title-slide
 
 &lt;br/&gt;
 
-Look at 3 next, then come back to 1 and 2.
+&gt; Look at 3 next, then come back to 1 and 2.
 
 ---
 ## Getting ready
@@ -43,6 +43,14 @@ library(ggplot2)
 
 library(classdata) 
 # not found? run devtools::install_github("haleyjeppson/classdata")
+```
+
+&lt;br/&gt;&lt;br/&gt;
+... not able to install devtools or the classdata package?
+
+
+```r
+fbiwide &lt;- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02-r_intro/data/fbiwide.csv")
 ```
 
 ---
@@ -59,7 +67,7 @@ Can facet to display plots for different subsets: `facet_wrap`, `facet_grid`
 ggplot(data=fbiwide, aes(x = Year, y = Murder)) + geom_point() + facet_wrap(~State)
 ```
 
-![](03-r_graphics_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](03-r_graphics_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 
 ---
 ## Setup of `facet_wrap` and `facet_grid`
@@ -99,7 +107,7 @@ Use the `fbiwide` data from the package `classdata` for this your turn.
 class: inverse, center
 ## Boxplots
 
-![](03-r_graphics_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](03-r_graphics_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 
 ---
 ## Boxplot definition
@@ -115,13 +123,17 @@ class: inverse, center
 
 - usually only make sense in form of side-by-side boxplots.
 
-- `geom_boxplot` in ggplot2 needs `x` and `y` variable (`y` is measurement, `x` is categorical)
+- `geom_boxplot` in ggplot2 needs `x` and `y` variable  
+  - `y` is measurement,  
+  - `x` is categorical  
 
-```
-ggplot(data = fbi, aes(x = Type, y = log10(Count))) +
-  geom_boxplot() + 
-  coord_flip()
-```
+&lt;br/&gt;
+
+  ```
+  ggplot(data = fbi, aes(x = Type, y = log10(Count))) +
+    geom_boxplot() + 
+    coord_flip()
+  ```
 
 ---
 class: inverse
@@ -167,7 +179,7 @@ ggplot(fbiwide, aes(x = Motor.vehicle.theft)) +
   ggtitle("binwidth = 5000")
 ```
 
-![](03-r_graphics_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](03-r_graphics_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
 ---
 ## Histograms
@@ -179,7 +191,7 @@ ggplot(fbiwide, aes(x = Motor.vehicle.theft)) +
   ggtitle("binwidth = 1000")
 ```
 
-![](03-r_graphics_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](03-r_graphics_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 
 ---
 ## Barchart
@@ -191,7 +203,7 @@ ggplot(fbi, aes(x = Type)) +
   coord_flip()
 ```
 
-![](03-r_graphics_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+![](03-r_graphics_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 ---
 ## Histograms and barcharts
@@ -275,7 +287,24 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     deleted = true;
   });
-})();</script>
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {
