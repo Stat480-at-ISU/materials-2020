@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
   <head>
     <title>Graphics in ggplot2</title>
     <meta charset="utf-8" />
@@ -60,8 +60,8 @@ str(fbiwide)
 
 ```
 ## 'data.frame':	2907 obs. of  12 variables:
-##  $ State              : Factor w/ 52 levels "Alabama","Alaska",..: 1 1 1 1 1 1 1 1 1 1 ...
-##  $ Abb                : Factor w/ 52 levels "AK","AL","AR",..: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ State              : chr  "Alabama" "Alabama" "Alabama" "Alabama" ...
+##  $ Abb                : chr  "AL" "AL" "AL" "AL" ...
 ##  $ Year               : int  1961 1962 1963 1964 1965 1966 1967 1968 1969 1970 ...
 ##  $ Population         : int  3302000 3358000 3347000 3407000 3462000 3517000 3540000 3566000 3531000 3444165 ...
 ##  $ Aggravated.assault : int  4255 3995 4755 5555 5162 6249 6495 6009 6415 7413 ...
@@ -350,7 +350,7 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
 class: inverse
 ## Your turn 
 
-- Work through each of the example plots (from slides 10 &amp; 15)
+- Work through each of the example plots (from slides 11 &amp; 16)
 
 - Try variations to answer your questions
 
@@ -406,7 +406,24 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     deleted = true;
   });
-})();</script>
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {

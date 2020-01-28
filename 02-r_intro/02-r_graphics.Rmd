@@ -326,7 +326,7 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
 class: inverse
 ## Your turn 
 
-- Work through each of the example plots (from slides 10 & 15)
+- Work through each of the example plots (from slides 11 & 16)
 
 - Try variations to answer your questions
 
