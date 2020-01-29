@@ -12,7 +12,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE, cache = TRUE)
+options(htmltools.dir.version = FALSE)
 #xaringan::inf_mr(cast_from = '..')
 ```
 
@@ -64,12 +64,19 @@ Find the expression for the logical vector that is TRUE where `a` is:
 
 <br/>
 
-**Hint**: have a look at the help for the operator `%%`
+**Hint**: have a look at the help for the operator `%%` 
+
+  ```
+  ?`%%`
+  ```
+  
+
 
 ---
 ## `filter {dplyr}`
 
 `filter` is a command of package `dplyr`  
+  - NOTE: the package `dplyr` is loaded by the package `tidyverse`
 
 `filter(data, ...)` finds subset of `data` where conditions specified by logical expression in `...` are true,  
   - e.g. `filter(fbi, Year == 2014)`
@@ -87,13 +94,11 @@ Use `::` to make sure you use the right one: `dplyr::filter`
 class: inverse
 ## Your turn 
 
-- Get a subset of all crimes in Iowa, Plot incidences/rates for one type of crime over time.
+- Get a subset of all crimes in Iowa. Plot incidences/rates for one type of crime over time.
 
 - Get a subset of all crimes in 2009. Plot the number or rate for one type of crime by state.
 
 - Get a subset of the data that includes number of homicides for the last five years. Find the rate of homicides, extract all states that have a rate of greater than 90% of the rates across all states, and plot (Hint: `?quantile`).
-
-Extra credit (1 point): submit your code (regardless of whether it works or not) in Canvas (yourturn-checkin-1).
 
 ---
 ## Useful commands
@@ -130,13 +135,13 @@ which.min(variable)
 
 Use the `fbi` data object to answer the following questions: 
 
-- how many reports of Burglaries are there for California?
+- how many reports of burglaries are there for California?
 
 - for any of the violent crimes, which state had the highest rate (and for which crime) in 2014? in 1961? 
 
 Use the `fbiwide` data object to answer the following question: 
 
-- in how many states in 2011 were there more vehicle thefts than robberies? (which states are those?)
+- in 2011, how many states had more vehicle thefts than robberies? (which states are those?)
 
 
 ---
