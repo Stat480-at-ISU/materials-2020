@@ -70,6 +70,9 @@ Find the expression for the logical vector that is TRUE where `a` is:
 
 
 ---
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
+background-size: 100px
+background-position: 80% 8%
 ## `filter {dplyr}`
 
 `filter` is a command of package `dplyr`  
@@ -102,28 +105,23 @@ class: inverse
 
 Number of records in a data set:
 
-```
-nrow(dataset)  
-```
+`nrow(dataset)`
 
 Quantiles: 
 
-```
-quantile(variable, probs=0.001, na.rm=T)  
-```
+`quantile(variable, probs=0.001, na.rm=T)`
 
 Find all indices for which the expression is TRUE:
 
-```
-which(logical variable)  
-```
+`which(logical variable)`
 
 Retrieve index of maximum/minimum value:
 
-```
-which.max(variable)
-which.min(variable) 
-```
+`which.max(variable)`  
+`which.min(variable)`
+
+
+
 
 ---
 ## Your turn 
