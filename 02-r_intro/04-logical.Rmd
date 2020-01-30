@@ -124,6 +124,7 @@ Retrieve index of maximum/minimum value:
 
 
 ---
+class: inverse
 ## Your turn 
 
 <!-- Use `learnr:: run_tutorial("logical", package="yourturns480")` to get to the answers for this your turn.   -->
@@ -156,7 +157,6 @@ replace(a, a == 0, -1)
 
 Very useful in combination with logical subsetting
 
-
 ---
 ## Updating elements in a data set
 
@@ -174,6 +174,7 @@ names(fbiwide)
 if that variable exists before, it is being over-written/updated
 
 ---
+class: inverse
 ## Your turn 
 
 The gapminder data we originally worked with is available [here](https://stat480-at-isu.github.io/materials-2020/01-collaborative_environment/data/gapminder-5060.csv). 
