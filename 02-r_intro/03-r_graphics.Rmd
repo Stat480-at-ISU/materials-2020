@@ -213,6 +213,11 @@ In a barchart, choose the order of the categories consciously (later)
 class:inverse
 ## Your turn 
 
+```{r}
+fbi <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02-r_intro/data/fbi.csv")
+```
+
+
 - Use the `fbi` data set to draw a barchart of the variable `Violent Crime`.  
 
 - Make the height of the bars dependent on the number of reports (use `weight`).
