@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Tools for collaborating in teams</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../extras/x-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Tools for collaborating in teams
+
+---
+
+
+
+class: inverse
+
+## A test case
+
+This is a two-part exercise:
+
+**Part 1:** Analyze + document
+
+**Part 2:** Swap + discuss
+
+---
+## Part 1: Analyze + document
+
+Introduce yourself to your neighbor. 
+
+Solve the following problem as a team.
+
+Assume you are a team within a larger project  
+
+  - i.e. keep your collaborators in mind
+
+Starting with the original dataset 
+([`data/gapminder-5060.csv`](data/gapminder-5060.csv) or [`data/gapminder-5060.xlsx`](data/gapminder-5060.xlsx)), complete the following tasks and **write instructions / documentation** for your
+collaborator to reproduce your work 
+
+
+---
+class: yourturn
+.center[
+# Your turn: analyze + document (20 mins) 
+]
+
+1. Visualize life expectancy over time for Canada in the 1950s and 1960s using a line plot.
+
+2. Something is clearly wrong with this plot! Turns out there's a data error 
+in the data file: life expectancy for Canada in the year 1957 is coded
+as `999999`, it should actually be `69.96`. Make this correction.
+
+
+&lt;br/&gt;
+**Pro goal**: Add lines for Mexico and the United States.
+
+---
+class: yourturn
+.center[
+# Part 2: swap + discuss (20 mins) 
+]
+
+Introduce yourself to the team closest to you.
+
+1. Swap instructions / documentation with the other team, and try to reproduce their work, first **without talking to each oher**.
+
+&gt; If your collaborator does not have/know the software they need to reproduce your work,  walk them through it on your computer in a way that would emulate the experience. (Remember, this could be part of the irreproducibility problem!)
+
+2. Then, talk to each other about challenges you faced (or didn't face) or why you were or weren't able to reproduce their work.&lt;/font&gt;
+
+???
+.footnote[Thanks to Jenny Bryant and Mine Cetinkaya-Rundel for the idea for the original example!]
+
+
+
+---
+## How did that go? 
+
+&lt;img src="images/desperation-0.jpg" height=300&gt; or &lt;img src="images/exaltation.jpeg" height=300&gt; ?
+
+
+&lt;br/&gt;&lt;br/&gt;
+Where did things get problematic?
+
+---
+## Reflection
+
+- Were you successful in reproducing each others' work? 
+
+- What tools did you use?
+
+- What would happen if your collaborator is no longer available to walk you through their analysis?
+
+- What made it easy / hard for reproducing your partners' work?
+
+- What would have to happen if:
+    - you had to swap out the dataset or extend the analysis further?
+    
+    - you caught further data errors and had to re-create the analysis with corrections?
+    
+    - you had to revert back to the original dataset?
+
+---
+## Summary
+
+Everyone struggles with reproducibility and it is a hindrance to moving science forward
+
+
+Even with a fairly simple analysis, challenges were faced in four main areas:
+  - organization  
+  
+  - documentation
+  
+  - automation
+  
+  - dissemination
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "solarized-light",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
