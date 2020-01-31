@@ -18,18 +18,24 @@ class: center, middle, inverse, title-slide
 
 class: inverse, center, middle
 
-## Questions for the fbi data
+# Questions for the &lt;br&gt;fbi data
 
 ---
 ## Plan for answers
 
-1. Explore how one (or more) variables are distributed: 
-  - barchart or histogram
+&lt;br&gt;
+Explore how one (or more) variables are distributed:  
 
-2. Explore how two variables are related:  
+  - barchart or histogram
+  
+&lt;br&gt;
+Explore how two variables are related: 
+
   - scatterplot, boxplot, tile plot
 
-3. Explore how two variables are related, conditioned on other variables:  
+&lt;br&gt;
+Explore how two variables are related, conditioned on other variables:  
+
   - facetting, color &amp; other aesthetics
 
 
@@ -89,17 +95,25 @@ fbiwide &lt;- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materia
 
 - we'll be using the `ggplot2` framework for plotting
 
+&lt;br/&gt;
+
+![](02-r_graphics_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
 ---
-class: inverse2, center, bottom
-background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/ggplot2.png)
-background-size: 350px
-background-position: 50% 40%
+class: inverse, center, top
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/ggplot2_exploratory.png)
+background-size: 550px
+background-position: 50% 80%
 # Why ggplot2?
 
 ---
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/ggplot2.png)
+background-size: 120px
+background-position: 85% 90%
 ## Why `ggplot2`
 
-- Wildly popular package for statistical graphics: over 2.5 million downloads from CRAN in 2017 (several thousand times per day)
+- Wildly popular package for statistical graphics:  
+  - over **2.5 million downloads** from CRAN in 2017 (several thousand times per day)
 
 - Developed by Hadley Wickham (An ISU Alumni)
 
@@ -135,9 +149,9 @@ For example, here are three ways of displaying the same data:
 
 
 ---
-## ggplot2: A layered grammar of graphics
+## A layered grammar of graphics
 
-A graphical representation (plot) consists of:
+A graphical representation (plot) in ggplot2 consists of:
 
 1. **default data and mappings** (`aes`):  data variables are mapped to visual properties of the graphical elements
 
@@ -181,7 +195,7 @@ ggplot(data = fbiwide, aes(x = log(Burglary), y = log(Motor.vehicle.theft))) +
 
 
 ---
-## Revision - Interpreting Scatterplots
+## Interpreting Scatterplots
 
 - Big patterns
 
@@ -272,7 +286,10 @@ ggplot(aes(x = log(Burglary), y = log(Motor.vehicle.theft),
 other aesthetics: shape
 
 ---
-class: inverse2, center, middle
+class: inverse, center, top
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/ggplot2_masterpiece.png)
+background-size: 650px
+background-position: 50% 80%
 # Make your first figure
 
 ---
@@ -284,7 +301,7 @@ class: inverse2, center, middle
 ggplot(data = fbiwide)
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -295,7 +312,7 @@ ggplot(data = fbiwide)
 ggplot(data = fbiwide, aes(x = Burglary, y = Murder))
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
 
 ???
 or what relationships we want to see
@@ -309,7 +326,7 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
     geom_point()
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 
 ---
 
@@ -321,7 +338,7 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
     geom_point(aes(color = State)) 
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
 
 ???
 we could add another layer
@@ -331,10 +348,10 @@ we could add another layer
 
 ```r
 ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
-    geom_point(color = "orange", alpha = .4) 
+    geom_point(color = "turquoise3", alpha = .4) 
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 ---
 ## Transform coordinates
@@ -342,15 +359,15 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
 
 ```r
 ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
-    geom_point(color = "orange", alpha = .4) +
+    geom_point(color = "turquoise3", alpha = .4) +
     scale_x_log10() + 
     scale_y_log10()
 ```
 
-![](02-r_graphics_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+![](02-r_graphics_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your turn 
 ]
@@ -360,11 +377,15 @@ class: inverse
 - Try variations to answer your questions
 
 ---
-## More on `ggplot2`
+## Resources
 
 - reference/document: http://ggplot2.tidyverse.org/reference/
 
+
 - RStudio cheat sheet for [ggplot2](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

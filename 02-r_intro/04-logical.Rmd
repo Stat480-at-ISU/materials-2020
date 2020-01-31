@@ -15,7 +15,7 @@ output:
 options(htmltools.dir.version = FALSE)
 #xaringan::inf_mr(cast_from = '..')
 ```
-class: inverse2, middle, center
+class: inverse, middle, center
 # Logical vectors
 
 ---
@@ -50,7 +50,7 @@ class: inverse2, middle, center
 ![](images/logical.png) 
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your turn 
 ]
@@ -76,16 +76,16 @@ Find the expression for the logical vector that is TRUE where `a` is:
   
 
 ---
-class: inverse2, center, bottom
-background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
-background-size: 350px
-background-position: 50% 40%
+class: inverse, center, top
+background-image: url(https://github.com/allisonhorst/stats-illustrations/blob/master/rstats-artwork/dplyr_wrangling.png?raw=true)
+background-size: 650px
+background-position: 50% 85%
 # filter {dplyr}
 
 ---
 background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
-background-size: 100px
-background-position: 80% 8%
+background-size: 150px
+background-position: 90% 95%
 ## `filter {dplyr}`
 
 `filter` is a command of package `dplyr`  
@@ -104,7 +104,7 @@ Caution! there is another function called `filter` in the `stats` package.
 Use `::` to make sure you use the right one: `dplyr::filter`  
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your turn 
 ]
@@ -139,7 +139,7 @@ Retrieve index of maximum/minimum value:
 
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your turn 
 ]
@@ -190,7 +190,7 @@ names(fbiwide)
 if that variable exists before, it is being over-written/updated
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your turn 
 ]
@@ -202,4 +202,15 @@ The gapminder data we originally worked with is available [here](https://stat480
 - What format does the object have?
 
 - Replace the problematic value in life expectancy for Canada in 1957  by 69.96. 
+
+
+---
+## Resources
+
+- reference/document: http://dplyr.tidyverse.org/reference/
+
+- RStudio cheat sheet for [dplyr](https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf)
+
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
 

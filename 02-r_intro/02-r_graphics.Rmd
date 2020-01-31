@@ -18,18 +18,24 @@ options(htmltools.dir.version = FALSE, message = FALSE, warning = FALSE)
 ```
 class: inverse, center, middle
 
-## Questions for the fbi data
+# Questions for the <br>fbi data
 
 ---
 ## Plan for answers
 
-1. Explore how one (or more) variables are distributed: 
-  - barchart or histogram
+<br>
+Explore how one (or more) variables are distributed:  
 
-2. Explore how two variables are related:  
+  - barchart or histogram
+  
+<br>
+Explore how two variables are related: 
+
   - scatterplot, boxplot, tile plot
 
-3. Explore how two variables are related, conditioned on other variables:  
+<br>
+Explore how two variables are related, conditioned on other variables:  
+
   - facetting, color & other aesthetics
 
 
@@ -70,17 +76,28 @@ fbiwide <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-
 
 - we'll be using the `ggplot2` framework for plotting
 
+<br/>
+
+```{r, echo=FALSE, fig.width=10, fig.height=5}
+ggplot(data = iris, aes(x = Sepal.Width, y = Sepal.Length)) +
+    geom_point(aes(color = Species), size = rel(1.5)) + theme_minimal() + scale_color_manual(values = c("turquoise3", "green3", "darkorchid2")) + theme(legend.position = "bottom")
+```
+
 ---
-class: inverse2, center, bottom
-background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/ggplot2.png)
-background-size: 350px
-background-position: 50% 40%
+class: inverse, center, top
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/ggplot2_exploratory.png)
+background-size: 550px
+background-position: 50% 80%
 # Why ggplot2?
 
 ---
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/ggplot2.png)
+background-size: 120px
+background-position: 85% 90%
 ## Why `ggplot2`
 
-- Wildly popular package for statistical graphics: over 2.5 million downloads from CRAN in 2017 (several thousand times per day)
+- Wildly popular package for statistical graphics:  
+  - over **2.5 million downloads** from CRAN in 2017 (several thousand times per day)
 
 - Developed by Hadley Wickham (An ISU Alumni)
 
@@ -124,9 +141,9 @@ gridExtra::grid.arrange(p1, p2, p3, ncol = 3, nrow = 1)
 
 
 ---
-## ggplot2: A layered grammar of graphics
+## A layered grammar of graphics
 
-A graphical representation (plot) consists of:
+A graphical representation (plot) in ggplot2 consists of:
 
 1. **default data and mappings** (`aes`):  data variables are mapped to visual properties of the graphical elements
 
@@ -170,7 +187,7 @@ ggplot(data = fbiwide, aes(x = log(Burglary), y = log(Motor.vehicle.theft))) +
 
 
 ---
-## Revision - Interpreting Scatterplots
+## Interpreting Scatterplots
 
 - Big patterns
 
@@ -261,7 +278,10 @@ ggplot(aes(x = log(Burglary), y = log(Motor.vehicle.theft),
 other aesthetics: shape
 
 ---
-class: inverse2, center, middle
+class: inverse, center, top
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/ggplot2_masterpiece.png)
+background-size: 650px
+background-position: 50% 80%
 # Make your first figure
 
 ---
@@ -312,7 +332,7 @@ we could add another layer
 
 ```{r, fig.width=10, fig.height=5, echo = TRUE}
 ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
-    geom_point(color = "orange", alpha = .4) 
+    geom_point(color = "turquoise3", alpha = .4) 
 ```
 
 ---
@@ -320,13 +340,13 @@ ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
 
 ```{r, fig.width=10, fig.height=5, echo = TRUE}
 ggplot(data = fbiwide, aes(x = Burglary, y = Murder)) +
-    geom_point(color = "orange", alpha = .4) +
+    geom_point(color = "turquoise3", alpha = .4) +
     scale_x_log10() + 
     scale_y_log10()
 ```
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your turn 
 ]
@@ -336,11 +356,13 @@ class: inverse
 - Try variations to answer your questions
 
 ---
-## More on `ggplot2`
+## Resources
 
 - reference/document: http://ggplot2.tidyverse.org/reference/
+
 
 - RStudio cheat sheet for [ggplot2](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
 
 
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
 

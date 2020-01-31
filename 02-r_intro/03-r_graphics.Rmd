@@ -52,7 +52,7 @@ fbiwide <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-
 ```
 
 ---
-class: inverse2, center, middle
+class: inverse, center, middle
 # Facetting
 
 ---
@@ -82,7 +82,7 @@ ggplot(data=fbiwide, aes(x = Year, y = Murder)) + geom_point() + facet_wrap(~Sta
 ```
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your turn ]
 
@@ -95,6 +95,9 @@ Use the `fbiwide` data from the package `classdata` for this your turn.
 - Another approach to fix the domination by CA, TX and NY: Read up on the parameters in `facet_wrap` to find a way to give each panel its own scale. Comment on the difference in the results.
 
 ---
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/ggplot2_masterpiece.png)
+background-size: 550px
+background-position: 50% 90%
 ## Facets vs. aesthetics?
 
 - Will need to experiment as to which one answers your question/tells the story best
@@ -102,7 +105,7 @@ Use the `fbiwide` data from the package `classdata` for this your turn.
 - Rule of thumb: comparisons of interest should be close together
 
 ---
-class: inverse2, center
+class: inverse, center
 ## Boxplots
 
 ```{r, echo=FALSE, warning=FALSE, fig.width = 16, fig.height = 10}
@@ -136,7 +139,7 @@ ggplot(data = fbi, aes(x = Type, y = log10(Count))) + geom_boxplot() + coord_fli
   ```
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your turn 
 ]
@@ -166,7 +169,7 @@ class: inverse
 
 
 ---
-class: inverse2, center, middle
+class: inverse, center, middle
 # Univariate plots
 ## Histograms & barcharts
 
@@ -212,7 +215,7 @@ For the histogram, always choose the binwidth consciously
 In a barchart, choose the order of the categories consciously (later)
 
 ---
-class:inverse
+class:yourturn
 .center[
 ## Your turn 
 ]
@@ -236,9 +239,11 @@ fbi <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020
 - Facet by type, make sure to use individual scales for the panels.
 
 ---
-## More on `ggplot2`
+## Resources
 
 - reference/document: http://ggplot2.tidyverse.org/reference/
 
 - RStudio cheat sheet for [ggplot2](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
 
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)

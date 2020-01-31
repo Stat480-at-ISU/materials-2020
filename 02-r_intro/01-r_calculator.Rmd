@@ -16,21 +16,29 @@ output:
 options(htmltools.dir.version = FALSE, cache = TRUE)
 #xaringan::inf_mr(cast_from = '..')
 ```
+class: inverse
 
 ## Outline
 
-- R is a calculator
+R is a calculator
 
-- five commands to look at objects
+five commands to look at objects
 
-- extracting pieces
+extracting pieces
 
-- a first glimpse at data
+a first glimpse at data
 
 ---
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/r_first_then.png)
+background-size: 500px
+background-position: 0% 27%
+.pull-left[]
+.pull-right[
 ## The R language
 
-- Learning a new language: grammar, vocabulary
+- Learning a new language is **hard**!  
+
+  - grammar, vocabulary
 
 - Loading, examining, summarizing data
 
@@ -39,12 +47,7 @@ options(htmltools.dir.version = FALSE, cache = TRUE)
 - Getting help
 
 - Miscellaneous useful stuff
-
----
-background-image: url("images/language.png")
-background-size: 900px
-background-position: 0% 90%
-
+]
 ---
 ## Grammar
 
@@ -95,7 +98,7 @@ background-position: 0% 90%
 ]
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your Turn (5 min) 
 ]
@@ -121,6 +124,10 @@ class: inverse
 - ...
 
 ---
+background-image: url(https://image.slidesharecdn.com/short-refcard-160608175856/95/reference-card-for-r-1-638.jpg?cb=1465408833)
+background-size: 700px
+background-position: 50% 170%
+
 ## R Reference Card
 
 - Download the R Reference Card from http://cran.r-project.org/doc/contrib/Short-refcard.pdf
@@ -168,7 +175,7 @@ library(classdata)
 ```
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your Turn (5 min) 
 ]
@@ -261,7 +268,7 @@ Summaries of two variables:
 `cor, cov`  
 
 ---
-class: inverse
+class: yourturn
 .center[
 # Your Turn
 ]
@@ -272,7 +279,7 @@ class: inverse
 - Advanced:  Read `?mean` and `?sd`, and fix missing value problem
 
 ---
-class:inverse
+class:yourturn
 .center[
 ## Your turn - practice to ask questions
 ]
@@ -281,3 +288,10 @@ Write down questions that you could answer with this data 4 minutes by yourself,
 
 
 The types of crimes are defined on the UCR website, see http://www.ucrdatatool.gov/offenses.cfm
+
+---
+## Resources
+
+[R Reference Card](http://cran.r-project.org/doc/contrib/Short-refcard.pdf)
+
+Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
