@@ -52,7 +52,7 @@ fbiwide <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-
 ```
 
 ---
-class: inverse, center, middle
+class: inverse2, center, middle
 # Facetting
 
 ---
@@ -83,7 +83,8 @@ ggplot(data=fbiwide, aes(x = Year, y = Murder)) + geom_point() + facet_wrap(~Sta
 
 ---
 class: inverse
-## Your turn 
+.center[
+# Your turn ]
 
 Use the `fbiwide` data from the package `classdata` for this your turn.
 
@@ -101,7 +102,7 @@ Use the `fbiwide` data from the package `classdata` for this your turn.
 - Rule of thumb: comparisons of interest should be close together
 
 ---
-class: inverse, center
+class: inverse2, center
 ## Boxplots
 
 ```{r, echo=FALSE, warning=FALSE, fig.width = 16, fig.height = 10}
@@ -136,8 +137,9 @@ ggplot(data = fbi, aes(x = Type, y = log10(Count))) + geom_boxplot() + coord_fli
 
 ---
 class: inverse
-## Your turn 
-
+.center[
+# Your turn 
+]
 
 - Using ggplot2, draw side-by-side boxplots of the number of robberies by state. Use a log transformation on y and compare results.
 
@@ -164,7 +166,7 @@ class: inverse
 
 
 ---
-class: inverse, center, middle
+class: inverse2, center, middle
 # Univariate plots
 ## Histograms & barcharts
 
@@ -211,14 +213,17 @@ In a barchart, choose the order of the categories consciously (later)
 
 ---
 class:inverse
+.center[
 ## Your turn 
+]
+
+- Use the `fbi` data set to draw a barchart of the variable `Violent Crime`.  
+
 
 ```{r}
 fbi <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02-r_intro/data/fbi.csv")
 ```
 
-
-- Use the `fbi` data set to draw a barchart of the variable `Violent Crime`.  
 
 - Make the height of the bars dependent on the number of reports (use `weight`).
 
