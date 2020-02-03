@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Visualizing factor variables</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../extras/x-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Visualizing factor variables
+
+---
+
+
+
+class: inverse
+
+## Visualizing factors 
+
+&lt;br/&gt;
+
+### Outline:
+
+- visualize factors directly using barcharts  
+
+- use factors in aesthetics (`colour`, `fill`, `shape`) or for facetting  
+
+- always make sure that the order in factors is sensible!
+
+---
+## Note: factors for fill color
+
+In area plots (e.g. histograms &amp; barcharts) use aesthetic `fill` for &lt;br&gt;showing colored areas.
+
+Only factor variables can be mapped to `fill`
+
+---
+## Fill color example: 
+
+
+```r
+ggplot(gss_cat, aes(x = marital, fill=year)) + 
+  geom_bar() # nothing happens
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+
+---
+## Fill color example: 
+
+
+
+```r
+ggplot(gss_cat, aes(x = marital, fill=factor(year))) + 
+  geom_bar() # not sensible, but works
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+## Example: Survival on the Titanic
+
+The object `titanic` is a table of a break down of survival of passengers and crew on board the Titanic by gender and age.
+
+
+```r
+library(classdata)
+data("Titanic", package = "classdata")
+head(titanic)
+```
+
+```
+##   Class  Sex   Age Survived
+## 1   3rd Male Child       No
+## 2   3rd Male Child       No
+## 3   3rd Male Child       No
+## 4   3rd Male Child       No
+## 5   3rd Male Child       No
+## 6   3rd Male Child       No
+```
+
+---
+## Barcharts of all variables
+
+.pull-left[
+
+```r
+ggplot(titanic, aes(x = Survived)) + 
+  geom_bar()
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+```r
+ggplot(titanic, aes(x = Sex)) + 
+  geom_bar()
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-4-2.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+ggplot(titanic, aes(x = Class)) + 
+  geom_bar()
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+```r
+ggplot(titanic, aes(x = Age)) + 
+  geom_bar()
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-5-2.png)&lt;!-- --&gt;
+]
+
+---
+## `position="fill"`
+
+.pull-left[
+
+```r
+ggplot(titanic, aes(x = Survived, fill=Survived)) + 
+  geom_bar(position="fill")
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+```r
+ggplot(titanic, aes(x = Sex, fill=Survived)) + 
+  geom_bar(position="fill")
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-6-2.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+ggplot(titanic, aes(x = Class, fill=Survived)) + 
+  geom_bar(position="fill")
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+```r
+ggplot(titanic, aes(x = Age, fill=Survived)) + 
+  geom_bar(position = "fill")
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-7-2.png)&lt;!-- --&gt;
+]
+
+---
+## Two and more factor variables
+
+Besides facetting and position, use **mosaic plots**  
+
+- there are extension packages for `ggplot2`, e.g. `ggmosaic`
+
+---
+## Mosaicplots
+
+
+```r
+library(ggmosaic)
+ggplot(data = titanic)  + 
+  geom_mosaic(aes(x = product(Sex), fill=Survived, weight=1)) +
+  facet_grid(Age~Class)
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+---
+class: yourturn
+.center[
+# Your turn 
+]
+
+For this your turn use the `titanic` object from the `classdata` package. 
+
+- Draw a barchart of Gender. Interpret.
+
+- Map survival to fill color in the barchart of Gender. Interpret.
+
+- In the previous barchart change the `position` parameter to `"fill"`. Interpret.
+
+- Read up on the `position` parameter in `?geom_bar`. Try out other options for `position`.
+
+---
+class: inverse, center, middle
+# Why no pie charts?
+
+---
+## Order of tasks (easiest to hardest)
+
+Cleveland and McGill (1984):
+
+1. Position along a common scale
+2. Positions along non-aligned scales
+3. Length, direction, angle
+6. Area
+7. Volume, curvature
+9. Shading, color saturation
+
+Implications for drawing charts: make main comparisons as easy as possible (i.e. map as position along a common scale). Additional messages can be mapped on other aesthetics.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

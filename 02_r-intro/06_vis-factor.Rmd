@@ -1,0 +1,163 @@
+---
+title: "Visualizing factor variables"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = TRUE)
+#xaringan::inf_mr(cast_from = '..') 
+# install_github("hadley/emo")
+library(emo)
+emo_warn <- emo::ji("warning")
+```
+class: inverse
+
+## Visualizing factors 
+
+<br/>
+
+### Outline:
+
+- visualize factors directly using barcharts  
+
+- use factors in aesthetics (`colour`, `fill`, `shape`) or for facetting  
+
+- always make sure that the order in factors is sensible!
+
+---
+## Note: factors for fill color
+
+In area plots (e.g. histograms & barcharts) use aesthetic `fill` for <br>showing colored areas.
+
+Only factor variables can be mapped to `fill`
+
+---
+## Fill color example: 
+
+```{r, message = FALSE, echo = TRUE, height = 3, width = 10}
+ggplot(gss_cat, aes(x = marital, fill=year)) + 
+  geom_bar() # nothing happens
+```
+
+---
+## Fill color example: 
+
+
+```{r echo = TRUE, height = 3}
+ggplot(gss_cat, aes(x = marital, fill=factor(year))) + 
+  geom_bar() # not sensible, but works
+```
+
+---
+## Example: Survival on the Titanic
+
+The object `titanic` is a table of a break down of survival of passengers and crew on board the Titanic by gender and age.
+
+```{r, message = FALSE, echo = TRUE}
+library(classdata)
+data("Titanic", package = "classdata")
+head(titanic)
+```
+
+---
+## Barcharts of all variables
+
+.pull-left[
+```{r, fig.width=3, fig.height = 2, echo = TRUE}
+ggplot(titanic, aes(x = Survived)) + 
+  geom_bar()
+
+ggplot(titanic, aes(x = Sex)) + 
+  geom_bar()
+```
+]
+.pull-right[
+```{r, fig.width=3, fig.height = 2, echo = TRUE}
+ggplot(titanic, aes(x = Class)) + 
+  geom_bar()
+
+ggplot(titanic, aes(x = Age)) + 
+  geom_bar()
+```
+]
+
+---
+## `position="fill"`
+
+.pull-left[
+```{r, fig.width=3, fig.height = 2, echo = TRUE}
+ggplot(titanic, aes(x = Survived, fill=Survived)) + 
+  geom_bar(position="fill")
+
+ggplot(titanic, aes(x = Sex, fill=Survived)) + 
+  geom_bar(position="fill")
+```
+]
+.pull-right[
+```{r, fig.width=3, fig.height = 2, echo = TRUE}
+ggplot(titanic, aes(x = Class, fill=Survived)) + 
+  geom_bar(position="fill")
+
+ggplot(titanic, aes(x = Age, fill=Survived)) + 
+  geom_bar(position = "fill")
+```
+]
+
+---
+## Two and more factor variables
+
+Besides facetting and position, use **mosaic plots**  
+
+- there are extension packages for `ggplot2`, e.g. `ggmosaic`
+
+---
+## Mosaicplots
+
+```{r, fig.width=10, fig.height = 4, message=FALSE, echo = TRUE}
+library(ggmosaic)
+ggplot(data = titanic)  + 
+  geom_mosaic(aes(x = product(Sex), fill=Survived, weight=1)) +
+  facet_grid(Age~Class)
+```
+
+---
+class: yourturn
+.center[
+# Your turn 
+]
+
+For this your turn use the `titanic` object from the `classdata` package. 
+
+- Draw a barchart of Gender. Interpret.
+
+- Map survival to fill color in the barchart of Gender. Interpret.
+
+- In the previous barchart change the `position` parameter to `"fill"`. Interpret.
+
+- Read up on the `position` parameter in `?geom_bar`. Try out other options for `position`.
+
+---
+class: inverse, center, middle
+# Why no pie charts?
+
+---
+## Order of tasks (easiest to hardest)
+
+Cleveland and McGill (1984):
+
+1. Position along a common scale
+2. Positions along non-aligned scales
+3. Length, direction, angle
+6. Area
+7. Volume, curvature
+9. Shading, color saturation
+
+Implications for drawing charts: make main comparisons as easy as possible (i.e. map as position along a common scale). Additional messages can be mapped on other aesthetics.
