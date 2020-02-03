@@ -12,7 +12,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE, cache = TRUE)
+options(htmltools.dir.version = FALSE, cache = TRUE, echo = TRUE)
 #xaringan::inf_mr(cast_from = '..') 
 # install_github("hadley/emo")
 library(emo)
@@ -33,8 +33,10 @@ background-position: 50% 90%
 
 - Numeric categorical variables have to be converted to factors manually
 
-- `factor` creates a new factor with specified labels
+- `factor()` creates a new factor with specified labels
 
+???
+categorical variable = variables that have a fixed and known set of possible values
 
 ---
 class: yourturn
@@ -42,15 +44,24 @@ class: yourturn
 # Your Turn 
 ]
 
-- Inspect the `fbi` object. How many variables are there? Which type does each of the variables have?
+Load a sample of data from the [General Social Survey](http://gss.norc.org/) with the following code:
 
-- Make a summary of Year
+```{r}
+data(gss_cat, package = "forcats")
+```
 
-- Make Year  a factor variable: `fbi$Year <- factor(fbi$Year)`  
 
-- Compare summary of Year to the previous result  
+Inspect the `gss_cat` object. 
 
-- Are there other variables that should be factors (or vice versa)? 
+How many variables are there? Which type does each of the variables have?
+
+Make a summary of `year`.
+
+Make `year` a factor variable: `gss_cat$year <- factor(gss_cat$year)`  
+
+Compare summary of `year` to the previous result.
+
+Are there other variables that should be factors (or vice versa)? 
 
 ---
 ## `r emo_warn` factors in boxplots `r emo_warn`
@@ -59,24 +70,23 @@ boxplots in ggplot2 only work properly if the x variable is a character variable
 
 ```{r, echo=FALSE, warning=FALSE, message= FALSE}
 library(ggplot2)
-library(classdata)
 ```
 
-```{r}
-twoyear <- dplyr::filter(fbi, Year %in% c(1961, 2014))
+```{r, echo = TRUE}
+twoyear <- dplyr::filter(gss_cat, year %in% c(2000, 2014))
 ```
 
 .pull-left[
-```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE}
+```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE, echo = TRUE}
 ggplot(data = twoyear, 
-       aes(x = Year, y = Count)) + 
+       aes(x = year, y = tvhours)) + 
   geom_boxplot()
 ```
 ]
 .pull-right[
-```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE}
+```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE, echo = TRUE}
 ggplot(data = twoyear, 
-       aes(x = factor(Year), y = Count)) + 
+       aes(x = factor(year), y = tvhours)) + 
   geom_boxplot()
 ```
 ]
@@ -120,13 +130,13 @@ To get the labels of a factor as numbers, first cast to character and then to a 
 ---
 ## Reordering factor levels - manual
 
-```{r}
+```{r, echo = TRUE}
 levels(fbi$Type)
 ```
 
 manually (extremely sensitive to typos):
 
-```{r}
+```{r, echo = TRUE}
 levels(factor(fbi$Type, levels=c("Larceny.theft", "Burglary", "Motor.vehicle.theft", "Aggravated.assault", "Robbery", "Legacy.rape", "Murder.and.nonnegligent.Manslaughter", "Rape")))
 ```
 
@@ -137,7 +147,7 @@ levels(factor(fbi$Type, levels=c("Larceny.theft", "Burglary", "Motor.vehicle.the
 
 reorder levels in factor by values in `numbers`. Use `function` to summarise (average is used by default). 
 
-```{r}
+```{r, echo = TRUE}
 levels(reorder(fbi$Type, fbi$Count, na.rm=TRUE))
 ```
 
@@ -162,11 +172,11 @@ For this your turn use the `fbi` object from the `classdata` package.
 ---
 ## Changing Levels' names
 
-```{r}
+```{r, echo = TRUE}
 levels(fbi$Type)
 ```
 
-```{r}
+```{r, echo = TRUE}
 levels(fbi$Type)[6] <- "Murder"
 
 levels(fbi$Type)

@@ -84,25 +84,55 @@ background-position: 50% 85%
 
 ---
 background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
-background-size: 150px
-background-position: 90% 95%
-## `filter {dplyr}`
+background-size: 120px
+background-position: 92% 5%
+## `dplyr::filter()`
 
-`filter` is a command of package `dplyr`  
-  - NOTE: the package `dplyr` is loaded by the package `tidyverse`
+`filter(data, ...)` allows you to subset observations based &lt;br&gt; on their values.
+  - The first argument, `data`, is the name of the data frame.  
+  
+  - The second and subsequent arguments, `...`, are the expressions &lt;br&gt; that filter the data frame.
 
-`filter(data, ...)` finds subset of `data` where conditions specified by logical expression in `...` are true,  
-  - e.g. `filter(fbi, Year == 2014)`
-`filter(fbi, Type == "Larceny.Theft", State %in% c("Iowa", "Minnesota"))`  
+&lt;br/&gt;
+`filter()` is a command of package `dplyr`  
+  - the package `dplyr` is loaded by the package `tidyverse`
 
-multiple expressions are combined by a logical and `&amp;`  
+&lt;br/&gt;
+Things to be aware of:  
+  - The command `subset` works very similarly.  
+  
+  - ⚠️ there is another function called `filter` in the `stats` package.  
+    - Use `::` to make sure you use the right one: `dplyr::filter`
+    
+---
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
+background-size: 120px
+background-position: 92% 5%
+## `dplyr::filter()` usage
 
-Note that the command `subset` works very similarly.  
+`filter(data, ...)` finds subset of `data` where conditions &lt;br&gt;specified by a logical expression in `...` are true,  
+- `filter(fbi, Year == 2014)`  
 
-Caution! there is another function called `filter` in the `stats` package.
+&lt;br/&gt;
+To save the result, you’ll need to use the assignment operator, `&lt;-`,  
+- `fbi14 &lt;- filter(fbi, Year == 2014)`
 
-Use `::` to make sure you use the right one: `dplyr::filter`  
+&lt;br/&gt; 
+Multiple expressions are combined by a logical "and" (i.e. `&amp;`  )
+  - `filter(fbi, Type == "Larceny.Theft", State %in% c("Iowa", "Minnesota"))`  
 
+&lt;br/&gt;
+⚠️ `filter()` only includes rows where the condition is `TRUE`  
+- i.e. it excludes both `FALSE` and `NA` values.  
+- If you want to preserve missing values, ask for them explicitly.
+
+
+???
+The first argument is the name of the data frame. The second and subsequent arguments are the expressions that filter the data frame. For example, ...
+
+When you run that line of code, dplyr executes the filtering operation and returns a new data frame. dplyr functions never modify their inputs, so if you want to save the result, you’ll need to use the assignment operator, &lt;-:
+
+R either prints out the results, or saves them to a variable. To do both...
 ---
 class: yourturn
 .center[
@@ -147,13 +177,13 @@ class: yourturn
 
 Use the `fbi` data object to answer the following questions: 
 
-- how many reports of burglaries are there for California?
+- In which year did California have the greatest number of &lt;br&gt; burglaries reported?
 
 - for any of the violent crimes, which state had the highest rate (and for which crime) in 2014? in 1961? 
 
 Use the `fbiwide` data object to answer the following question: 
 
-- in 2011, how many states had more vehicle thefts than robberies? (which states are those?)
+- in 2011, how many states had fewer vehicle thefts than robberies? (which states are those?)
 
 
 ---
@@ -188,19 +218,21 @@ replace(a, a == 0, -1)
 ## [1]  1 -1 -1  4
 ```
 
-Very useful in combination with logical subsetting
+&lt;br/&gt;
+
+👍 Very useful in combination with logical subsetting
 
 ---
 ## Updating elements in a data set
 
-data sets and their parts can be used as rhs of an assignment:
+Data sets and their parts can be used on both sides of an assignment:
 
 
 ```r
 library(classdata)
 
 # introduces new variable in the data set fbiwide
-fbiwide$murder.rate &lt;- fbiwide$Murder/fbiwide$Population*100000
+fbiwide$murder_rate &lt;- fbiwide$Murder/fbiwide$Population*100000
 
 names(fbiwide)
 ```
@@ -212,10 +244,12 @@ names(fbiwide)
 ##  [7] "Larceny.theft"       "Legacy.rape"        
 ##  [9] "Motor.vehicle.theft" "Murder"             
 ## [11] "Rape"                "Robbery"            
-## [13] "murder.rate"
+## [13] "murder_rate"
 ```
 
-if that variable exists before, it is being over-written/updated
+&lt;br/&gt;
+
+If that variable exists before, it is being over-written/updated
 
 ---
 class: yourturn
@@ -223,7 +257,7 @@ class: yourturn
 # Your turn 
 ]
 
-The gapminder data we originally worked with is available [here](https://stat480-at-isu.github.io/materials-2020/01-collaborative_environment/data/gapminder-5060.csv). 
+The gapminder data we originally worked with is available [here](https://stat480-at-isu.github.io/materials-2020/01_collaborative-environment/data/gapminder-5060.csv). 
 
 - `read.csv` helps you read the gapminder from the given link. Store the result in an object.
 

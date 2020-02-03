@@ -30,8 +30,10 @@ background-position: 50% 90%
 
 - Numeric categorical variables have to be converted to factors manually
 
-- `factor` creates a new factor with specified labels
+- `factor()` creates a new factor with specified labels
 
+???
+categorical variable = variables that have a fixed and known set of possible values
 
 ---
 class: yourturn
@@ -39,15 +41,22 @@ class: yourturn
 # Your Turn 
 ]
 
-- Inspect the `fbi` object. How many variables are there? Which type does each of the variables have?
+Load a sample of data from the [General Social Survey](http://gss.norc.org/) with the following code:
 
-- Make a summary of Year
 
-- Make Year  a factor variable: `fbi$Year &lt;- factor(fbi$Year)`  
 
-- Compare summary of Year to the previous result  
 
-- Are there other variables that should be factors (or vice versa)? 
+Inspect the `gss_cat` object. 
+
+How many variables are there? Which type does each of the variables have?
+
+Make a summary of `year`.
+
+Make `year` a factor variable: `gss_cat$year &lt;- factor(gss_cat$year)`  
+
+Compare summary of `year` to the previous result.
+
+Are there other variables that should be factors (or vice versa)? 
 
 ---
 ## ⚠️ factors in boxplots ⚠️
@@ -58,28 +67,28 @@ boxplots in ggplot2 only work properly if the x variable is a character variable
 
 
 ```r
-twoyear &lt;- dplyr::filter(fbi, Year %in% c(1961, 2014))
+twoyear &lt;- dplyr::filter(gss_cat, year %in% c(2000, 2014))
 ```
 
 .pull-left[
 
 ```r
 ggplot(data = twoyear, 
-       aes(x = Year, y = Count)) + 
+       aes(x = year, y = tvhours)) + 
   geom_boxplot()
 ```
 
-![](05_factors_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+![](05_factors_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 ]
 .pull-right[
 
 ```r
 ggplot(data = twoyear, 
-       aes(x = factor(Year), y = Count)) + 
+       aes(x = factor(year), y = tvhours)) + 
   geom_boxplot()
 ```
 
-![](05_factors_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](05_factors_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
 ]
 
 ---

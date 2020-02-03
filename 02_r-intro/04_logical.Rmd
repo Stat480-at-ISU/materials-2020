@@ -14,6 +14,9 @@ output:
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 #xaringan::inf_mr(cast_from = '..')
+library(emo)
+emo_warn <- emo::ji("warning")
+emo_thumbs <- emo::ji("+1")
 ```
 class: inverse, middle, center
 # Logical vectors
@@ -84,25 +87,55 @@ background-position: 50% 85%
 
 ---
 background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
-background-size: 150px
-background-position: 90% 95%
-## `filter {dplyr}`
+background-size: 120px
+background-position: 92% 5%
+## `dplyr::filter()`
 
-`filter` is a command of package `dplyr`  
-  - NOTE: the package `dplyr` is loaded by the package `tidyverse`
+`filter(data, ...)` allows you to subset observations based <br> on their values.
+  - The first argument, `data`, is the name of the data frame.  
+  
+  - The second and subsequent arguments, `...`, are the expressions <br> that filter the data frame.
 
-`filter(data, ...)` finds subset of `data` where conditions specified by logical expression in `...` are true,  
-  - e.g. `filter(fbi, Year == 2014)`
-`filter(fbi, Type == "Larceny.Theft", State %in% c("Iowa", "Minnesota"))`  
+<br/>
+`filter()` is a command of package `dplyr`  
+  - the package `dplyr` is loaded by the package `tidyverse`
 
-multiple expressions are combined by a logical and `&`  
+<br/>
+Things to be aware of:  
+  - The command `subset` works very similarly.  
+  
+  - `r emo_warn` there is another function called `filter` in the `stats` package.  
+    - Use `::` to make sure you use the right one: `dplyr::filter`
+    
+---
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
+background-size: 120px
+background-position: 92% 5%
+## `dplyr::filter()` usage
 
-Note that the command `subset` works very similarly.  
+`filter(data, ...)` finds subset of `data` where conditions <br>specified by a logical expression in `...` are true,  
+- `filter(fbi, Year == 2014)`  
 
-Caution! there is another function called `filter` in the `stats` package.
+<br/>
+To save the result, you’ll need to use the assignment operator, `<-`,  
+- `fbi14 <- filter(fbi, Year == 2014)`
 
-Use `::` to make sure you use the right one: `dplyr::filter`  
+<br/> 
+Multiple expressions are combined by a logical "and" (i.e. `&`  )
+  - `filter(fbi, Type == "Larceny.Theft", State %in% c("Iowa", "Minnesota"))`  
 
+<br/>
+`r emo_warn` `filter()` only includes rows where the condition is `TRUE`  
+- i.e. it excludes both `FALSE` and `NA` values.  
+- If you want to preserve missing values, ask for them explicitly.
+
+
+???
+The first argument is the name of the data frame. The second and subsequent arguments are the expressions that filter the data frame. For example, ...
+
+When you run that line of code, dplyr executes the filtering operation and returns a new data frame. dplyr functions never modify their inputs, so if you want to save the result, you’ll need to use the assignment operator, <-:
+
+R either prints out the results, or saves them to a variable. To do both...
 ---
 class: yourturn
 .center[
@@ -147,13 +180,13 @@ class: yourturn
 
 Use the `fbi` data object to answer the following questions: 
 
-- how many reports of burglaries are there for California?
+- In which year did California have the greatest number of <br> burglaries reported?
 
 - for any of the violent crimes, which state had the highest rate (and for which crime) in 2014? in 1961? 
 
 Use the `fbiwide` data object to answer the following question: 
 
-- in 2011, how many states had more vehicle thefts than robberies? (which states are those?)
+- in 2011, how many states had fewer vehicle thefts than robberies? (which states are those?)
 
 
 ---
@@ -161,7 +194,7 @@ Use the `fbiwide` data object to answer the following question:
 
 You can take a subset and update the original data:
 
-```{r}
+```{r echo = TRUE}
 a <- 1:4
 a
 
@@ -171,23 +204,27 @@ a
 replace(a, a == 0, -1)
 ```
 
-Very useful in combination with logical subsetting
+<br/>
+
+`r emo_thumbs` Very useful in combination with logical subsetting
 
 ---
 ## Updating elements in a data set
 
-data sets and their parts can be used as rhs of an assignment:
+Data sets and their parts can be used on both sides of an assignment:
 
-```{r}
+```{r echo = TRUE}
 library(classdata)
 
 # introduces new variable in the data set fbiwide
-fbiwide$murder.rate <- fbiwide$Murder/fbiwide$Population*100000
+fbiwide$murder_rate <- fbiwide$Murder/fbiwide$Population*100000
 
 names(fbiwide)
 ```
 
-if that variable exists before, it is being over-written/updated
+<br/>
+
+If that variable exists before, it is being over-written/updated
 
 ---
 class: yourturn
@@ -195,7 +232,7 @@ class: yourturn
 # Your turn 
 ]
 
-The gapminder data we originally worked with is available [here](https://stat480-at-isu.github.io/materials-2020/01-collaborative_environment/data/gapminder-5060.csv). 
+The gapminder data we originally worked with is available [here](https://stat480-at-isu.github.io/materials-2020/01_collaborative-environment/data/gapminder-5060.csv). 
 
 - `read.csv` helps you read the gapminder from the given link. Store the result in an object.
 
@@ -213,4 +250,5 @@ The gapminder data we originally worked with is available [here](https://stat480
 
 
 - Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
 
