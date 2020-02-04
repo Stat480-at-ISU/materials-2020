@@ -48,7 +48,7 @@ library(classdata)
 ... not able to install devtools or the classdata package?
 
 ```{r}
-fbiwide <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02-r_intro/data/fbiwide.csv")
+fbiwide <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02_r-intro/data/fbiwide.csv")
 ```
 
 ---
@@ -224,7 +224,7 @@ class:yourturn
 
 
 ```{r}
-fbi <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02-r_intro/data/fbi.csv")
+fbi <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02_r-intro/data/fbi.csv")
 ```
 
 
