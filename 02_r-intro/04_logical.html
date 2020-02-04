@@ -172,8 +172,12 @@ Retrieve index of maximum/minimum value:
 class: yourturn
 .center[
 # Your turn 
-]
-&lt;!-- Use `learnr:: run_tutorial("logical", package="yourturns480")` to get to the answers for this your turn.   --&gt;
+
+
+```r
+fbi &lt;- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02_r-intro/data/fbi.csv")
+fbiwide &lt;- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02_r-intro/data/fbiwide.csv")
+```
 
 Use the `fbi` data object to answer the following questions: 
 
@@ -238,12 +242,9 @@ names(fbiwide)
 ```
 
 ```
-##  [1] "State"               "Abb"                
-##  [3] "Year"                "Population"         
-##  [5] "Aggravated.assault"  "Burglary"           
-##  [7] "Larceny.theft"       "Legacy.rape"        
-##  [9] "Motor.vehicle.theft" "Murder"             
-## [11] "Rape"                "Robbery"            
+##  [1] "State"               "Abb"                 "Year"                "Population"         
+##  [5] "Aggravated.assault"  "Burglary"            "Larceny.theft"       "Legacy.rape"        
+##  [9] "Motor.vehicle.theft" "Murder"              "Rape"                "Robbery"            
 ## [13] "murder_rate"
 ```
 

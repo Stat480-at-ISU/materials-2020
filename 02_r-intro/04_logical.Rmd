@@ -175,8 +175,11 @@ Retrieve index of maximum/minimum value:
 class: yourturn
 .center[
 # Your turn 
-]
-<!-- Use `learnr:: run_tutorial("logical", package="yourturns480")` to get to the answers for this your turn.   -->
+
+```{r echo = TRUE}
+fbi <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02_r-intro/data/fbi.csv")
+fbiwide <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02_r-intro/data/fbiwide.csv")
+```
 
 Use the `fbi` data object to answer the following questions: 
 
