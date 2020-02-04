@@ -175,6 +175,7 @@ Retrieve index of maximum/minimum value:
 class: yourturn
 .center[
 # Your turn 
+]
 
 ```{r echo = TRUE}
 fbi <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02_r-intro/data/fbi.csv")
