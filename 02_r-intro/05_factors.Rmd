@@ -17,6 +17,8 @@ options(htmltools.dir.version = FALSE, cache = TRUE, echo = TRUE)
 # install_github("hadley/emo")
 library(emo)
 emo_warn <- emo::ji("warning")
+library(dplyr)
+data(gss_cat, package = "forcats")
 ```
 
 background-image: url(https://github.com/allisonhorst/stats-illustrations/raw/master/other-stats-artwork/nominal_ordinal_binary.png)
@@ -44,16 +46,13 @@ class: yourturn
 # Your Turn 
 ]
 
-Load a sample of data from the [General Social Survey](http://gss.norc.org/) with the following code:
-
-```{r}
-data(gss_cat, package = "forcats")
-```
-
+Load a sample of data from the [General Social Survey](http://gss.norc.org/) with the following code: `data(gss_cat, package = "forcats")`
 
 Inspect the `gss_cat` object. 
 
-How many variables are there? Which type does each of the variables have?
+How many variables are there? 
+
+Which type does each of the variables have?
 
 Make a summary of `year`.
 
@@ -62,6 +61,10 @@ Make `year` a factor variable: `gss_cat$year <- factor(gss_cat$year)`
 Compare summary of `year` to the previous result.
 
 Are there other variables that should be factors (or vice versa)? 
+
+---
+class: inverse, center, middle
+# Checking and casting <br> data types
 
 ---
 ## `r emo_warn` factors in boxplots `r emo_warn`
@@ -116,42 +119,138 @@ Checking for, and casting between types:
 
 To get the labels of a factor as numbers, first cast to character and then to a number.
 
+
 ---
 ## Levels of factor variables
 
-- `levels(x)` shows us the levels of factor variable `x` in their current order
+Use `levels(x)` to check the levels of factor variable `x` in their current order 
 
-- factor variables often have to be re-ordered for ease of comparisons
+```{r echo = TRUE}
+levels(gss_cat$race)
+```
 
-- We can specify the order of the levels by explicitly listing them, see `help(factor)`
+<br/>
+Use `summary(x)` to see order of the levels with counts for each level  
+
+```{r echo = TRUE}
+summary(gss_cat$race)
+```
+
+`dplyr::count()` will also work but more on this next week...
+
+```{r echo = TRUE}
+gss_cat %>% count(race)
+```
+
+
+---
+## `r emo_warn` factors in bar charts `r emo_warn`
+
+A barchart can also provide us with a quick summary *provided* the <br> levels have values.
+
+.pull-left[
+```{r echo = TRUE}
+ggplot(gss_cat, aes(race)) +
+  geom_bar()
+```
+]
+
+.pull-right[
+```{r echo = TRUE}
+ggplot(gss_cat, aes(race)) +
+  geom_bar() +
+  scale_x_discrete(drop = FALSE)
+```
+]
+
+---
+class: inverse, center, middle
+# Changing the <br> order or values <br> of the levels
+
+---
+background-image: url(https://d33wubrfki0l68.cloudfront.net/cd4a81fe4e2b6bf9ea7af524faf5f8c9db039edb/5c672/images/hex-forcats.png)
+background-size: 120px
+background-position: 94% 5%
+## Changing the order
+
+Factor variables often have to be re-ordered for ease of comparisons
+
+- We can manually specify the order of the levels by explicitly <br> listing them, see `help(factor)`
 
 - We can make the order of the levels in one variable dependent on the summary statistic of another variable
+
+  - the `forcats` package (part of the `tidyverse` `r emo_warn` but not automatically loaded!) contains many <br> functions to make this easier and less error-prone
+
+```{r echo=FALSE, fig.height=4, fig.width=9}
+gss_cat$relig <- gss_cat$relig %>% forcats::fct_shuffle()
+ggplot(gss_cat, aes(x = relig)) + 
+  geom_bar() + 
+  coord_flip()
+```
 
 ---
 ## Reordering factor levels - manual
 
 ```{r, echo = TRUE}
-levels(fbi$Type)
+levels(gss_cat$relig)
 ```
 
-manually (extremely sensitive to typos):
+manually (**extremely sensitive to typos**):
 
 ```{r, echo = TRUE}
-levels(factor(fbi$Type, levels=c("Larceny.theft", "Burglary", "Motor.vehicle.theft", "Aggravated.assault", "Robbery", "Legacy.rape", "Murder.and.nonnegligent.Manslaughter", "Rape")))
+levels(factor(gss_cat$relig, levels=c("Moslem/islam", "Hinduism", "Buddhism", "Other eastern", "Jewish", "Christian", "Orthodox-christian", "Catholic", "Protestant", "Inter-nondenominational", "Native american", "Other", "None", "No answer", "Don't know",  "Not applicable")))
+```
+
+---
+## Reordering factor levels - <br> by frequency
+
+Use the function `fct_infreq()` from the `forcats` packagge to order the categorical variable `relig` by its frequency.
+
+```{r echo=TRUE, fig.height=4, fig.width=9}
+library(forcats)
+ggplot(gss_cat, aes(x = fct_infreq(relig))) + 
+  geom_bar() + 
+  coord_flip()
 ```
 
 ---
 ## Reordering factor levels - <br>using another variable
 
-`reorder(factor, numbers, function)`
 
-reorder levels in factor by values in `numbers`. Use `function` to summarise (average is used by default). 
+Base R option: `reorder(factor, numbers, function)`
+
+reorder levels in factor by values in `numbers`. Use the argument `function` to summarise (average is used by default). 
 
 ```{r, echo = TRUE}
-levels(reorder(fbi$Type, fbi$Count, na.rm=TRUE))
+levels(reorder(gss_cat$relig, gss_cat$tvhours, na.rm=TRUE))
 ```
 
 missing values in `numbers`? make sure to use parameter `na.rm=TRUE`!
+
+---
+## Reordering factor levels - <br>using another variable
+
+Option using the `forcats` package: `fct_reorder(factor, numbers, function)`
+
+```{r echo=TRUE}
+relig_summary <- gss_cat %>% group_by(relig) %>% summarise(age = mean(age, na.rm = TRUE), tvhours = mean(tvhours, na.rm = TRUE), n = n())
+```
+
+.pull-left[
+```{r fig.height=3}
+ggplot(relig_summary, aes(x = tvhours, 
+      y = relig)) + 
+  geom_point()
+```
+]
+  
+.pull-right[
+```{r fig.height=3}
+ggplot(relig_summary, aes(x = tvhours, 
+    y = fct_reorder(relig, tvhours))) + 
+  geom_point()
+```
+]
 
 ---
 class: yourturn
@@ -170,17 +269,64 @@ For this your turn use the `fbi` object from the `classdata` package.
 - For one type of crime (subset!) plot boxplots of rates by state, reorder boxplots by median crime rates
 
 ---
-## Changing Levels' names
+## Changing Levels' names - <br> using base R
+
 
 ```{r, echo = TRUE}
-levels(fbi$Type)
+levels(gss_cat$partyid)
 ```
 
 ```{r, echo = TRUE}
-levels(fbi$Type)[6] <- "Murder"
+levels(gss_cat$partyid)[2] <- "Not sure"
 
-levels(fbi$Type)
+levels(gss_cat$partyid)
 ```
+
+---
+## Changing Levels' names - <br> using forcats
+
+The most general and powerful tool is `fct_recode()`
+
+  - can recode, or change, the value of each level
+  - levels not mentioned are left as is
+
+```{r, echo = TRUE}
+levels(gss_cat$partyid)
+```
+
+```{r, echo = TRUE}
+partyid2 = fct_recode(gss_cat$partyid,
+    "Republican, strong"    = "Strong republican", "Republican, weak"      = "Not str republican",
+    "Independent, near rep" = "Ind,near rep", "Independent, near dem" = "Ind,near dem",
+    "Democrat, weak"        = "Not str democrat", "Democrat, strong"      = "Strong democrat"
+)
+levels(partyid2)
+```
+
+---
+## Lump levels together
+
+If you want to collapse a lot of levels, `fct_collapse()` is a useful variant of `fct_recode()`.  
+
+For each new variable, you can provide a vector of old levels:
+
+```{r, echo = TRUE, warning = FALSE}
+partyid2 = fct_collapse(gss_cat$partyid,
+    other = c("No answer", "Don't know", "Other party"),
+    rep = c("Strong republican", "Not str republican"),
+    ind = c("Ind,near rep", "Independent", "Ind,near dem"),
+    dem = c("Not str democrat", "Strong democrat"))
+levels(partyid2)
+```
+
+<br/>
+You can lump together all the small groups with `fct_lump()`
+
+```{r, echo = TRUE}
+relig2 = fct_lump(gss_cat$relig, n = 6)
+summary(relig2)
+```
+
 
 ---
 ## Resources

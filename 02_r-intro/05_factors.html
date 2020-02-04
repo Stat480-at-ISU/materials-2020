@@ -41,14 +41,13 @@ class: yourturn
 # Your Turn 
 ]
 
-Load a sample of data from the [General Social Survey](http://gss.norc.org/) with the following code:
-
-
-
+Load a sample of data from the [General Social Survey](http://gss.norc.org/) with the following code: `data(gss_cat, package = "forcats")`
 
 Inspect the `gss_cat` object. 
 
-How many variables are there? Which type does each of the variables have?
+How many variables are there? 
+
+Which type does each of the variables have?
 
 Make a summary of `year`.
 
@@ -57,6 +56,10 @@ Make `year` a factor variable: `gss_cat$year &lt;- factor(gss_cat$year)`
 Compare summary of `year` to the previous result.
 
 Are there other variables that should be factors (or vice versa)? 
+
+---
+class: inverse, center, middle
+# Checking and casting &lt;br&gt; data types
 
 ---
 ## ⚠️ factors in boxplots ⚠️
@@ -78,7 +81,7 @@ ggplot(data = twoyear,
   geom_boxplot()
 ```
 
-![](05_factors_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](05_factors_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 ]
 .pull-right[
 
@@ -88,7 +91,7 @@ ggplot(data = twoyear,
   geom_boxplot()
 ```
 
-![](05_factors_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](05_factors_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -116,78 +119,233 @@ Checking for, and casting between types:
 
 To get the labels of a factor as numbers, first cast to character and then to a number.
 
+
 ---
 ## Levels of factor variables
 
-- `levels(x)` shows us the levels of factor variable `x` in their current order
+Use `levels(x)` to check the levels of factor variable `x` in their current order 
 
-- factor variables often have to be re-ordered for ease of comparisons
 
-- We can specify the order of the levels by explicitly listing them, see `help(factor)`
+```r
+levels(gss_cat$race)
+```
+
+```
+## [1] "Other"          "Black"         
+## [3] "White"          "Not applicable"
+```
+
+&lt;br/&gt;
+Use `summary(x)` to see order of the levels with counts for each level  
+
+
+```r
+summary(gss_cat$race)
+```
+
+```
+##          Other          Black          White 
+##           1959           3129          16395 
+## Not applicable 
+##              0
+```
+
+`dplyr::count()` will also work but more on this next week...
+
+
+```r
+gss_cat %&gt;% count(race)
+```
+
+```
+## # A tibble: 3 x 2
+##   race      n
+##   &lt;fct&gt; &lt;int&gt;
+## 1 Other  1959
+## 2 Black  3129
+## 3 White 16395
+```
+
+
+---
+## ⚠️ factors in bar charts ⚠️
+
+A barchart can also provide us with a quick summary *provided* the &lt;br&gt; levels have values.
+
+.pull-left[
+
+```r
+ggplot(gss_cat, aes(race)) +
+  geom_bar()
+```
+
+![](05_factors_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+ggplot(gss_cat, aes(race)) +
+  geom_bar() +
+  scale_x_discrete(drop = FALSE)
+```
+
+![](05_factors_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+]
+
+---
+class: inverse, center, middle
+# Changing the &lt;br&gt; order or values &lt;br&gt; of the levels
+
+---
+background-image: url(https://d33wubrfki0l68.cloudfront.net/cd4a81fe4e2b6bf9ea7af524faf5f8c9db039edb/5c672/images/hex-forcats.png)
+background-size: 120px
+background-position: 94% 5%
+## Changing the order
+
+Factor variables often have to be re-ordered for ease of comparisons
+
+- We can manually specify the order of the levels by explicitly &lt;br&gt; listing them, see `help(factor)`
 
 - We can make the order of the levels in one variable dependent on the summary statistic of another variable
+
+  - the `forcats` package (part of the `tidyverse` ⚠️ but not automatically loaded!) contains many &lt;br&gt; functions to make this easier and less error-prone
+
+![](05_factors_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 ---
 ## Reordering factor levels - manual
 
 
 ```r
-levels(fbi$Type)
+levels(gss_cat$relig)
 ```
 
 ```
-## [1] "Aggravated.assault"                  
-## [2] "Burglary"                            
-## [3] "Larceny.theft"                       
-## [4] "Legacy.rape"                         
-## [5] "Motor.vehicle.theft"                 
-## [6] "Murder.and.nonnegligent.Manslaughter"
-## [7] "Rape"                                
-## [8] "Robbery"
+##  [1] "Moslem/islam"           
+##  [2] "Inter-nondenominational"
+##  [3] "None"                   
+##  [4] "No answer"              
+##  [5] "Hinduism"               
+##  [6] "Christian"              
+##  [7] "Other eastern"          
+##  [8] "Catholic"               
+##  [9] "Don't know"             
+## [10] "Other"                  
+## [11] "Buddhism"               
+## [12] "Not applicable"         
+## [13] "Protestant"             
+## [14] "Jewish"                 
+## [15] "Orthodox-christian"     
+## [16] "Native american"
 ```
 
-manually (extremely sensitive to typos):
+manually (**extremely sensitive to typos**):
 
 
 ```r
-levels(factor(fbi$Type, levels=c("Larceny.theft", "Burglary", "Motor.vehicle.theft", "Aggravated.assault", "Robbery", "Legacy.rape", "Murder.and.nonnegligent.Manslaughter", "Rape")))
+levels(factor(gss_cat$relig, levels=c("Moslem/islam", "Hinduism", "Buddhism", "Other eastern", "Jewish", "Christian", "Orthodox-christian", "Catholic", "Protestant", "Inter-nondenominational", "Native american", "Other", "None", "No answer", "Don't know",  "Not applicable")))
 ```
 
 ```
-## [1] "Larceny.theft"                       
-## [2] "Burglary"                            
-## [3] "Motor.vehicle.theft"                 
-## [4] "Aggravated.assault"                  
-## [5] "Robbery"                             
-## [6] "Legacy.rape"                         
-## [7] "Murder.and.nonnegligent.Manslaughter"
-## [8] "Rape"
+##  [1] "Moslem/islam"           
+##  [2] "Hinduism"               
+##  [3] "Buddhism"               
+##  [4] "Other eastern"          
+##  [5] "Jewish"                 
+##  [6] "Christian"              
+##  [7] "Orthodox-christian"     
+##  [8] "Catholic"               
+##  [9] "Protestant"             
+## [10] "Inter-nondenominational"
+## [11] "Native american"        
+## [12] "Other"                  
+## [13] "None"                   
+## [14] "No answer"              
+## [15] "Don't know"             
+## [16] "Not applicable"
 ```
+
+---
+## Reordering factor levels - &lt;br&gt; by frequency
+
+Use the function `fct_infreq()` from the `forcats` packagge to order the categorical variable `relig` by its frequency.
+
+
+```r
+library(forcats)
+ggplot(gss_cat, aes(x = fct_infreq(relig))) + 
+  geom_bar() + 
+  coord_flip()
+```
+
+![](05_factors_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
 
 ---
 ## Reordering factor levels - &lt;br&gt;using another variable
 
-`reorder(factor, numbers, function)`
 
-reorder levels in factor by values in `numbers`. Use `function` to summarise (average is used by default). 
+Base R option: `reorder(factor, numbers, function)`
+
+reorder levels in factor by values in `numbers`. Use the argument `function` to summarise (average is used by default). 
 
 
 ```r
-levels(reorder(fbi$Type, fbi$Count, na.rm=TRUE))
+levels(reorder(gss_cat$relig, gss_cat$tvhours, na.rm=TRUE))
 ```
 
 ```
-## [1] "Murder.and.nonnegligent.Manslaughter"
-## [2] "Legacy.rape"                         
-## [3] "Rape"                                
-## [4] "Robbery"                             
-## [5] "Aggravated.assault"                  
-## [6] "Motor.vehicle.theft"                 
-## [7] "Burglary"                            
-## [8] "Larceny.theft"
+##  [1] "Other eastern"          
+##  [2] "Hinduism"               
+##  [3] "Buddhism"               
+##  [4] "Orthodox-christian"     
+##  [5] "Moslem/islam"           
+##  [6] "Jewish"                 
+##  [7] "None"                   
+##  [8] "No answer"              
+##  [9] "Other"                  
+## [10] "Christian"              
+## [11] "Inter-nondenominational"
+## [12] "Catholic"               
+## [13] "Protestant"             
+## [14] "Native american"        
+## [15] "Don't know"             
+## [16] "Not applicable"
 ```
 
 missing values in `numbers`? make sure to use parameter `na.rm=TRUE`!
+
+---
+## Reordering factor levels - &lt;br&gt;using another variable
+
+Option using the `forcats` package: `fct_reorder(factor, numbers, function)`
+
+
+```r
+relig_summary &lt;- gss_cat %&gt;% group_by(relig) %&gt;% summarise(age = mean(age, na.rm = TRUE), tvhours = mean(tvhours, na.rm = TRUE), n = n())
+```
+
+.pull-left[
+
+```r
+ggplot(relig_summary, aes(x = tvhours, 
+      y = relig)) + 
+  geom_point()
+```
+
+![](05_factors_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+]
+  
+.pull-right[
+
+```r
+ggplot(relig_summary, aes(x = tvhours, 
+    y = fct_reorder(relig, tvhours))) + 
+  geom_point()
+```
+
+![](05_factors_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+]
 
 ---
 class: yourturn
@@ -206,37 +364,114 @@ For this your turn use the `fbi` object from the `classdata` package.
 - For one type of crime (subset!) plot boxplots of rates by state, reorder boxplots by median crime rates
 
 ---
-## Changing Levels' names
+## Changing Levels' names - &lt;br&gt; using base R
+
 
 
 ```r
-levels(fbi$Type)
+levels(gss_cat$partyid)
 ```
 
 ```
-## [1] "Aggravated.assault"                  
-## [2] "Burglary"                            
-## [3] "Larceny.theft"                       
-## [4] "Legacy.rape"                         
-## [5] "Motor.vehicle.theft"                 
-## [6] "Murder.and.nonnegligent.Manslaughter"
-## [7] "Rape"                                
-## [8] "Robbery"
+##  [1] "No answer"          "Don't know"        
+##  [3] "Other party"        "Strong republican" 
+##  [5] "Not str republican" "Ind,near rep"      
+##  [7] "Independent"        "Ind,near dem"      
+##  [9] "Not str democrat"   "Strong democrat"
 ```
 
 
 ```r
-levels(fbi$Type)[6] &lt;- "Murder"
+levels(gss_cat$partyid)[2] &lt;- "Not sure"
 
-levels(fbi$Type)
+levels(gss_cat$partyid)
 ```
 
 ```
-## [1] "Aggravated.assault"  "Burglary"           
-## [3] "Larceny.theft"       "Legacy.rape"        
-## [5] "Motor.vehicle.theft" "Murder"             
-## [7] "Rape"                "Robbery"
+##  [1] "No answer"          "Not sure"          
+##  [3] "Other party"        "Strong republican" 
+##  [5] "Not str republican" "Ind,near rep"      
+##  [7] "Independent"        "Ind,near dem"      
+##  [9] "Not str democrat"   "Strong democrat"
 ```
+
+---
+## Changing Levels' names - &lt;br&gt; using forcats
+
+The most general and powerful tool is `fct_recode()`
+
+  - can recode, or change, the value of each level
+  - levels not mentioned are left as is
+
+
+```r
+levels(gss_cat$partyid)
+```
+
+```
+##  [1] "No answer"          "Not sure"          
+##  [3] "Other party"        "Strong republican" 
+##  [5] "Not str republican" "Ind,near rep"      
+##  [7] "Independent"        "Ind,near dem"      
+##  [9] "Not str democrat"   "Strong democrat"
+```
+
+
+```r
+partyid2 = fct_recode(gss_cat$partyid,
+    "Republican, strong"    = "Strong republican", "Republican, weak"      = "Not str republican",
+    "Independent, near rep" = "Ind,near rep", "Independent, near dem" = "Ind,near dem",
+    "Democrat, weak"        = "Not str democrat", "Democrat, strong"      = "Strong democrat"
+)
+levels(partyid2)
+```
+
+```
+##  [1] "No answer"             "Not sure"             
+##  [3] "Other party"           "Republican, strong"   
+##  [5] "Republican, weak"      "Independent, near rep"
+##  [7] "Independent"           "Independent, near dem"
+##  [9] "Democrat, weak"        "Democrat, strong"
+```
+
+---
+## Lump levels together
+
+If you want to collapse a lot of levels, `fct_collapse()` is a useful variant of `fct_recode()`.  
+
+For each new variable, you can provide a vector of old levels:
+
+
+```r
+partyid2 = fct_collapse(gss_cat$partyid,
+    other = c("No answer", "Don't know", "Other party"),
+    rep = c("Strong republican", "Not str republican"),
+    ind = c("Ind,near rep", "Independent", "Ind,near dem"),
+    dem = c("Not str democrat", "Strong democrat"))
+levels(partyid2)
+```
+
+```
+## [1] "other"    "Not sure" "rep"      "ind"     
+## [5] "dem"
+```
+
+&lt;br/&gt;
+You can lump together all the small groups with `fct_lump()`
+
+
+```r
+relig2 = fct_lump(gss_cat$relig, n = 6)
+summary(relig2)
+```
+
+```
+##       None  Christian   Catholic Protestant 
+##       3523        689       5124      10846 
+##     Jewish      Other 
+##        388        913
+```
+
 
 ---
 ## Resources
