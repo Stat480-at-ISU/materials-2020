@@ -50,17 +50,28 @@ background-position: 0% 27%
 ]
 
 ---
-## Grammar
+## R syntax
 
-- Basic algebra is the same as calculator/mathematics
+Basic algebra is the same as calculator/mathematics
 
-- explicit operators: `2*x` not `2x`,  `2^p` instead of `2p`
+  - use explicit operators: `2*x` not `2x`,  `2^p` instead of `2p`
 
-- Applying a function is similar 
+&lt;br/&gt;
 
-- Making and saving a variable, use `&lt;-` or `=`
+Functions are (most often) verbs, followed by what they will be applied to in parantheses:  
 
-- Everything in R is a vector
+- `do_this(to_this)`  
+
+- `do_that(to_this, to_that, with_those)`  
+
+In my notes, I will try to refer to objects as `objects` and functions as `function()`
+
+&lt;br/&gt;
+Making and saving a variable, use `&lt;-` or `=`
+
+- Remember: everything in R is a vector
+
+- Vectors can be constructed using concatenation (the `c()` function)
 
 ---
 ## Examples
@@ -138,41 +149,31 @@ background-position: 50% 170%
 ---
 ## R essentials
 
-A short list (for now):  
-
-Functions are (most often) verbs, followed by what they will be applied to in parantheses:  
-
-`do_this(to_this)`  
-`do_that(to_this, to_that, with_those)`  
-
-Columns (variables) in data frames are accessed with $:  
-
-`dataframe$var_name`  
-
-Packages are installed with the install.packages function and loaded with the library function, once per session:  
-
-`install.packages("package_name")`  
-`library(package_name)`  
-
----
-## Very basics
-
 #### Getting help within R
 
 If you want to know what a specific `command` is doing:
 
-```
-?command
-help(command) 
-help.search(command)
-```
+`?command`  
+
+`help(command)`  
+
+`help.search(command)`
+
 
 #### Getting out
 
-```
-q()
-```
+`q()`  
+
 Quits out of the console
+
+---
+# R packages: &lt;br&gt;installing &amp; loading
+Packages are installed with the install.packages function and loaded with the library function, once per session:  
+
+`install.packages("package_name")`   
+
+`library(package_name)`  
+
 
 ---
 ## Loading class data
@@ -210,9 +211,7 @@ Install the package `classdata` on your machine
 
 Make the package active in your current R session:
 
-```
-library(classdata)
-```
+`library(classdata)`
 
 Check the R help on the dataset `fbi`&lt;br&gt;
 
@@ -292,19 +291,19 @@ Try these commands out for yourself on the `fbi` data.
 
 Elements of the five point summary: 
 
-`mean, median, min, max, quartiles`
+`mean()`, `median()`, `min()`, `max()`, `quartiles()`
 
 &lt;br/&gt;
 
 Other summary statistics:
 
-`range, sd, var`
+`range()`, `sd()`, `var()`
 
 &lt;br/&gt;
 
 Summaries of two variables:
 
-`cor, cov`  
+`cor()`, `cov()`  
 
 ---
 class: yourturn
