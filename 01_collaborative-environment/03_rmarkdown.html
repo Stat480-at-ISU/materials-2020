@@ -40,17 +40,21 @@ length(pkgs)
 ```
 
 ---
-background-image: url(images/airport.png)
-background-position: 20% 30%
-background-size: 450px
-
 ## RStudio is ... 
 
-&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;
+RStudio is a convenient interface for R  
+  - an IDE, integreated development environment
 
-[From Julie Lowndes](http://jules32.github.io/resources/RStudio_intro/):  
+At its simplest:  
 
-&gt; If R were an airplane, RStudio would be the airport, providing many, many supporting services that make it easier for you, the pilot, to take off and go to awesome places. &lt;br&gt;&lt;br&gt; Sure, you can fly an airplane without an airport, but having those runways and supporting infrastructure is a game-changer.
+- R is like a car’s engine  
+
+- RStudio is like a car’s dashboard
+
+&lt;img src="images/engine-dashboard.png" width="1752" style="display: block; margin: auto;" /&gt;
+
+
+Source: [Modern Dive](https://moderndive.com/)
 
 ---
 background-image: url("images/rstudio-panes.png")
@@ -122,10 +126,12 @@ background-position: 50% 105%
 
 - ... an authoring format that enables easy creation of dynamic documents, presentations, and reports from R. 
 
-- it combines the core syntax of markdown with embedded R code chunks that are run so their output can be included in the final document.
+- combines markdown syntax with embedded R code chunks that are run so their output can be included in the final document.
 
-- R Markdown documents are fully reproducible (they are automatically regenerated whenever underlying R code or data changes).
+- creates fully reproducible reports - each time you knit the analysis is ran from the beginning
 
+???
+  - Code goes in chunks, defined by three backticks, narrative goes outside of chunks
 
 ---
 background-image: url("images/rmarkdown.png")

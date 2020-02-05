@@ -23,18 +23,77 @@ class: inverse
 
 ### Outline:
 
-- visualize factors directly using barcharts  
+- Review: factors in bar charts &amp; factors in boxplots  
 
 - use factors in aesthetics (`colour`, `fill`, `shape`) or for facetting  
 
 - always make sure that the order in factors is sensible!
 
 ---
+## ⚠️ factors in boxplots ⚠️
+
+boxplots in ggplot2 only work properly if the x variable is a character variable or a factor:
+
+
+
+
+```r
+twoyear &lt;- dplyr::filter(gss_cat, year %in% c(2000, 2014))
+```
+
+.pull-left[
+
+```r
+ggplot(data = twoyear, 
+       aes(x = year, y = tvhours)) + 
+  geom_boxplot()
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+ggplot(data = twoyear, 
+       aes(x = factor(year), y = tvhours)) + 
+  geom_boxplot()
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+
+---
+## ⚠️ factors in bar charts ⚠️
+
+A barchart can also provide us with a quick summary *provided* the &lt;br&gt; levels have values.
+
+.pull-left[
+
+```r
+ggplot(gss_cat, aes(race)) +
+  geom_bar()
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[
+
+```r
+ggplot(gss_cat, aes(race)) +
+  geom_bar() +
+  scale_x_discrete(drop = FALSE)
+```
+
+![](06_vis-factor_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+]
+
+---
 ## Note: factors for fill color
 
 In area plots (e.g. histograms &amp; barcharts) use aesthetic `fill` for &lt;br&gt;showing colored areas.
 
-Only factor variables can be mapped to `fill`
+ - In area plots, only factor variables can be mapped to `fill`
 
 ---
 ## Fill color example: 
@@ -45,7 +104,7 @@ ggplot(gss_cat, aes(x = marital, fill=year)) +
   geom_bar() # nothing happens
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
 
 ---
 ## Fill color example: 
@@ -57,10 +116,10 @@ ggplot(gss_cat, aes(x = marital, fill=factor(year))) +
   geom_bar() # not sensible, but works
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
 
 ---
-## Example: Survival on the Titanic
+## Ex: Survival on the Titanic
 
 The object `titanic` is a table of a break down of survival of passengers and crew on board the Titanic by gender and age.
 
@@ -91,14 +150,14 @@ ggplot(titanic, aes(x = Survived)) +
   geom_bar()
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
 
 ```r
 ggplot(titanic, aes(x = Sex)) + 
   geom_bar()
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-4-2.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-10-2.png)&lt;!-- --&gt;
 ]
 .pull-right[
 
@@ -107,14 +166,14 @@ ggplot(titanic, aes(x = Class)) +
   geom_bar()
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-11-1.png)&lt;!-- --&gt;
 
 ```r
 ggplot(titanic, aes(x = Age)) + 
   geom_bar()
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-5-2.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-11-2.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -127,14 +186,14 @@ ggplot(titanic, aes(x = Survived, fill=Survived)) +
   geom_bar(position="fill")
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
 
 ```r
 ggplot(titanic, aes(x = Sex, fill=Survived)) + 
   geom_bar(position="fill")
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-6-2.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-12-2.png)&lt;!-- --&gt;
 ]
 .pull-right[
 
@@ -143,14 +202,14 @@ ggplot(titanic, aes(x = Class, fill=Survived)) +
   geom_bar(position="fill")
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
 
 ```r
 ggplot(titanic, aes(x = Age, fill=Survived)) + 
   geom_bar(position = "fill")
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-7-2.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-13-2.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -171,7 +230,7 @@ ggplot(data = titanic)  +
   facet_grid(Age~Class)
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 
 ---
 class: yourturn
@@ -194,8 +253,12 @@ class: inverse, center, middle
 # Why no pie charts?
 
 ---
-## Order of tasks (easiest to hardest)
+background-image: url(https://miro.medium.com/max/1200/1*1IGNklnCANZPp2VD3mV9JQ.png)
+background-size: 400px
+background-position: 90% 40%
+## Order of tasks - &lt;br&gt; easiest to hardest
 
+.pull-left[
 Cleveland and McGill (1984):
 
 1. Position along a common scale
@@ -204,8 +267,16 @@ Cleveland and McGill (1984):
 6. Area
 7. Volume, curvature
 9. Shading, color saturation
+]
 
-Implications for drawing charts: make main comparisons as easy as possible (i.e. map as position along a common scale). Additional messages can be mapped on other aesthetics.
+
+---
+## Implications for &lt;br&gt;drawing charts:  
+
+- make main comparisons as easy as possible 
+  - i.e. map as position along a common scale  
+  
+- Additional messages can be mapped on other aesthetics
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

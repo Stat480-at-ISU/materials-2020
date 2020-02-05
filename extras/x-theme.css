@@ -49,7 +49,7 @@ strong{color:#283747;}
 .yourturn strong{color:#fdf6e3;}
 
 .yourturn {
-  background-color: #4d8dc9;
+  background-color: #3DAF6F;
   color: #ffffff;
   font-size: 22px;
 }
@@ -77,10 +77,21 @@ strong{color:#283747;}
 .remark-code {
   font-size: 0.9em;
 }
+ 
+.yourturn .remark-inline-code{
+  font-size: 1em;
+  color: #C9F276;
+}
+
+.yourturn h1{
+  text-align: center;
+}
+
 .remark-inline-code {
   font-size: 1em;
   color: #6c71c4;
 }
+
 .remark-slide-number {
   color: #93a1a1;
   opacity: 1;

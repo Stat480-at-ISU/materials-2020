@@ -40,11 +40,10 @@ background-position: 50% 90%
 ???
 categorical variable = variables that have a fixed and known set of possible values
 
+
 ---
 class: yourturn
-.center[
-# Your Turn 
-]
+# Your Turn
 
 Load a sample of data from the [General Social Survey](http://gss.norc.org/) with the following code: `data(gss_cat, package = "forcats")`
 
@@ -66,47 +65,55 @@ Are there other variables that should be factors (or vice versa)?
 class: inverse, center, middle
 # Checking and casting <br> data types
 
----
-## `r emo_warn` factors in boxplots `r emo_warn`
-
-boxplots in ggplot2 only work properly if the x variable is a character variable or a factor:
-
-```{r, echo=FALSE, warning=FALSE, message= FALSE}
-library(ggplot2)
-```
-
-```{r, echo = TRUE}
-twoyear <- dplyr::filter(gss_cat, year %in% c(2000, 2014))
-```
-
-.pull-left[
-```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE, echo = TRUE}
-ggplot(data = twoyear, 
-       aes(x = year, y = tvhours)) + 
-  geom_boxplot()
-```
-]
-.pull-right[
-```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE, echo = TRUE}
-ggplot(data = twoyear, 
-       aes(x = factor(year), y = tvhours)) + 
-  geom_boxplot()
-```
-]
 
 ---
-## Data types: checking and casting
+## Check the data type
 
-Checking for, and casting between types: 
+Recall the data types in R: 
 
-- `str` or `mode` provide info on type
+- logical, double, integer, character, lists, & more
 
+Checking for types: 
+
+- `str` or `typeof` provide info on type  
 
 - `is.XXX` (with XXX either `factor, int, numeric, logical, character, ...` ) checks for specific type
 
+```{r}
+typeof(TRUE)
+typeof("hello")
+is.integer(1:3)
+```
 
-- `as.XXX` casts to specific type
+---
+## `r emo_warn` Data type coercion `r emo_warn` 
 
+R is a dynamically typed language 
+
+It will happily convert between the various types without complaint
+
+```{r}
+c(1, "Hello")
+c(FALSE, 3L)
+c(1.2, 3L)
+```
+
+---
+## Casting between types
+
+<br/>
+`as.XXX` casts to specific type
+
+<br/>
+
+```{r}
+as.character(c(1, 9, 4.3, FALSE))
+
+as.numeric(c(TRUE, FALSE, FALSE))
+
+fruits <- factor(c("apple", "banana", "orange"))
+as.numeric(fruits)
+```
 
 ---
 ## Casting between types
@@ -119,6 +126,12 @@ Checking for, and casting between types:
 
 To get the labels of a factor as numbers, first cast to character and then to a number.
 
+```{r}
+as.numeric(factor(c(4,6,1,4,7)))
+```
+---
+class: inverse, center, middle
+# working with factor variables
 
 ---
 ## Levels of factor variables
@@ -164,8 +177,36 @@ ggplot(gss_cat, aes(race)) +
 ]
 
 ---
+## `r emo_warn` factors in boxplots `r emo_warn`
+
+boxplots in ggplot2 only work properly if the x variable is a character variable or a factor:
+
+```{r, echo=FALSE, warning=FALSE, message= FALSE}
+library(ggplot2)
+```
+
+```{r, echo = TRUE}
+twoyear <- dplyr::filter(gss_cat, year %in% c(2000, 2014))
+```
+
+.pull-left[
+```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE, echo = TRUE}
+ggplot(data = twoyear, 
+       aes(x = year, y = tvhours)) + 
+  geom_boxplot()
+```
+]
+.pull-right[
+```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE, echo = TRUE}
+ggplot(data = twoyear, 
+       aes(x = factor(year), y = tvhours)) + 
+  geom_boxplot()
+```
+]
+
+---
 class: inverse, center, middle
-# Changing the <br> order or values <br> of the levels
+# Changing the order <br>of the levels
 
 ---
 background-image: url(https://d33wubrfki0l68.cloudfront.net/cd4a81fe4e2b6bf9ea7af524faf5f8c9db039edb/5c672/images/hex-forcats.png)
@@ -179,7 +220,7 @@ Factor variables often have to be re-ordered for ease of comparisons
 
 - We can make the order of the levels in one variable dependent on the summary statistic of another variable
 
-  - the `forcats` package (part of the `tidyverse` `r emo_warn` but not automatically loaded!) contains many <br> functions to make this easier and less error-prone
+  - the `forcats` package (part of the `tidyverse` `r emo_warn` but not automatically loaded!) contains many functions to make this easier and less error-prone
 
 ```{r echo=FALSE, fig.height=4, fig.width=9}
 gss_cat$relig <- gss_cat$relig %>% forcats::fct_shuffle()
@@ -189,22 +230,25 @@ ggplot(gss_cat, aes(x = relig)) +
 ```
 
 ---
-## Reordering factor levels - manual
+## Reordering factor levels - <br>the manual way
 
 ```{r, echo = TRUE}
 levels(gss_cat$relig)
 ```
 
-manually (**extremely sensitive to typos**):
+manually (`r emo_warn` extremely sensitive to typos):
 
 ```{r, echo = TRUE}
 levels(factor(gss_cat$relig, levels=c("Moslem/islam", "Hinduism", "Buddhism", "Other eastern", "Jewish", "Christian", "Orthodox-christian", "Catholic", "Protestant", "Inter-nondenominational", "Native american", "Other", "None", "No answer", "Don't know",  "Not applicable")))
 ```
 
 ---
+background-image: url(https://d33wubrfki0l68.cloudfront.net/cd4a81fe4e2b6bf9ea7af524faf5f8c9db039edb/5c672/images/hex-forcats.png)
+background-size: 120px
+background-position: 94% 5%
 ## Reordering factor levels - <br> by frequency
 
-Use the function `fct_infreq()` from the `forcats` packagge to order the categorical variable `relig` by its frequency.
+Use the function `fct_infreq()` from the `forcats` package to order the <br>categorical variable `relig` by its frequency.
 
 ```{r echo=TRUE, fig.height=4, fig.width=9}
 library(forcats)
@@ -225,9 +269,13 @@ reorder levels in factor by values in `numbers`. Use the argument `function` to 
 levels(reorder(gss_cat$relig, gss_cat$tvhours, na.rm=TRUE))
 ```
 
+<br/>
 missing values in `numbers`? make sure to use parameter `na.rm=TRUE`!
 
 ---
+background-image: url(https://d33wubrfki0l68.cloudfront.net/cd4a81fe4e2b6bf9ea7af524faf5f8c9db039edb/5c672/images/hex-forcats.png)
+background-size: 120px
+background-position: 94% 5%
 ## Reordering factor levels - <br>using another variable
 
 Option using the `forcats` package: `fct_reorder(factor, numbers, function)`
@@ -258,15 +306,21 @@ class: yourturn
 # Your turn 
 ]
 
-For this your turn use the `fbi` object from the `classdata` package. 
+For this your turn use the `fbi` object:  
 
-- Introduce a rate of the number of reported offenses by population into the `fbi` data. You could use the *Ames standard* to make values comparable to a city of the size of Ames (population ~70,000).
+`fbi <- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02_r-intro/data/fbi.csv")`
 
-- Plot boxplots of crime rates by different types of crime. How can you make axis text legible? 
+1. Introduce a rate of the number of reported offenses by population into the `fbi` data. You could use the *Ames standard* to make values comparable to a city of the size of Ames (population ~70,000).
 
-- Reorder the boxplots of crime rates, such that the boxplots are ordered by their medians. 
+2.  Plot boxplots of crime rates by different types of crime. How can you make axis text legible? 
 
-- For one type of crime (subset!) plot boxplots of rates by state, reorder boxplots by median crime rates
+3. Reorder the boxplots of crime rates, such that the boxplots are ordered by their medians. 
+
+4. For one type of crime (subset!) plot boxplots of rates by state, reorder boxplots by median crime rates
+
+---
+class: inverse, center, middle
+# Changing the values <br> of the levels
 
 ---
 ## Changing Levels' names - <br> using base R
@@ -320,24 +374,23 @@ levels(partyid2)
 ```
 
 <br/>
-You can lump together all the small groups with `fct_lump()`
+You can lump together `n` small groups with `fct_lump()`
 
 ```{r, echo = TRUE}
 relig2 = fct_lump(gss_cat$relig, n = 6)
 summary(relig2)
 ```
 
-
 ---
 ## Resources
+
+- reference/document: https://forcats.tidyverse.org/
 
 - Wickham & Grolemund's <a href="http://r4ds.had.co.nz/factors.html">chapter on factors</a> in *R for Data Science*
 
 - Roger Peng: [*stringsAsFactors: An unauthorized biography*](http://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/")
 
 - Thomas Lumley: <a href="http://notstatschat.tumblr.com/post/124987394001/stringsasfactors-sigh"><em>stringsAsFactors = &lt;sigh&gt;</em></a> 
-
-- The `forcats` package has a lot of additional functions that make working with factors easier.
 
 
 - Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)

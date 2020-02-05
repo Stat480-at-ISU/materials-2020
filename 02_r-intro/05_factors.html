@@ -35,11 +35,10 @@ background-position: 50% 90%
 ???
 categorical variable = variables that have a fixed and known set of possible values
 
+
 ---
 class: yourturn
-.center[
-# Your Turn 
-]
+# Your Turn
 
 Load a sample of data from the [General Social Survey](http://gss.norc.org/) with the following code: `data(gss_cat, package = "forcats")`
 
@@ -61,52 +60,110 @@ Are there other variables that should be factors (or vice versa)?
 class: inverse, center, middle
 # Checking and casting &lt;br&gt; data types
 
----
-## ⚠️ factors in boxplots ⚠️
-
-boxplots in ggplot2 only work properly if the x variable is a character variable or a factor:
-
-
-
-
-```r
-twoyear &lt;- dplyr::filter(gss_cat, year %in% c(2000, 2014))
-```
-
-.pull-left[
-
-```r
-ggplot(data = twoyear, 
-       aes(x = year, y = tvhours)) + 
-  geom_boxplot()
-```
-
-![](05_factors_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
-]
-.pull-right[
-
-```r
-ggplot(data = twoyear, 
-       aes(x = factor(year), y = tvhours)) + 
-  geom_boxplot()
-```
-
-![](05_factors_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
-]
 
 ---
-## Data types: checking and casting
+## Check the data type
 
-Checking for, and casting between types: 
+Recall the data types in R: 
 
-- `str` or `mode` provide info on type
+- logical, double, integer, character, lists, &amp; more
 
+Checking for types: 
+
+- `str` or `typeof` provide info on type  
 
 - `is.XXX` (with XXX either `factor, int, numeric, logical, character, ...` ) checks for specific type
 
 
-- `as.XXX` casts to specific type
+```r
+typeof(TRUE)
+```
 
+```
+## [1] "logical"
+```
+
+```r
+typeof("hello")
+```
+
+```
+## [1] "character"
+```
+
+```r
+is.integer(1:3)
+```
+
+```
+## [1] TRUE
+```
+
+---
+## ⚠️ Data type coercion ⚠️ 
+
+R is a dynamically typed language 
+
+It will happily convert between the various types without complaint
+
+
+```r
+c(1, "Hello")
+```
+
+```
+## [1] "1"     "Hello"
+```
+
+```r
+c(FALSE, 3L)
+```
+
+```
+## [1] 0 3
+```
+
+```r
+c(1.2, 3L)
+```
+
+```
+## [1] 1.2 3.0
+```
+
+---
+## Casting between types
+
+&lt;br/&gt;
+`as.XXX` casts to specific type
+
+&lt;br/&gt;
+
+
+```r
+as.character(c(1, 9, 4.3, FALSE))
+```
+
+```
+## [1] "1"   "9"   "4.3" "0"
+```
+
+```r
+as.numeric(c(TRUE, FALSE, FALSE))
+```
+
+```
+## [1] 1 0 0
+```
+
+```r
+fruits &lt;- factor(c("apple", "banana", "orange"))
+as.numeric(fruits)
+```
+
+```
+## [1] 1 2 3
+```
 
 ---
 ## Casting between types
@@ -120,6 +177,17 @@ Checking for, and casting between types:
 To get the labels of a factor as numbers, first cast to character and then to a number.
 
 
+```r
+as.numeric(factor(c(4,6,1,4,7)))
+```
+
+```
+## [1] 2 3 1 2 4
+```
+---
+class: inverse, center, middle
+# working with factor variables
+
 ---
 ## Levels of factor variables
 
@@ -131,7 +199,8 @@ levels(gss_cat$race)
 ```
 
 ```
-## [1] "Other"          "Black"          "White"          "Not applicable"
+## [1] "Other"          "Black"          "White"         
+## [4] "Not applicable"
 ```
 
 &lt;br/&gt;
@@ -191,8 +260,41 @@ ggplot(gss_cat, aes(race)) +
 ]
 
 ---
+## ⚠️ factors in boxplots ⚠️
+
+boxplots in ggplot2 only work properly if the x variable is a character variable or a factor:
+
+
+
+
+```r
+twoyear &lt;- dplyr::filter(gss_cat, year %in% c(2000, 2014))
+```
+
+.pull-left[
+
+```r
+ggplot(data = twoyear, 
+       aes(x = year, y = tvhours)) + 
+  geom_boxplot()
+```
+
+![](05_factors_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+ggplot(data = twoyear, 
+       aes(x = factor(year), y = tvhours)) + 
+  geom_boxplot()
+```
+
+![](05_factors_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+]
+
+---
 class: inverse, center, middle
-# Changing the &lt;br&gt; order or values &lt;br&gt; of the levels
+# Changing the order &lt;br&gt;of the levels
 
 ---
 background-image: url(https://d33wubrfki0l68.cloudfront.net/cd4a81fe4e2b6bf9ea7af524faf5f8c9db039edb/5c672/images/hex-forcats.png)
@@ -206,12 +308,12 @@ Factor variables often have to be re-ordered for ease of comparisons
 
 - We can make the order of the levels in one variable dependent on the summary statistic of another variable
 
-  - the `forcats` package (part of the `tidyverse` ⚠️ but not automatically loaded!) contains many &lt;br&gt; functions to make this easier and less error-prone
+  - the `forcats` package (part of the `tidyverse` ⚠️ but not automatically loaded!) contains many functions to make this easier and less error-prone
 
-![](05_factors_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+![](05_factors_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
 
 ---
-## Reordering factor levels - manual
+## Reordering factor levels - &lt;br&gt;the manual way
 
 
 ```r
@@ -219,13 +321,17 @@ levels(gss_cat$relig)
 ```
 
 ```
-##  [1] "Christian"               "Inter-nondenominational" "Hinduism"                "Moslem/islam"            "Buddhism"               
-##  [6] "Don't know"              "None"                    "Other"                   "Native american"         "Orthodox-christian"     
-## [11] "Jewish"                  "Not applicable"          "No answer"               "Catholic"                "Other eastern"          
-## [16] "Protestant"
+##  [1] "Other"                   "No answer"              
+##  [3] "Hinduism"                "Don't know"             
+##  [5] "None"                    "Orthodox-christian"     
+##  [7] "Buddhism"                "Moslem/islam"           
+##  [9] "Inter-nondenominational" "Christian"              
+## [11] "Protestant"              "Jewish"                 
+## [13] "Native american"         "Catholic"               
+## [15] "Other eastern"           "Not applicable"
 ```
 
-manually (**extremely sensitive to typos**):
+manually (⚠️ extremely sensitive to typos):
 
 
 ```r
@@ -233,16 +339,23 @@ levels(factor(gss_cat$relig, levels=c("Moslem/islam", "Hinduism", "Buddhism", "O
 ```
 
 ```
-##  [1] "Moslem/islam"            "Hinduism"                "Buddhism"                "Other eastern"           "Jewish"                 
-##  [6] "Christian"               "Orthodox-christian"      "Catholic"                "Protestant"              "Inter-nondenominational"
-## [11] "Native american"         "Other"                   "None"                    "No answer"               "Don't know"             
-## [16] "Not applicable"
+##  [1] "Moslem/islam"            "Hinduism"               
+##  [3] "Buddhism"                "Other eastern"          
+##  [5] "Jewish"                  "Christian"              
+##  [7] "Orthodox-christian"      "Catholic"               
+##  [9] "Protestant"              "Inter-nondenominational"
+## [11] "Native american"         "Other"                  
+## [13] "None"                    "No answer"              
+## [15] "Don't know"              "Not applicable"
 ```
 
 ---
+background-image: url(https://d33wubrfki0l68.cloudfront.net/cd4a81fe4e2b6bf9ea7af524faf5f8c9db039edb/5c672/images/hex-forcats.png)
+background-size: 120px
+background-position: 94% 5%
 ## Reordering factor levels - &lt;br&gt; by frequency
 
-Use the function `fct_infreq()` from the `forcats` packagge to order the categorical variable `relig` by its frequency.
+Use the function `fct_infreq()` from the `forcats` package to order the &lt;br&gt;categorical variable `relig` by its frequency.
 
 
 ```r
@@ -252,7 +365,7 @@ ggplot(gss_cat, aes(x = fct_infreq(relig))) +
   coord_flip()
 ```
 
-![](05_factors_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+![](05_factors_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
 
 ---
 ## Reordering factor levels - &lt;br&gt;using another variable
@@ -268,15 +381,23 @@ levels(reorder(gss_cat$relig, gss_cat$tvhours, na.rm=TRUE))
 ```
 
 ```
-##  [1] "Other eastern"           "Hinduism"                "Buddhism"                "Orthodox-christian"      "Moslem/islam"           
-##  [6] "Jewish"                  "None"                    "No answer"               "Other"                   "Christian"              
-## [11] "Inter-nondenominational" "Catholic"                "Protestant"              "Native american"         "Don't know"             
-## [16] "Not applicable"
+##  [1] "Other eastern"           "Hinduism"               
+##  [3] "Buddhism"                "Orthodox-christian"     
+##  [5] "Moslem/islam"            "Jewish"                 
+##  [7] "None"                    "No answer"              
+##  [9] "Other"                   "Christian"              
+## [11] "Inter-nondenominational" "Catholic"               
+## [13] "Protestant"              "Native american"        
+## [15] "Don't know"              "Not applicable"
 ```
 
+&lt;br/&gt;
 missing values in `numbers`? make sure to use parameter `na.rm=TRUE`!
 
 ---
+background-image: url(https://d33wubrfki0l68.cloudfront.net/cd4a81fe4e2b6bf9ea7af524faf5f8c9db039edb/5c672/images/hex-forcats.png)
+background-size: 120px
+background-position: 94% 5%
 ## Reordering factor levels - &lt;br&gt;using another variable
 
 Option using the `forcats` package: `fct_reorder(factor, numbers, function)`
@@ -294,7 +415,7 @@ ggplot(relig_summary, aes(x = tvhours,
   geom_point()
 ```
 
-![](05_factors_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+![](05_factors_files/figure-html/unnamed-chunk-20-1.png)&lt;!-- --&gt;
 ]
   
 .pull-right[
@@ -305,7 +426,7 @@ ggplot(relig_summary, aes(x = tvhours,
   geom_point()
 ```
 
-![](05_factors_files/figure-html/unnamed-chunk-17-1.png)&lt;!-- --&gt;
+![](05_factors_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
 ]
 
 ---
@@ -314,15 +435,21 @@ class: yourturn
 # Your turn 
 ]
 
-For this your turn use the `fbi` object from the `classdata` package. 
+For this your turn use the `fbi` object:  
 
-- Introduce a rate of the number of reported offenses by population into the `fbi` data. You could use the *Ames standard* to make values comparable to a city of the size of Ames (population ~70,000).
+`fbi &lt;- read.csv("https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/02_r-intro/data/fbi.csv")`
 
-- Plot boxplots of crime rates by different types of crime. How can you make axis text legible? 
+1. Introduce a rate of the number of reported offenses by population into the `fbi` data. You could use the *Ames standard* to make values comparable to a city of the size of Ames (population ~70,000).
 
-- Reorder the boxplots of crime rates, such that the boxplots are ordered by their medians. 
+2.  Plot boxplots of crime rates by different types of crime. How can you make axis text legible? 
 
-- For one type of crime (subset!) plot boxplots of rates by state, reorder boxplots by median crime rates
+3. Reorder the boxplots of crime rates, such that the boxplots are ordered by their medians. 
+
+4. For one type of crime (subset!) plot boxplots of rates by state, reorder boxplots by median crime rates
+
+---
+class: inverse, center, middle
+# Changing the values &lt;br&gt; of the levels
 
 ---
 ## Changing Levels' names - &lt;br&gt; using base R
@@ -334,8 +461,11 @@ levels(gss_cat$partyid)
 ```
 
 ```
-##  [1] "No answer"          "Don't know"         "Other party"        "Strong republican"  "Not str republican" "Ind,near rep"      
-##  [7] "Independent"        "Ind,near dem"       "Not str democrat"   "Strong democrat"
+##  [1] "No answer"          "Don't know"        
+##  [3] "Other party"        "Strong republican" 
+##  [5] "Not str republican" "Ind,near rep"      
+##  [7] "Independent"        "Ind,near dem"      
+##  [9] "Not str democrat"   "Strong democrat"
 ```
 
 
@@ -346,8 +476,11 @@ levels(gss_cat$partyid)
 ```
 
 ```
-##  [1] "No answer"          "Not sure"           "Other party"        "Strong republican"  "Not str republican" "Ind,near rep"      
-##  [7] "Independent"        "Ind,near dem"       "Not str democrat"   "Strong democrat"
+##  [1] "No answer"          "Not sure"          
+##  [3] "Other party"        "Strong republican" 
+##  [5] "Not str republican" "Ind,near rep"      
+##  [7] "Independent"        "Ind,near dem"      
+##  [9] "Not str democrat"   "Strong democrat"
 ```
 
 ---
@@ -364,8 +497,11 @@ levels(gss_cat$partyid)
 ```
 
 ```
-##  [1] "No answer"          "Not sure"           "Other party"        "Strong republican"  "Not str republican" "Ind,near rep"      
-##  [7] "Independent"        "Ind,near dem"       "Not str democrat"   "Strong democrat"
+##  [1] "No answer"          "Not sure"          
+##  [3] "Other party"        "Strong republican" 
+##  [5] "Not str republican" "Ind,near rep"      
+##  [7] "Independent"        "Ind,near dem"      
+##  [9] "Not str democrat"   "Strong democrat"
 ```
 
 
@@ -379,8 +515,11 @@ levels(partyid2)
 ```
 
 ```
-##  [1] "No answer"             "Not sure"              "Other party"           "Republican, strong"    "Republican, weak"     
-##  [6] "Independent, near rep" "Independent"           "Independent, near dem" "Democrat, weak"        "Democrat, strong"
+##  [1] "No answer"             "Not sure"             
+##  [3] "Other party"           "Republican, strong"   
+##  [5] "Republican, weak"      "Independent, near rep"
+##  [7] "Independent"           "Independent, near dem"
+##  [9] "Democrat, weak"        "Democrat, strong"
 ```
 
 ---
@@ -405,7 +544,7 @@ levels(partyid2)
 ```
 
 &lt;br/&gt;
-You can lump together all the small groups with `fct_lump()`
+You can lump together `n` small groups with `fct_lump()`
 
 
 ```r
@@ -414,21 +553,22 @@ summary(relig2)
 ```
 
 ```
-##  Christian       None     Jewish   Catholic Protestant      Other 
-##        689       3523        388       5124      10846        913
+##       None  Christian Protestant     Jewish   Catholic 
+##       3523        689      10846        388       5124 
+##      Other 
+##        913
 ```
-
 
 ---
 ## Resources
+
+- reference/document: https://forcats.tidyverse.org/
 
 - Wickham &amp; Grolemund's &lt;a href="http://r4ds.had.co.nz/factors.html"&gt;chapter on factors&lt;/a&gt; in *R for Data Science*
 
 - Roger Peng: [*stringsAsFactors: An unauthorized biography*](http://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/")
 
 - Thomas Lumley: &lt;a href="http://notstatschat.tumblr.com/post/124987394001/stringsasfactors-sigh"&gt;&lt;em&gt;stringsAsFactors = &amp;lt;sigh&amp;gt;&lt;/em&gt;&lt;/a&gt; 
-
-- The `forcats` package has a lot of additional functions that make working with factors easier.
 
 
 - Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)

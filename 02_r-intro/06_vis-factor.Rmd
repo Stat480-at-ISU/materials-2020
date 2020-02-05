@@ -26,23 +26,71 @@ class: inverse
 
 ### Outline:
 
-- visualize factors directly using barcharts  
+- Review: factors in bar charts & factors in boxplots  
 
 - use factors in aesthetics (`colour`, `fill`, `shape`) or for facetting  
 
 - always make sure that the order in factors is sensible!
 
 ---
+## `r emo_warn` factors in boxplots `r emo_warn`
+
+boxplots in ggplot2 only work properly if the x variable is a character variable or a factor:
+
+```{r, echo=FALSE, warning=FALSE, message= FALSE}
+library(ggplot2)
+```
+
+```{r, echo = TRUE}
+twoyear <- dplyr::filter(gss_cat, year %in% c(2000, 2014))
+```
+
+.pull-left[
+```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE, echo = TRUE}
+ggplot(data = twoyear, 
+       aes(x = year, y = tvhours)) + 
+  geom_boxplot()
+```
+]
+.pull-right[
+```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE, echo = TRUE}
+ggplot(data = twoyear, 
+       aes(x = factor(year), y = tvhours)) + 
+  geom_boxplot()
+```
+]
+
+---
+## `r emo_warn` factors in bar charts `r emo_warn`
+
+A barchart can also provide us with a quick summary *provided* the <br> levels have values.
+
+.pull-left[
+```{r echo = TRUE}
+ggplot(gss_cat, aes(race)) +
+  geom_bar()
+```
+]
+
+.pull-right[
+```{r echo = TRUE}
+ggplot(gss_cat, aes(race)) +
+  geom_bar() +
+  scale_x_discrete(drop = FALSE)
+```
+]
+
+---
 ## Note: factors for fill color
 
 In area plots (e.g. histograms & barcharts) use aesthetic `fill` for <br>showing colored areas.
 
-Only factor variables can be mapped to `fill`
+ - In area plots, only factor variables can be mapped to `fill`
 
 ---
 ## Fill color example: 
 
-```{r, message = FALSE, echo = TRUE, height = 3, width = 10}
+```{r, message = FALSE, echo = TRUE, fig.height = 5.5, fig.width = 6}
 ggplot(gss_cat, aes(x = marital, fill=year)) + 
   geom_bar() # nothing happens
 ```
@@ -51,13 +99,13 @@ ggplot(gss_cat, aes(x = marital, fill=year)) +
 ## Fill color example: 
 
 
-```{r echo = TRUE, height = 3}
+```{r echo = TRUE, fig.height = 5.5, fig.width = 7.1}
 ggplot(gss_cat, aes(x = marital, fill=factor(year))) + 
   geom_bar() # not sensible, but works
 ```
 
 ---
-## Example: Survival on the Titanic
+## Ex: Survival on the Titanic
 
 The object `titanic` is a table of a break down of survival of passengers and crew on board the Titanic by gender and age.
 
@@ -149,8 +197,12 @@ class: inverse, center, middle
 # Why no pie charts?
 
 ---
-## Order of tasks (easiest to hardest)
+background-image: url(https://miro.medium.com/max/1200/1*1IGNklnCANZPp2VD3mV9JQ.png)
+background-size: 400px
+background-position: 90% 40%
+## Order of tasks - <br> easiest to hardest
 
+.pull-left[
 Cleveland and McGill (1984):
 
 1. Position along a common scale
@@ -159,5 +211,13 @@ Cleveland and McGill (1984):
 6. Area
 7. Volume, curvature
 9. Shading, color saturation
+]
 
-Implications for drawing charts: make main comparisons as easy as possible (i.e. map as position along a common scale). Additional messages can be mapped on other aesthetics.
+
+---
+## Implications for <br>drawing charts:  
+
+- make main comparisons as easy as possible 
+  - i.e. map as position along a common scale  
+  
+- Additional messages can be mapped on other aesthetics
