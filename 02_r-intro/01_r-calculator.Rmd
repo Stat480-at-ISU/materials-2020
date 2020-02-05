@@ -48,24 +48,6 @@ background-position: 0% 27%
 
 - Miscellaneous useful stuff
 ]
----
-## R essentials
-
-A short list (for now):  
-
-Functions are (most often) verbs, followed by what they will be applied to in parantheses:  
-
-`do_this(to_this)`  
-`do_that(to_this, to_that, with_those)`  
-
-Columns (variables) in data frames are accessed with $:  
-
-`dataframe$var_name`  
-
-Packages are installed with the install.packages function and loaded with the library function, once per session:  
-
-`install.packages("package_name")`  
-`library(package_name)`  
 
 ---
 ## Grammar
@@ -153,6 +135,24 @@ background-position: 50% 170%
 
 - Open/Print it so that you can glance at it while working
 
+---
+## R essentials
+
+A short list (for now):  
+
+Functions are (most often) verbs, followed by what they will be applied to in parantheses:  
+
+`do_this(to_this)`  
+`do_that(to_this, to_that, with_those)`  
+
+Columns (variables) in data frames are accessed with $:  
+
+`dataframe$var_name`  
+
+Packages are installed with the install.packages function and loaded with the library function, once per session:  
+
+`install.packages("package_name")`  
+`library(package_name)`  
 
 ---
 ## Very basics
