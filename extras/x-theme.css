@@ -46,6 +46,7 @@ a, a > code {
 }
 strong{color:#283747;}
 .inverse strong{color:#fdf6e3;}
+.inverse2 strong{color:#fdf6e3;}
 .yourturn strong{color:#fdf6e3;}
 
 .yourturn {
@@ -58,7 +59,18 @@ strong{color:#283747;}
   color: #ffffff;
   font-size: 22px;
 }
+
+.inverse2 {
+  background-color: #fac375;
+  color: #ffffff;
+  font-size: 22px;
+}
+
 .inverse h1, .yourturn h1, .inverse h2, .yourturn h2, .inverse h3, .yourturn h3 {
+  color: #fdf6e3;
+}
+
+.inverse2 h1, .inverse2 h2, .inverse2 h3 {
   color: #fdf6e3;
 }
 
@@ -174,6 +186,46 @@ strong{color:#283747;}
 .pull-right ~ * {
   clear: both;
 }
+.teach-left {
+  float: left;
+  width: 75%;
+}
+.teach-right {
+  float: right;
+  width: 20%;
+}
+.left-minus {
+  width: 40%;
+  float: left;
+  padding-top: 1em;
+}
+.right-plus {
+  width: 57%;
+  float: right;
+  padding-top: 1em;
+}
+.left-third {
+  width: 30%;
+  float: left;
+  padding-top: 1em;
+}
+.right-two-thirds {
+  width: 70%;
+  float: right;
+  padding-top: 1em;
+}
+
+.left-column-small {
+  width: 12%;
+  height: 92%;
+  float: left;
+}
+.right-column-large {
+  width: 82%;
+  height: 92%;
+  float: right;
+}
+
 img, video, iframe {
   max-width: 100%;
 }
