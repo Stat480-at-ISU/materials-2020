@@ -1,0 +1,17 @@
+base
+usethis
+devtools
+classdata
+ggplot2
+emo
+dplyr
+forcats
+ggmosaic
+ggsci
+ggthemes
+gridExtra
+viridisLite
+viridis
+wesanderson
+RColorBrewer
+plotly
