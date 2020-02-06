@@ -199,8 +199,7 @@ levels(gss_cat$race)
 ```
 
 ```
-## [1] "Other"          "Black"          "White"         
-## [4] "Not applicable"
+## [1] "Other"          "Black"          "White"          "Not applicable"
 ```
 
 &lt;br/&gt;
@@ -321,14 +320,12 @@ levels(gss_cat$relig)
 ```
 
 ```
-##  [1] "Other"                   "No answer"              
-##  [3] "Hinduism"                "Don't know"             
-##  [5] "None"                    "Orthodox-christian"     
-##  [7] "Buddhism"                "Moslem/islam"           
-##  [9] "Inter-nondenominational" "Christian"              
-## [11] "Protestant"              "Jewish"                 
-## [13] "Native american"         "Catholic"               
-## [15] "Other eastern"           "Not applicable"
+##  [1] "Orthodox-christian"      "Don't know"              "Not applicable"         
+##  [4] "Buddhism"                "Moslem/islam"            "Hinduism"               
+##  [7] "Other eastern"           "Native american"         "Other"                  
+## [10] "Protestant"              "None"                    "Jewish"                 
+## [13] "No answer"               "Christian"               "Catholic"               
+## [16] "Inter-nondenominational"
 ```
 
 manually (⚠️ extremely sensitive to typos):
@@ -339,14 +336,12 @@ levels(factor(gss_cat$relig, levels=c("Moslem/islam", "Hinduism", "Buddhism", "O
 ```
 
 ```
-##  [1] "Moslem/islam"            "Hinduism"               
-##  [3] "Buddhism"                "Other eastern"          
-##  [5] "Jewish"                  "Christian"              
-##  [7] "Orthodox-christian"      "Catholic"               
-##  [9] "Protestant"              "Inter-nondenominational"
-## [11] "Native american"         "Other"                  
-## [13] "None"                    "No answer"              
-## [15] "Don't know"              "Not applicable"
+##  [1] "Moslem/islam"            "Hinduism"                "Buddhism"               
+##  [4] "Other eastern"           "Jewish"                  "Christian"              
+##  [7] "Orthodox-christian"      "Catholic"                "Protestant"             
+## [10] "Inter-nondenominational" "Native american"         "Other"                  
+## [13] "None"                    "No answer"               "Don't know"             
+## [16] "Not applicable"
 ```
 
 ---
@@ -381,14 +376,12 @@ levels(reorder(gss_cat$relig, gss_cat$tvhours, na.rm=TRUE))
 ```
 
 ```
-##  [1] "Other eastern"           "Hinduism"               
-##  [3] "Buddhism"                "Orthodox-christian"     
-##  [5] "Moslem/islam"            "Jewish"                 
-##  [7] "None"                    "No answer"              
-##  [9] "Other"                   "Christian"              
-## [11] "Inter-nondenominational" "Catholic"               
-## [13] "Protestant"              "Native american"        
-## [15] "Don't know"              "Not applicable"
+##  [1] "Other eastern"           "Hinduism"                "Buddhism"               
+##  [4] "Orthodox-christian"      "Moslem/islam"            "Jewish"                 
+##  [7] "None"                    "No answer"               "Other"                  
+## [10] "Christian"               "Inter-nondenominational" "Catholic"               
+## [13] "Protestant"              "Native american"         "Don't know"             
+## [16] "Not applicable"
 ```
 
 &lt;br/&gt;
@@ -461,11 +454,10 @@ levels(gss_cat$partyid)
 ```
 
 ```
-##  [1] "No answer"          "Don't know"        
-##  [3] "Other party"        "Strong republican" 
-##  [5] "Not str republican" "Ind,near rep"      
-##  [7] "Independent"        "Ind,near dem"      
-##  [9] "Not str democrat"   "Strong democrat"
+##  [1] "No answer"          "Don't know"         "Other party"       
+##  [4] "Strong republican"  "Not str republican" "Ind,near rep"      
+##  [7] "Independent"        "Ind,near dem"       "Not str democrat"  
+## [10] "Strong democrat"
 ```
 
 
@@ -476,11 +468,10 @@ levels(gss_cat$partyid)
 ```
 
 ```
-##  [1] "No answer"          "Not sure"          
-##  [3] "Other party"        "Strong republican" 
-##  [5] "Not str republican" "Ind,near rep"      
-##  [7] "Independent"        "Ind,near dem"      
-##  [9] "Not str democrat"   "Strong democrat"
+##  [1] "No answer"          "Not sure"           "Other party"       
+##  [4] "Strong republican"  "Not str republican" "Ind,near rep"      
+##  [7] "Independent"        "Ind,near dem"       "Not str democrat"  
+## [10] "Strong democrat"
 ```
 
 ---
@@ -497,11 +488,10 @@ levels(gss_cat$partyid)
 ```
 
 ```
-##  [1] "No answer"          "Not sure"          
-##  [3] "Other party"        "Strong republican" 
-##  [5] "Not str republican" "Ind,near rep"      
-##  [7] "Independent"        "Ind,near dem"      
-##  [9] "Not str democrat"   "Strong democrat"
+##  [1] "No answer"          "Not sure"           "Other party"       
+##  [4] "Strong republican"  "Not str republican" "Ind,near rep"      
+##  [7] "Independent"        "Ind,near dem"       "Not str democrat"  
+## [10] "Strong democrat"
 ```
 
 
@@ -515,11 +505,10 @@ levels(partyid2)
 ```
 
 ```
-##  [1] "No answer"             "Not sure"             
-##  [3] "Other party"           "Republican, strong"   
-##  [5] "Republican, weak"      "Independent, near rep"
-##  [7] "Independent"           "Independent, near dem"
-##  [9] "Democrat, weak"        "Democrat, strong"
+##  [1] "No answer"             "Not sure"              "Other party"          
+##  [4] "Republican, strong"    "Republican, weak"      "Independent, near rep"
+##  [7] "Independent"           "Independent, near dem" "Democrat, weak"       
+## [10] "Democrat, strong"
 ```
 
 ---
@@ -553,10 +542,8 @@ summary(relig2)
 ```
 
 ```
-##       None  Christian Protestant     Jewish   Catholic 
-##       3523        689      10846        388       5124 
-##      Other 
-##        913
+## Protestant       None     Jewish  Christian   Catholic      Other 
+##      10846       3523        388        689       5124        913
 ```
 
 ---
