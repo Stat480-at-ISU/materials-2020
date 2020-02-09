@@ -12,11 +12,12 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE, echo = TRUE)
+options(htmltools.dir.version = FALSE, echo = TRUE, cache = TRUE)
 #xaringan::inf_mr(cast_from = '..') 
 # install_github("hadley/emo")
 library(emo)
 emo_warn <- emo::ji("warning")
+library(forcats)
 ```
 class: inverse
 
@@ -26,16 +27,18 @@ class: inverse
 
 ### Outline:
 
-- Review: factors in bar charts & factors in boxplots  
+- review: factors in bar charts & factors in boxplots  
 
-- use factors in aesthetics (`colour`, `fill`, `shape`) or for facetting  
+- use factors in aesthetics (`color`, `fill`, `shape`) or for facetting  
 
 - always make sure that the order in factors is sensible!
+
+- visualizing 2+ factors
 
 ---
 ## `r emo_warn` factors in boxplots `r emo_warn`
 
-boxplots in ggplot2 only work properly if the x variable is a character variable or a factor:
+boxplots in ggplot2 only work properly if the x variable is a character or a factor:
 
 ```{r, echo=FALSE, warning=FALSE, message= FALSE}
 library(ggplot2)
@@ -46,14 +49,14 @@ twoyear <- dplyr::filter(gss_cat, year %in% c(2000, 2014))
 ```
 
 .pull-left[
-```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE, echo = TRUE}
+```{r, fig.width=4, fig.height = 4, message = FALSE, warning = FALSE, echo = TRUE}
 ggplot(data = twoyear, 
        aes(x = year, y = tvhours)) + 
   geom_boxplot()
 ```
 ]
 .pull-right[
-```{r, fig.width=3, fig.height = 3, message = FALSE, warning = FALSE, echo = TRUE}
+```{r, fig.width=4, fig.height = 4, message = FALSE, warning = FALSE, echo = TRUE}
 ggplot(data = twoyear, 
        aes(x = factor(year), y = tvhours)) + 
   geom_boxplot()
@@ -81,42 +84,39 @@ ggplot(gss_cat, aes(race)) +
 ]
 
 ---
-## Note: factors for fill color
+## `r emo_warn` factors for fill color `r emo_warn`
 
-In area plots (e.g. histograms & barcharts) use aesthetic `fill` for <br>showing colored areas.
+Area plots (e.g. histograms & barcharts) use aesthetic `fill` for showing colored areas & only factor variables can be mapped to `fill`
 
- - In area plots, only factor variables can be mapped to `fill`
+.pull-left[
 
----
-## Fill color example: 
-
-```{r, message = FALSE, echo = TRUE, fig.height = 5.5, fig.width = 6}
-ggplot(gss_cat, aes(x = marital, fill=year)) + 
-  geom_bar() # nothing happens
+```{r, message = FALSE, echo = TRUE, fig.height = 5, fig.width = 4}
+ggplot(gss_cat, aes(x = marital)) + 
+  geom_bar(aes(fill=year)) # nothing happens
 ```
-
----
-## Fill color example: 
-
-
-```{r echo = TRUE, fig.height = 5.5, fig.width = 7.1}
-ggplot(gss_cat, aes(x = marital, fill=factor(year))) + 
-  geom_bar() # not sensible, but works
+]
+.pull-right[
+```{r echo = TRUE, fig.height = 5, fig.width = 4.5}
+ggplot(gss_cat, aes(x = marital)) + 
+  geom_bar(aes(fill=factor(year))) # not sensible, but works
 ```
-
+]
 ---
 ## Ex: Survival on the Titanic
 
 The object `titanic` is a table of a break down of survival of passengers and crew on board the Titanic by gender and age.
 
 ```{r, message = FALSE, echo = TRUE}
+# devtools::install_github("haleyjeppson/classdata")
 library(classdata)
-data("Titanic", package = "classdata")
+data("titanic", package = "classdata")
 head(titanic)
 ```
 
 ---
-## Barcharts of all variables
+## Ex: Survival on the Titanic
+
+Barcharts of all 4 variables: `Survived`, `Sex`, `Class`, and `Age`
 
 .pull-left[
 ```{r, fig.width=3, fig.height = 2, echo = TRUE}
@@ -138,10 +138,12 @@ ggplot(titanic, aes(x = Age)) +
 ]
 
 ---
-## `position="fill"`
+## Ex: Survival on the Titanic
+
+Add `fill = Survived` and `position="fill"` (not an aesthetic!)
 
 .pull-left[
-```{r, fig.width=3, fig.height = 2, echo = TRUE}
+```{r, fig.width=3.9, fig.height = 2, echo = TRUE}
 ggplot(titanic, aes(x = Survived, fill=Survived)) + 
   geom_bar(position="fill")
 
@@ -150,7 +152,7 @@ ggplot(titanic, aes(x = Sex, fill=Survived)) +
 ```
 ]
 .pull-right[
-```{r, fig.width=3, fig.height = 2, echo = TRUE}
+```{r, fig.width=3.9, fig.height = 2, echo = TRUE}
 ggplot(titanic, aes(x = Class, fill=Survived)) + 
   geom_bar(position="fill")
 
@@ -160,14 +162,53 @@ ggplot(titanic, aes(x = Age, fill=Survived)) +
 ]
 
 ---
-## Two and more factor variables
+class: inverse, center, middle
+# What if we have <br> more than 2 factors?
+
+---
+## 2+ factor variables
 
 Besides facetting and position, use **mosaic plots**  
 
-- there are extension packages for `ggplot2`, e.g. `ggmosaic`
+- there are [extension packages](https://www.ggplot2-exts.org/gallery/) for `ggplot2`, e.g. `ggmosaic`
+
+<br/>
+```{r, fig.width=9, fig.height = 6, message=FALSE, echo = FALSE}
+library(ggmosaic)
+ggplot(data = gss_cat)  + 
+  geom_mosaic(aes(x = product(marital, race), fill=marital)) +
+  labs(x = "Race", y = "Marital", title = "Breakdown of Marital Status by Race") 
+```
+
 
 ---
-## Mosaicplots
+## other `ggplot2` [Extension packages](https://www.ggplot2-exts.org/gallery/)
+
+.pull-left[
+gganimate
+<img src="images/gganimate.gif" width = "90%">  
+
+
+cowplot
+<img src="images/cowplot.png" width = "90%">
+]
+.pull-right[
+gggenes
+<img src="images/gggenes.png" width = "90%">  
+
+<br/>
+tvthemes
+<img src="images/tvthemes.png" width = "90%">
+]
+
+---
+class: inverse, center, middle
+# Returning to our example...
+
+---
+## Ex: Survival on the Titanic
+
+... as a mosaic plot!
 
 ```{r, fig.width=10, fig.height = 4, message=FALSE, echo = TRUE}
 library(ggmosaic)
@@ -221,3 +262,5 @@ Cleveland and McGill (1984):
   - i.e. map as position along a common scale  
   
 - Additional messages can be mapped on other aesthetics
+
+

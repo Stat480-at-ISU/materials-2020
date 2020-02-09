@@ -23,16 +23,18 @@ class: inverse
 
 ### Outline:
 
-- Review: factors in bar charts &amp; factors in boxplots  
+- review: factors in bar charts &amp; factors in boxplots  
 
-- use factors in aesthetics (`colour`, `fill`, `shape`) or for facetting  
+- use factors in aesthetics (`color`, `fill`, `shape`) or for facetting  
 
 - always make sure that the order in factors is sensible!
+
+- visualizing 2+ factors
 
 ---
 ## ⚠️ factors in boxplots ⚠️
 
-boxplots in ggplot2 only work properly if the x variable is a character variable or a factor:
+boxplots in ggplot2 only work properly if the x variable is a character or a factor:
 
 
 
@@ -89,35 +91,29 @@ ggplot(gss_cat, aes(race)) +
 ]
 
 ---
-## Note: factors for fill color
+## ⚠️ factors for fill color ⚠️
 
-In area plots (e.g. histograms &amp; barcharts) use aesthetic `fill` for &lt;br&gt;showing colored areas.
+Area plots (e.g. histograms &amp; barcharts) use aesthetic `fill` for showing colored areas &amp; only factor variables can be mapped to `fill`
 
- - In area plots, only factor variables can be mapped to `fill`
-
----
-## Fill color example: 
+.pull-left[
 
 
 ```r
-ggplot(gss_cat, aes(x = marital, fill=year)) + 
-  geom_bar() # nothing happens
+ggplot(gss_cat, aes(x = marital)) + 
+  geom_bar(aes(fill=year)) # nothing happens
 ```
 
 ![](06_vis-factor_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
-
----
-## Fill color example: 
-
-
+]
+.pull-right[
 
 ```r
-ggplot(gss_cat, aes(x = marital, fill=factor(year))) + 
-  geom_bar() # not sensible, but works
+ggplot(gss_cat, aes(x = marital)) + 
+  geom_bar(aes(fill=factor(year))) # not sensible, but works
 ```
 
 ![](06_vis-factor_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
-
+]
 ---
 ## Ex: Survival on the Titanic
 
@@ -125,8 +121,9 @@ The object `titanic` is a table of a break down of survival of passengers and cr
 
 
 ```r
+# devtools::install_github("haleyjeppson/classdata")
 library(classdata)
-data("Titanic", package = "classdata")
+data("titanic", package = "classdata")
 head(titanic)
 ```
 
@@ -141,7 +138,9 @@ head(titanic)
 ```
 
 ---
-## Barcharts of all variables
+## Ex: Survival on the Titanic
+
+Barcharts of all 4 variables: `Survived`, `Sex`, `Class`, and `Age`
 
 .pull-left[
 
@@ -177,7 +176,9 @@ ggplot(titanic, aes(x = Age)) +
 ]
 
 ---
-## `position="fill"`
+## Ex: Survival on the Titanic
+
+Add `fill = Survived` and `position="fill"` (not an aesthetic!)
 
 .pull-left[
 
@@ -213,14 +214,48 @@ ggplot(titanic, aes(x = Age, fill=Survived)) +
 ]
 
 ---
-## Two and more factor variables
+class: inverse, center, middle
+# What if we have &lt;br&gt; more than 2 factors?
+
+---
+## 2+ factor variables
 
 Besides facetting and position, use **mosaic plots**  
 
-- there are extension packages for `ggplot2`, e.g. `ggmosaic`
+- there are [extension packages](https://www.ggplot2-exts.org/gallery/) for `ggplot2`, e.g. `ggmosaic`
+
+&lt;br/&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+
 
 ---
-## Mosaicplots
+## other `ggplot2` [Extension packages](https://www.ggplot2-exts.org/gallery/)
+
+.pull-left[
+gganimate
+&lt;img src="images/gganimate.gif" width = "90%"&gt;  
+
+
+cowplot
+&lt;img src="images/cowplot.png" width = "90%"&gt;
+]
+.pull-right[
+gggenes
+&lt;img src="images/gggenes.png" width = "90%"&gt;  
+
+&lt;br/&gt;
+tvthemes
+&lt;img src="images/tvthemes.png" width = "90%"&gt;
+]
+
+---
+class: inverse, center, middle
+# Returning to our example...
+
+---
+## Ex: Survival on the Titanic
+
+... as a mosaic plot!
 
 
 ```r
@@ -230,7 +265,7 @@ ggplot(data = titanic)  +
   facet_grid(Age~Class)
 ```
 
-![](06_vis-factor_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+![](06_vis-factor_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
 
 ---
 class: yourturn
