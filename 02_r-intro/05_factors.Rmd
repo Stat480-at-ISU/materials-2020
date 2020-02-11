@@ -19,6 +19,7 @@ library(emo)
 emo_warn <- emo::ji("warning")
 library(dplyr)
 data(gss_cat, package = "forcats")
+library(ggplot2)
 ```
 
 background-image: url(https://github.com/allisonhorst/stats-illustrations/raw/master/other-stats-artwork/nominal_ordinal_binary.png)

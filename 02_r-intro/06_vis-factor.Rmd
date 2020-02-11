@@ -234,6 +234,28 @@ For this your turn use the `titanic` object from the `classdata` package.
 - Read up on the `position` parameter in `?geom_bar`. Try out other options for `position`.
 
 ---
+class: yourturn
+.center[
+# Your turn 
+]
+
+For this your turn use the `titanic` object from the `classdata` package:
+
+```{r eval= FALSE}
+# devtools::install_github("haleyjeppson/classdata")
+library(classdata)
+data("titanic")
+```
+
+- Draw a barchart of Gender. Interpret.
+
+- Map survival to fill color in the barchart of Gender. Interpret.
+
+- In the previous barchart change the `position` parameter to `"fill"`. Interpret.
+
+- Read up on the `position` parameter in `?geom_bar`. Try out other options for `position`.
+
+---
 class: inverse, center, middle
 # Why no pie charts?
 
