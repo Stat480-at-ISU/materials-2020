@@ -1,0 +1,147 @@
+---
+title: " Data management in R: <br>the tidyverse"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: tomorrow
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = TRUE)
+#xaringan::inf_mr(cast_from = '..') 
+library(tidyverse)
+```
+
+class: inverse, center, top
+background-image: url(https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/tidyverse_celestial.png)
+background-size: 500px
+background-position: 50% 85%
+
+## The `tidyverse`
+
+
+---
+background-image: url(https://camo.githubusercontent.com/c1a290fbb20a6bb45e4c47fc2e7b7ddc8d8ccf12/68747470733a2f2f692e696d6775722e636f6d2f677965596c6b4c2e706e67)
+background-size: 400px
+background-position: 100% 55%
+## Intro to the `tidyverse`
+
+.pull-left-large[
+
+`tidyverse` is a package bundling several other R packages:
+
+- `ggplot2`, `dplyr`, `tidyr`, `purrr`, ...
+
+- share common data representations and API, i.e. work well together
+
+- from the [tidyverse manifesto](https://tidyverse.tidyverse.org/articles/manifesto.html):
+
+  1. Reuse existing data structures.
+
+  2. Compose simple functions with the pipe.
+
+  3. Embrace functional programming.
+
+  4. Design for humans.
+
+
+- see https://github.com/hadley/tidyverse for more information
+]
+.pull-right-small[
+<!--
+<img src="images/tidyverse.jpeg" alt="" width=100%>
+-->
+
+]
+
+
+---
+## Common structure
+
+All functions of the tidyverse have `data` as their first argument:
+  - `function(data, arg2, ...)`
+
+The subsequent arguments describe what to do with the data frame, using <br>the variable names (without quotes)
+
+- Important: do not use `$` notation for variables within these functions, e.g: `filter(fbi, Year>=2019, State=="Iowa")`
+
+The output is a new data frame that will print or it can be saved
+  -  e.g: `fbi_iowa19 <- filter(fbi, Year>=2019, State=="Iowa")`
+
+<br/>
+The common structure makes it easy to chain together multiple simple steps using the pipe function (`%>%`)
+
+
+---
+background-image: url(https://magrittr.tidyverse.org/logo.png)
+background-size: 120px
+background-position: 94% 5%
+## The pipe operator: `%>%`
+
+Implemented in the package `magrittr`
+
+Can be pronounced as "*and then*" or "*then do*"  
+
+The output of one function is used as input to the next function
+  - `x %>% f(y)` is the same as `f(x, y)`
+  
+  - `f(x) %>% g(y)` is equivalent to `g(f(x), y)`
+  
+  - statements of the form `k(h(g(f(x, y), z), u), v, w)` become <br>
+`x %>% f(y) %>% g(z) %>% h(u) %>% k(v, w)`
+
+
+---
+## How the pipe (`%>%`) works  
+
+Consider the following sequence of actions:  
+- find key, unlock car, start car, drive to school, park.  
+
+Expressed as a set of **nested functions** in R pseudocode this would look like:  
+
+  ```{r eval=FALSE}
+  park(drive(start_car(find("keys")), to = "campus"))
+  ``` 
+
+Writing it out **using pipes** give it a more natural (and easier to read) structure: 
+  
+  ```{r eval=FALSE}
+  find("keys") %>%  
+    start_car() %>% 
+    drive(to = "campus") %>%
+    park()
+  ```
+
+---
+## Using the pipe (`%>%`)
+
+
+```{r eval=FALSE}
+ggplot(data = filter(fbi, Type == "Murder.and.nonnegligent.Manslaughter"), 
+       aes(x = Year, y = Count)) + 
+  geom_point()
+```
+
+becomes
+
+```{r eval=FALSE}
+fbi %>% 
+  filter(Type == "Murder.and.nonnegligent.Manslaughter") %>%
+  ggplot(aes(x = Year, y = Count)) + 
+    geom_point()
+```
+
+
+---
+## Resources
+
+- reference/document: https://www.tidyverse.org/
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
+- https://datasciencebox.org/

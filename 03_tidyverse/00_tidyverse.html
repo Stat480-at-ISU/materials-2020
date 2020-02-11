@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data management in R:  the tidyverse</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../extras/x-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Data management in R: <br>the tidyverse
+
+---
+
+
+
+
+class: inverse, center, top
+background-image: url(https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/tidyverse_celestial.png)
+background-size: 500px
+background-position: 50% 85%
+
+## The `tidyverse`
+
+
+---
+background-image: url(https://camo.githubusercontent.com/c1a290fbb20a6bb45e4c47fc2e7b7ddc8d8ccf12/68747470733a2f2f692e696d6775722e636f6d2f677965596c6b4c2e706e67)
+background-size: 400px
+background-position: 100% 55%
+## Intro to the `tidyverse`
+
+.pull-left-large[
+
+`tidyverse` is a package bundling several other R packages:
+
+- `ggplot2`, `dplyr`, `tidyr`, `purrr`, ...
+
+- share common data representations and API, i.e. work well together
+
+- from the [tidyverse manifesto](https://tidyverse.tidyverse.org/articles/manifesto.html):
+
+  1. Reuse existing data structures.
+
+  2. Compose simple functions with the pipe.
+
+  3. Embrace functional programming.
+
+  4. Design for humans.
+
+
+- see https://github.com/hadley/tidyverse for more information
+]
+.pull-right-small[
+&lt;!--
+&lt;img src="images/tidyverse.jpeg" alt="" width=100%&gt;
+--&gt;
+
+]
+
+
+---
+## Common structure
+
+All functions of the tidyverse have `data` as their first argument:
+  - `function(data, arg2, ...)`
+
+The subsequent arguments describe what to do with the data frame, using &lt;br&gt;the variable names (without quotes)
+
+- Important: do not use `$` notation for variables within these functions, e.g: `filter(fbi, Year&gt;=2019, State=="Iowa")`
+
+The output is a new data frame that will print or it can be saved
+  -  e.g: `fbi_iowa19 &lt;- filter(fbi, Year&gt;=2019, State=="Iowa")`
+
+&lt;br/&gt;
+The common structure makes it easy to chain together multiple simple steps using the pipe function (`%&gt;%`)
+
+
+---
+background-image: url(https://magrittr.tidyverse.org/logo.png)
+background-size: 120px
+background-position: 94% 5%
+## The pipe operator: `%&gt;%`
+
+Implemented in the package `magrittr`
+
+Can be pronounced as "*and then*" or "*then do*"  
+
+The output of one function is used as input to the next function
+  - `x %&gt;% f(y)` is the same as `f(x, y)`
+  
+  - `f(x) %&gt;% g(y)` is equivalent to `g(f(x), y)`
+  
+  - statements of the form `k(h(g(f(x, y), z), u), v, w)` become &lt;br&gt;
+`x %&gt;% f(y) %&gt;% g(z) %&gt;% h(u) %&gt;% k(v, w)`
+
+
+---
+## How the pipe (`%&gt;%`) works  
+
+Consider the following sequence of actions:  
+- find key, unlock car, start car, drive to school, park.  
+
+Expressed as a set of **nested functions** in R pseudocode this would look like:  
+
+  
+  ```r
+  park(drive(start_car(find("keys")), to = "campus"))
+  ```
+
+Writing it out **using pipes** give it a more natural (and easier to read) structure: 
+  
+  
+  ```r
+  find("keys") %&gt;%  
+    start_car() %&gt;% 
+    drive(to = "campus") %&gt;%
+    park()
+  ```
+
+---
+## Using the pipe (`%&gt;%`)
+
+
+
+```r
+ggplot(data = filter(fbi, Type == "Murder.and.nonnegligent.Manslaughter"), 
+       aes(x = Year, y = Count)) + 
+  geom_point()
+```
+
+becomes
+
+
+```r
+fbi %&gt;% 
+  filter(Type == "Murder.and.nonnegligent.Manslaughter") %&gt;%
+  ggplot(aes(x = Year, y = Count)) + 
+    geom_point()
+```
+
+
+---
+## Resources
+
+- reference/document: https://www.tidyverse.org/
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
+- https://datasciencebox.org/
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "tomorrow",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
