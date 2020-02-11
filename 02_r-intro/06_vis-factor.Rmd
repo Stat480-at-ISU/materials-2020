@@ -6,7 +6,7 @@ output:
     lib_dir: libs
     css: "../extras/x-theme.css"
     nature:
-      highlightStyle: github
+      highlightStyle: tomorrow
       highlightLines: true
       countIncrementalSlides: false
 ---

@@ -44,7 +44,7 @@ a, a > code {
     color: #b58900;
     text-decoration: none;
 }
-strong{color:#283747;}
+strong{color:#84a9cd;}
 .inverse strong{color:#fdf6e3;}
 .inverse2 strong{color:#fdf6e3;}
 .yourturn strong{color:#fdf6e3;}
@@ -85,6 +85,7 @@ strong{color:#283747;}
 }
 .remark-code, .remark-inline-code {
   font-family: Inconsolata, 'Lucida Console', Monaco, monospace;
+  text-transform: none;
 }
 .remark-code {
   font-size: 0.9em;

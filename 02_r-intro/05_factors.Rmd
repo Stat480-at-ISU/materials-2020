@@ -6,13 +6,13 @@ output:
     lib_dir: libs
     css: "../extras/x-theme.css"
     nature:
-      highlightStyle: github
+      highlightStyle: tomorrow
       highlightLines: true
       countIncrementalSlides: false
 ---
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE, cache = TRUE, echo = TRUE)
+options(htmltools.dir.version = FALSE, echo = TRUE)
 #xaringan::inf_mr(cast_from = '..') 
 # install_github("hadley/emo")
 library(emo)
