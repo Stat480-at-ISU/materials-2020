@@ -69,8 +69,8 @@ The subsequent arguments describe what to do with the data frame, using &lt;br&g
 
 - Important: do not use `$` notation for variables within these functions, e.g: `filter(fbi, Year&gt;=2019, State=="Iowa")`
 
-The output is a new data frame that will print or it can be saved
-  -  e.g: `fbi_iowa19 &lt;- filter(fbi, Year&gt;=2019, State=="Iowa")`
+The output is a new data frame that will print or it can be saved with the assignment operator, `&lt;-`:
+  -  e.g: `fbi_iowa19 &lt;- filter(fbi, Year &gt;= 2019, State == "Iowa")`
 
 &lt;br/&gt;
 The common structure makes it easy to chain together multiple simple steps using the pipe function (`%&gt;%`)

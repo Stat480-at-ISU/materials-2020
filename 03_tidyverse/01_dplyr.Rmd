@@ -1,0 +1,458 @@
+---
+title: "Data wrangling"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: tomorrow
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = TRUE)
+#xaringan::inf_mr(cast_from = '..') 
+library(tidyverse)
+```
+
+
+class: inverse, center, top
+background-image: url(https://github.com/allisonhorst/stats-illustrations/blob/master/rstats-artwork/dplyr_wrangling.png?raw=true)
+background-size: 650px
+background-position: 50% 85%
+# the `dplyr` package
+
+---
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
+background-size: 120px
+background-position: 92% 5%
+## the `dplyr` package
+
+Functions are thought of as **verbs** that manipulate data frames 
+
+- `filter()`: pick rows by matching some criteria
+
+- `slice()` pick rows using index(es)
+
+- `select()`: select columns of a data frame by name
+
+- `pull()`: grab a column as a vector
+
+- `arrange()`: reorder the rows of a data frame
+
+- `mutate()`: add new or change existing columns of the data frame (as functions of existing columns)
+
+- `summarize()`: collapse many values down into a summary of the data frame
+
+- ...
+
+These can all be used with `group_by()` which changes the scope of function from entire dataset to group-by-group. 
+
+---
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
+background-size: 120px
+background-position: 92% 5%
+## the `dplyr` package
+
+Rules for functions:
+
+  - First argument is always a data frame
+  
+  - Subsequent arguments say what to do with that data frame
+
+  - Always return a data frame
+
+  - Don't modify in place
+  
+<br/>  
+A note on piping and layering:
+
+- The `%>%` operator in dplyr functions is called the "pipe operator". 
+  
+  - This means you "pipe" the output of the previous line of code as the first input of the next line of code.  
+  
+- The `+` operator in ggplot2 functions is used for "layering".  
+  
+  - This means you create the plot in layers, separated by `+`.  
+  
+---
+## `filter()`
+
+
+select a subset of the observations (horizontal selection):
+
+`filter(.data, ...)`
+
+specify constraints (as logical expression) to data in ...
+
+all constraints are combined by logical and &
+
+```{r echo = FALSE}
+library(gt)
+my_table <- tibble(variable1 = paste("obs", 1:5), variable2 = paste("obs of type", c("A", "A", "B", "C", "A")), variable3 = paste("obs", 1:5))
+```
+
+.pull-left[
+```{r echo = FALSE}
+# my_table %>%
+#   gt() %>% 
+#   tab_style(
+#     style = cell_fill(color = "white"),
+#     locations = cells_data(
+#       rows = is.character(variable1))
+#   )
+
+my_table %>%
+  gt() %>% 
+  tab_style(
+    style = cell_fill(color = "white"),
+    locations = cells_data(
+      rows = is.character(variable1))
+  ) %>% 
+  tab_style(
+    style = cell_fill(color = "yellowgreen"),
+    locations = cells_data(
+      rows = variable2 == "obs of type A")
+  )
+```
+]
+
+.pull-right[
+```{r echo = FALSE}
+# my_filtered_table <- filter(my_table, variable1 == "obs 1") 
+my_filtered_table <- tibble(variable1 = paste("obs", c(1,2,5)), variable2 = paste("obs of type", c("A", "A", "A")), variable3 = paste("obs", c(1,2,5)))
+```
+
+```{r echo = FALSE}
+my_filtered_table %>%
+  gt() %>%
+  tab_style(
+    style = cell_fill(color = "yellowgreen"),
+    locations = cells_data(
+      rows = variable2 == "obs of type A")
+  )
+```
+]
+
+.footnote[
+Make sure to always call `library(dplyr)` before using `filter()`
+]
+---
+## `filter()` EXAMPLE
+
+From the `fbi` data, extract all burglaries in 2014:
+
+
+```{r, message=FALSE}
+library(classdata)
+library(dplyr)
+
+fbi %>% 
+  dplyr::filter(Type == "Burglary", Year == 2014) %>% 
+  head()
+```
+
+
+---
+## `arrange()`
+
+`arrange()` sorts a data set by the values in one or more variables
+
+  - successive variables break ties in previous ones
+
+  - `desc()` stands for descending, otherwise rows are sorted from smallest to largest
+
+```{r, message=FALSE}
+fbi %>% 
+  arrange(desc(Year), Type, desc(Count)) %>% 
+  head()
+```
+
+---
+## `select()`
+
+Select specific variables of a data frame (vertical selection):
+
+`select(.data, ...)`
+
+specify all variables you want to keep
+
+Variables can be selected by index, e.g. `1:5`, by name (don't use quotes), or using a selector function, such as `starts_with()`
+
+Negative selection also works, e.g. `-1` (not the first variable)
+
+
+```{r echo = FALSE}
+library(gt)
+my_table <- tibble(variable1 = paste("obs", 1:5), variable2 = paste("obs of type", c("A", "A", "B", "C", "A")), variable3 = paste("obs", 1:5))
+```
+
+.pull-left[
+```{r echo = FALSE}
+# my_table %>%
+#   gt() %>% 
+#   tab_style(
+#     style = cell_fill(color = "white"),
+#     locations = cells_data(
+#       rows = is.character(variable1))
+#   )
+
+my_table %>%
+  gt() %>% 
+  tab_style(
+    style = cell_fill(color = "white"),
+    locations = cells_data(
+      rows = is.character(variable1))
+  ) %>% 
+  tab_style(
+    style = cell_fill(color = "yellowgreen"),
+    locations = cells_data(
+      columns = c("variable1", "variable3"))
+  )
+```
+]
+
+.pull-right[
+```{r echo = FALSE}
+# my_filtered_table <- filter(my_table, variable1 == "obs 1") 
+my_table <- tibble(variable1 = paste("obs", 1:5), variable2 = paste("obs of type", c("A", "A", "B", "C", "A")), variable3 = paste("obs", 1:5))
+
+my_filtered_table <- my_table %>% 
+  select(1,3)
+```
+
+```{r echo = FALSE}
+my_filtered_table %>%
+  gt() %>%
+  tab_style(
+    style = cell_fill(color = "yellowgreen"),
+    locations = cells_data(
+      columns = c("variable1", "variable3"))
+  )
+```
+]
+
+---
+## `select()` EXAMPLE
+
+Select `Type`, `Count`, `State`, and `Year` from the `fbi` data:
+
+
+```{r}
+fbi %>% 
+  arrange(desc(Year), Type, desc(Count)) %>%
+  select(Type, Count, State, Year) %>% head()
+```
+
+---
+background-image: url(https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/dplyr_mutate.png)
+background-size: 400px
+background-position: 50% 100%
+## `mutate()`
+
+`mutate(.data, ...)`
+
+Introduce new variables into the data set or transform/update old variables
+
+multiple variables can be changed/introduced
+
+`mutate()` works sequentially: variables introduced become available in following changes
+
+
+---
+## `mutate()` EXAMPLE
+
+Introduce a variable Rate into the fbi data:
+
+```{r}
+fbi %>% 
+  mutate(Rate = Count/Population*70000) %>% 
+  head()
+```
+
+
+---
+## `summarise()`
+
+`summarize(.data, ...)`
+
+summarize observations into a (set of) one-number statistic(s):
+
+Creates a new dataset with 1 row and one column for each of the summary statistics
+
+
+---
+## `summarise()` EXAMPLE
+
+Calculate the mean and standard deviation of Crime rates in the `fbi` data
+
+
+
+```{r}
+fbi %>% 
+    summarise(mean_rate = mean(Count/Population*70000, na.rm=TRUE), 
+              sd_rate = sd(Count/Population*70000, na.rm = TRUE))
+```
+
+---
+## `summarise()` & `group_by()`
+
+Power combo!
+
+for each combination of group levels, create one row of a (set of) one-number statistic(s)
+
+The new dataset has one column for each of the summary statistics, and one row for each combination of grouping levels (multiplicative)
+
+
+---
+## `summarise()` & `group_by()` example
+
+For each type of crime, calculate average crime rate and standard deviation.
+
+
+
+```{r}
+fbi %>%
+    group_by(Type) %>%
+    summarise(mean_rate = mean(Count/Population*70000, na.rm=TRUE), 
+              sd_rate = sd(Count/Population*70000, na.rm = TRUE))
+```
+
+---
+class: inverse, center, middle
+# Let's put these <br>tools to use
+
+
+---
+## French fries data
+
+```{r}
+data(french_fries, package="reshape2")
+```
+
+- data from sensory experiment conducted at Iowa State University in 2004
+
+- investigators were interested in comparing effects of three different fryer oils on taste of fries
+
+```{r}
+french_fries %>% 
+  head()
+```
+
+---
+## Did the french fries taste worse over time?
+
+ How do we define 'tasting well'? 
+
+- Higher values of potato-y and buttery, lower values of grassy, rancid, painty
+
+- Compute averages of these scales for each time point
+
+- combination of `group_by` and `summarise`
+
+---
+## Did the french fries taste worse over time? (2)
+
+```{r}
+french_fries %>% group_by(time) %>% 
+  summarise(
+    m.potato = mean(potato, na.rm=TRUE),
+    m.buttery = mean(buttery, na.rm=TRUE),
+    m.grassy = mean(grassy, na.rm=TRUE),
+    m.rancid = mean(rancid, na.rm=TRUE),
+    m.painty = mean(painty, na.rm=TRUE)
+  ) %>% 
+  head()
+```
+
+---
+## Did the french fries taste worse over time? (3)
+
+```{r, echo=FALSE}
+library(ggplot2)
+
+avgs <- french_fries %>% 
+  group_by(time) %>% 
+  summarise(
+    m.potato = mean(potato, na.rm=TRUE),
+    m.buttery = mean(buttery, na.rm=TRUE),
+    m.grassy = mean(grassy, na.rm=TRUE),
+    m.rancid = mean(rancid, na.rm=TRUE),
+    m.painty = mean(painty, na.rm=TRUE)
+  )
+```
+
+```{r}
+avgs %>% 
+  ggplot(aes(x = time)) + 
+  geom_point(aes(y = m.potato)) +
+  geom_point(shape=2, aes(y=m.rancid)) + 
+  ylab("Average")
+```
+
+---
+class: yourturn
+# Your turn 
+
+For this your turn use the `french_fries` data from the `reshape2` package: `data(french_fries, package="reshape2")` 
+
+- Do ratings of potato-y show a difference between the different oils over time?
+
+- Draw a plot of the average potato-y rating by time, color by treatment.
+
+- How does this plot look like for the rancid rating?
+
+
+---
+class: yourturn
+# Your turn 
+
+For this your turn use the `french_fries` data from the `reshape2` package: `data(french_fries, package="reshape2")`
+
+- How much consistency do we see between ratings? For buttery and rancid ratings find the mean and the absolute difference between the two replicates (for each subject, each treatment and each time point). Use `dplyr` functions to find this summary dataset.
+
+- Are ratings more different between the two scales? What would you need to draw a side-by-side boxplot of the two ratings? Describe in words.
+
+- Are some subjects in the study more consistent than others?  Show the variability in the potato-y ratings by subjects. Order subjects from least variability to most.
+
+
+---
+class: yourturn
+# Your turn 
+
+For this your turn use the `french_fries` data from the `reshape2` package: `data(french_fries, package="reshape2")`
+
+For each subject, determine how many records are missing (either absent or NA). 
+
+Expand on the above summary of missing values by taking time into account. Plot the result: plot number of missing values by week, facet by subject. Is the result surprising?
+
+
+
+
+```{r, eval=FALSE, echo=FALSE}
+miss <- french_fries %>% 
+  group_by(subject, time) %>%
+  tidyr::complete(subject, time, fill=list(treatment=NA)) %>%
+  summarise(
+   missing = 2*3*5-length(na.omit(c(buttery, rancid, potato, grassy, painty)))
+ ) %>% arrange(desc(missing))
+
+miss %>% 
+  ggplot(aes(x = time, y = missing)) + geom_point() +
+  facet_wrap(~subject)
+
+```
+
+---
+## Resources
+
+- reference/document: http://dplyr.tidyverse.org/reference/
+
+- RStudio cheat sheet for [dplyr](https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf)
+
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
+- https://datasciencebox.org/
