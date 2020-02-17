@@ -764,7 +764,7 @@ avgs <- french_fries %>%
   )
 ```
 
-```{r}
+```{r fig.height=5}
 avgs %>% 
   ggplot(aes(x = time)) + 
   geom_point(aes(y = m.potato)) +
