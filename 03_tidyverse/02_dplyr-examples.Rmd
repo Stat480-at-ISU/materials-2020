@@ -73,7 +73,9 @@ class: inverse, center, middle
 ---
 ## Set-up
 
-To explore the basic data manipulation verbs of dplyr, we’ll use the `flights` data found in the `nycflights13` package that contains 336,776 flights that departed from New York City in 2013.
+To explore the basic data manipulation verbs of dplyr, we’ll use the <br>`flights` data found in the `nycflights13` package.
+
+This data contains 336,776 flights that departed from NYC in 2013.
 
 ```{r}
 library(dplyr)
@@ -284,6 +286,13 @@ What time of day should you fly if you want to avoid delays as much as possible?
 
 Find all destinations that are flown by at least two carriers. Use that information to rank the carriers.
  
+
+---
+## Resources
+
+- reference/document: http://dplyr.tidyverse.org/reference/
+
+- RStudio cheat sheet for [dplyr](https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf)
 
 
 
