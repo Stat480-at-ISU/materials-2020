@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>dplyr functions</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../extras/x-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# dplyr functions
+
+---
+
+
+
+
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
+background-size: 120px
+background-position: 92% 5%
+
+## the `dplyr` package
+
+Functions are thought of as **verbs** that manipulate data frames 
+
+- `filter()`: pick rows by matching some criteria
+
+- `slice()` pick rows using index(es)
+
+- `select()`: select columns of a data frame by name
+
+- `pull()`: grab a column as a vector
+
+- `arrange()`: reorder the rows of a data frame
+
+- `mutate()`: add new or change existing columns of the data frame (as functions of existing columns)
+
+- `summarize()`: collapse many values down into a summary of the data frame
+
+- ...
+
+These can all be used with `group_by()` which changes the scope of function from entire dataset to group-by-group. 
+  
+
+---
+## Keywords: which function is it?
+
+
+- `mutate()`: introduce, replace, reorder, ...
+
+- `summarise()`: calculate, average, summary, ...
+
+- `group_by()`: for each of, 
+
+- `filter()`: exclude, only consider, subset, ...
+
+
+---
+## Potential traps
+
+- using the `$` notation in tidyverse can lead to strange behavior and error messages
+
+- don't forget to save statements back into the dataset (`mutate()`, `arrange()`) &lt;br&gt; or new data objects (`summarise()`, `filter()`)
+
+- when using the pipe `%&gt;%`: what is output from lhs, first parameter on rhs?
+
+---
+class: inverse, center, middle
+# Examples 
+
+---
+## Set-up
+
+To explore the basic data manipulation verbs of dplyr, we’ll use the `flights` data found in the `nycflights13` package that contains 336,776 flights that departed from New York City in 2013.
+
+
+```r
+library(dplyr)
+library(nycflights13)
+data(flights, package = "nycflights13")
+flights
+```
+
+```
+## # A tibble: 336,776 x 19
+##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time arr_delay carrier flight tailnum origin dest  air_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt; &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;    &lt;dbl&gt;
+##  1  2013     1     1      517            515         2      830            819        11 UA        1545 N14228  EWR    IAH        227
+##  2  2013     1     1      533            529         4      850            830        20 UA        1714 N24211  LGA    IAH        227
+##  3  2013     1     1      542            540         2      923            850        33 AA        1141 N619AA  JFK    MIA        160
+##  4  2013     1     1      544            545        -1     1004           1022       -18 B6         725 N804JB  JFK    BQN        183
+##  5  2013     1     1      554            600        -6      812            837       -25 DL         461 N668DN  LGA    ATL        116
+##  6  2013     1     1      554            558        -4      740            728        12 UA        1696 N39463  EWR    ORD        150
+##  7  2013     1     1      555            600        -5      913            854        19 B6         507 N516JB  EWR    FLL        158
+##  8  2013     1     1      557            600        -3      709            723       -14 EV        5708 N829AS  LGA    IAD         53
+##  9  2013     1     1      557            600        -3      838            846        -8 B6          79 N593JB  JFK    MCO        140
+## 10  2013     1     1      558            600        -2      753            745         8 AA         301 N3ALAA  LGA    ORD        138
+## # … with 336,766 more rows, and 4 more variables: distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+```
+
+
+
+---
+## Create a subset
+
+### `filter()` 
+
+filter to select a subset of rows: `flights %&gt;% filter(month == 1)`
+
+filter for many conditions at once: `flights %&gt;% filter(month == 1, day == 1)`
+
+
+### `slice()`
+
+slice for certain row numbers: `flights %&gt;% slice(1:6)`
+
+### `sample_n()` &amp; `sample_frac()`
+
+grab a random sample: `flights %&gt;% sample_n(5, replace = FALSE)`
+
+
+
+---
+## Select columns
+
+### `select()`
+
+select to keep variables: `flights %&gt;% select(year, month, day)`
+
+select to exclude variables: `flights %&gt;% select(-c(year, month, day))`
+
+select a range of variables: `flights %&gt;% select(year:day)`
+
+&lt;br/&gt;
+### Helper functions to use within `select()`:
+
+matches names that begin with "abc": `starts_with("abc")`
+
+matches names that end with "xyz": `ends_with("xyz")`
+
+matches names that contain "ijk": `contains("ijk")`
+
+
+
+---
+## &amp; more ...
+
+### `arrange()`
+
+arrange a data set by the values in one or more variables:  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `flights %&gt;% arrange(year, month, day)`
+
+arrange in the reverse the order:  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `flights %&gt;% arrange(desc(dep_delay))`
+
+### `distinct()`
+
+filter for unique rows:  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;  `flights %&gt;% select(dest) %&gt;% distinct() %&gt;% arrange(dest))`
+
+### `pull()`
+
+pull to extract a column as a vector:  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;  `flights %&gt;% slice(1:6) %&gt;% pull(carrier)`
+
+---
+class: yourturn
+# Your turn
+
+Find all flights that had an arrival delay of two or more hours.
+
+Find all flights that were delayed by at least an hour, but made up over 30 minutes in flight
+
+Brainstorm as many ways as possible to select `dep_time`, `dep_delay`, `arr_time`, and `arr_delay` from `flights.`
+
+What happens if you include the name of a variable multiple times in a `select()` call?
+
+
+Sort flights to find the most delayed flights. Find the flights that left earliest.
+
+Which flights traveled the longest? Which traveled the shortest?
+
+
+---
+## Add or transform variables
+
+### `mutate()`
+
+mutate to add new variables: 
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `flights %&gt;% `  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `mutate(gain = dep_delay - arr_delay)`
+
+refer to columns that you’ve just created: 
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `flights %&gt;% `  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `mutate(`  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `hours = air_time / 60,`  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;  `gain_per_hour = gain / hours`  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `)`  
+
+ 
+
+---
+class: yourturn
+# Your turn
+
+
+Compare `air_time` with `arr_time - dep_time`. What do you expect to see? What do you see? What do you need to do to fix it?
+
+Compare `dep_time`, `sched_dep_time`, and `dep_delay.` How would you expect those three numbers to be related?
+
+Find the 10 most delayed flights using a ranking function. How do you want to handle ties? Check `?min_rank` vs. `?row_number` vs. `?dense_rank`
+
+
+---
+## Create summaries
+
+### `summarise()`
+
+summarise to reduce variables to values:  
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `flights %&gt;% `  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `summarise(delay = mean(dep_delay, na.rm = TRUE))`
+
+
+
+### `group_by()` &amp; `summarise()`
+
+summarise groups:
+
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `flights %&gt;% `  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;   `group_by(dest) %&gt;% `  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `summarise(`  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `dist = mean(distance, na.rm = TRUE),`  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `delay = mean(arr_delay, na.rm = TRUE)`  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `)`
+
+
+
+  
+---
+## Grouping helper functions
+
+### `n()`
+
+number of rows: `flights %&gt;% group_by(dest) %&gt;% summarise(count = n())`
+
+### `tally()` 
+
+A combination of `summarise()` and `n()`: `flights %&gt;% group_by(dest) %&gt;% tally()`
+
+
+### `count()`
+
+A further shortcut of `group_by()` and `tally()`: `flights %&gt;% count(dest)`
+
+### `ungroup()` 
+
+remove a grouping structure: `flights %&gt;% group_by(carrier) %&gt;% ungroup()`
+
+
+
+???
+
+- necessary to make changes to a grouping variable (such as re-ordering or re-labelling)
+
+
+---
+## Grouped mutates &amp; filters
+
+Filter per group: 
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `flights %&gt;% `  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `group_by(dest) %&gt;% `  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `filter(n() &gt;365)`
+
+Compute per group metrics: 
+
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `flights %&gt;%`  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `  group_by(hour) %&gt;%`  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `summarise(arr_delay = mean(arr_delay, na.rm = TRUE)) %&gt;%`  
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `arrange(arr_delay)`
+  
+
+
+
+
+
+---
+class: yourturn
+# Your turn
+
+Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
+
+Which carrier has the worst delays? 
+
+What time of day should you fly if you want to avoid delays as much as possible?
+
+Find all destinations that are flown by at least two carriers. Use that information to rank the carriers.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "tomorrow",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

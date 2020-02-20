@@ -1,0 +1,289 @@
+---
+title: "dplyr functions"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: tomorrow
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = TRUE)
+#xaringan::inf_mr(cast_from = '..') 
+library(tidyverse)
+```
+
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/dplyr.png)
+background-size: 120px
+background-position: 92% 5%
+
+## the `dplyr` package
+
+Functions are thought of as **verbs** that manipulate data frames 
+
+- `filter()`: pick rows by matching some criteria
+
+- `slice()` pick rows using index(es)
+
+- `select()`: select columns of a data frame by name
+
+- `pull()`: grab a column as a vector
+
+- `arrange()`: reorder the rows of a data frame
+
+- `mutate()`: add new or change existing columns of the data frame (as functions of existing columns)
+
+- `summarize()`: collapse many values down into a summary of the data frame
+
+- ...
+
+These can all be used with `group_by()` which changes the scope of function from entire dataset to group-by-group. 
+  
+
+---
+## Keywords: which function is it?
+
+
+- `mutate()`: introduce, replace, reorder, ...
+
+- `summarise()`: calculate, average, summary, ...
+
+- `group_by()`: for each of, 
+
+- `filter()`: exclude, only consider, subset, ...
+
+
+---
+## Potential traps
+
+- using the `$` notation in tidyverse can lead to strange behavior and error messages
+
+- don't forget to save statements back into the dataset (`mutate()`, `arrange()`) <br> or new data objects (`summarise()`, `filter()`)
+
+- when using the pipe `%>%`: what is output from lhs, first parameter on rhs?
+
+---
+class: inverse, center, middle
+# Examples 
+
+---
+## Set-up
+
+To explore the basic data manipulation verbs of dplyr, we’ll use the `flights` data found in the `nycflights13` package that contains 336,776 flights that departed from New York City in 2013.
+
+```{r}
+library(dplyr)
+library(nycflights13)
+data(flights, package = "nycflights13")
+flights
+```
+
+
+
+---
+## Create a subset
+
+### `filter()` 
+
+filter to select a subset of rows: `flights %>% filter(month == 1)`
+
+filter for many conditions at once: `flights %>% filter(month == 1, day == 1)`
+
+
+### `slice()`
+
+slice for certain row numbers: `flights %>% slice(1:6)`
+
+### `sample_n()` & `sample_frac()`
+
+grab a random sample: `flights %>% sample_n(5, replace = FALSE)`
+
+
+
+---
+## Select columns
+
+### `select()`
+
+select to keep variables: `flights %>% select(year, month, day)`
+
+select to exclude variables: `flights %>% select(-c(year, month, day))`
+
+select a range of variables: `flights %>% select(year:day)`
+
+<br/>
+### Helper functions to use within `select()`:
+
+matches names that begin with "abc": `starts_with("abc")`
+
+matches names that end with "xyz": `ends_with("xyz")`
+
+matches names that contain "ijk": `contains("ijk")`
+
+
+
+---
+## & more ...
+
+### `arrange()`
+
+arrange a data set by the values in one or more variables:  
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% arrange(year, month, day)`
+
+arrange in the reverse the order:  
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% arrange(desc(dep_delay))`
+
+### `distinct()`
+
+filter for unique rows:  
+&nbsp;&nbsp;&nbsp;&nbsp;  `flights %>% select(dest) %>% distinct() %>% arrange(dest))`
+
+### `pull()`
+
+pull to extract a column as a vector:  
+&nbsp;&nbsp;&nbsp;&nbsp;  `flights %>% slice(1:6) %>% pull(carrier)`
+
+---
+class: yourturn
+# Your turn
+
+Find all flights that had an arrival delay of two or more hours.
+
+Find all flights that were delayed by at least an hour, but made up over 30 minutes in flight
+
+Brainstorm as many ways as possible to select `dep_time`, `dep_delay`, `arr_time`, and `arr_delay` from `flights.`
+
+What happens if you include the name of a variable multiple times in a `select()` call?
+
+
+Sort flights to find the most delayed flights. Find the flights that left earliest.
+
+Which flights traveled the longest? Which traveled the shortest?
+
+
+---
+## Add or transform variables
+
+### `mutate()`
+
+mutate to add new variables: 
+
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% `  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `mutate(gain = dep_delay - arr_delay)`
+
+refer to columns that you’ve just created: 
+
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% `  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `mutate(`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `hours = air_time / 60,`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;  `gain_per_hour = gain / hours`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `)`  
+
+ 
+
+---
+class: yourturn
+# Your turn
+
+
+Compare `air_time` with `arr_time - dep_time`. What do you expect to see? What do you see? What do you need to do to fix it?
+
+Compare `dep_time`, `sched_dep_time`, and `dep_delay.` How would you expect those three numbers to be related?
+
+Find the 10 most delayed flights using a ranking function. How do you want to handle ties? Check `?min_rank` vs. `?row_number` vs. `?dense_rank`
+
+
+---
+## Create summaries
+
+### `summarise()`
+
+summarise to reduce variables to values:  
+
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% `  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `summarise(delay = mean(dep_delay, na.rm = TRUE))`
+
+
+
+### `group_by()` & `summarise()`
+
+summarise groups:
+
+
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% `  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;   `group_by(dest) %>% `  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `summarise(`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `dist = mean(distance, na.rm = TRUE),`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `delay = mean(arr_delay, na.rm = TRUE)`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `)`
+
+
+
+  
+---
+## Grouping helper functions
+
+### `n()`
+
+number of rows: `flights %>% group_by(dest) %>% summarise(count = n())`
+
+### `tally()` 
+
+A combination of `summarise()` and `n()`: `flights %>% group_by(dest) %>% tally()`
+
+
+### `count()`
+
+A further shortcut of `group_by()` and `tally()`: `flights %>% count(dest)`
+
+### `ungroup()` 
+
+remove a grouping structure: `flights %>% group_by(carrier) %>% ungroup()`
+
+
+
+???
+
+- necessary to make changes to a grouping variable (such as re-ordering or re-labelling)
+
+
+---
+## Grouped mutates & filters
+
+Filter per group: 
+
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% `  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `group_by(dest) %>% `  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `filter(n() >365)`
+
+Compute per group metrics: 
+
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>%`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `  group_by(hour) %>%`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `summarise(arr_delay = mean(arr_delay, na.rm = TRUE)) %>%`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `arrange(arr_delay)`
+  
+
+
+
+
+
+---
+class: yourturn
+# Your turn
+
+Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
+
+Which carrier has the worst delays? 
+
+What time of day should you fly if you want to avoid delays as much as possible?
+
+Find all destinations that are flown by at least two carriers. Use that information to rank the carriers.
+ 
+
+
+
