@@ -99,8 +99,8 @@ flights
 ##  9  2013     1     1      557            600        -3      838            846        -8
 ## 10  2013     1     1      558            600        -2      753            745         8
 ## # … with 336,766 more rows, and 10 more variables: carrier &lt;chr&gt;, flight &lt;int&gt;,
-## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;,
-## #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
+## #   tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;
 ```
 
 
@@ -215,7 +215,7 @@ class: yourturn
 
 - Add to the `mutate()` statement from above to calculate the air speed in miles per hour (create `mph`).  
 
-- Compute `arr_hour` and `arr_min` from `arr_time`. (Hint: use modular arithmetic `%/%` for hour and `%%` for minute)  
+- Compute `arr_hour` and `arr_min` from `arr_time`. &lt;br&gt;&lt;br&gt;**Hint**: use modular arithmetic `%/%` for hour and `%%` for minute  
 
 - Find the 10 most delayed flights using a ranking function. How do you want to handle ties? Check `?min_rank` vs. `?row_number` vs. &lt;br&gt; `?dense_rank` Print the top 10 in descending order according to the amount of delay.
 
@@ -314,7 +314,7 @@ class: yourturn
 
 - Rank airlines by the number of destinations that they fly to, considering only those airports that are flown to by two or more airlines.
  
-- For each destination, compute the total minutes of delay. For each flight, compute the proportion of the total delay for its destination. (**Hint**: only include delayed flights when calculating the total delay and proportion of delay.)
+- For each destination, compute the total minutes of delay. For each flight, compute the proportion of the total delay for its destination. &lt;br&gt;&lt;br&gt; **Hint**: only include delayed flights when calculating the total delay and proportion of delay.
 
 ---
 ## Grouping &amp; ungrouping

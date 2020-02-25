@@ -196,7 +196,7 @@ class: yourturn
 
 - Add to the `mutate()` statement from above to calculate the air speed in miles per hour (create `mph`).  
 
-- Compute `arr_hour` and `arr_min` from `arr_time`. (Hint: use modular arithmetic `%/%` for hour and `%%` for minute)  
+- Compute `arr_hour` and `arr_min` from `arr_time`. <br><br>**Hint**: use modular arithmetic `%/%` for hour and `%%` for minute  
 
 - Find the 10 most delayed flights using a ranking function. How do you want to handle ties? Check `?min_rank` vs. `?row_number` vs. <br> `?dense_rank` Print the top 10 in descending order according to the amount of delay.
 
@@ -295,7 +295,7 @@ class: yourturn
 
 - Rank airlines by the number of destinations that they fly to, considering only those airports that are flown to by two or more airlines.
  
-- For each destination, compute the total minutes of delay. For each flight, compute the proportion of the total delay for its destination. (**Hint**: only include delayed flights when calculating the total delay and proportion of delay.)
+- For each destination, compute the total minutes of delay. For each flight, compute the proportion of the total delay for its destination. <br><br> **Hint**: only include delayed flights when calculating the total delay and proportion of delay.
 
 ---
 ## Grouping & ungrouping
