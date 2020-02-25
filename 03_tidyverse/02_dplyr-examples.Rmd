@@ -85,7 +85,6 @@ flights
 ```
 
 
-
 ---
 ## Create a subset
 
@@ -153,18 +152,18 @@ pull to extract a column as a vector:
 class: yourturn
 # Your turn
 
-Find all flights that had an arrival delay of two or more hours.
+- Find all flights that had an arrival delay of two or more hours.
 
-Find all flights that were delayed by at least an hour, but made up over 30 minutes in flight
+- Find all flights that were delayed by at least an hour, but made up over 30 minutes in flight
 
-Brainstorm as many ways as possible to select `dep_time`, `dep_delay`, `arr_time`, and `arr_delay` from `flights.`
+- Brainstorm as many ways as possible to select `dep_time`, `dep_delay`, `arr_time`, and `arr_delay` from `flights.`
 
-What happens if you include the name of a variable multiple times in a `select()` call?
+- What happens if you include the name of a variable multiple times in a `select()` call?
 
 
-Sort flights to find the most delayed flights. Find the flights that left earliest.
+- Sort flights to find the most delayed flights. Find the flights that left earliest.
 
-Which flights traveled the longest? Which traveled the shortest?
+- Which flights traveled the longest? Which traveled the shortest?
 
 
 ---
@@ -177,10 +176,12 @@ mutate to add new variables:
 &nbsp;&nbsp;&nbsp;&nbsp; `flights %>% `  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `mutate(gain = dep_delay - arr_delay)`
 
+</br>
 refer to columns that you’ve just created: 
 
 &nbsp;&nbsp;&nbsp;&nbsp; `flights %>% `  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `mutate(`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `gain = dep_delay - arr_delay,`  
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `hours = air_time / 60,`  
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;  `gain_per_hour = gain / hours`  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `)`  
@@ -191,12 +192,24 @@ refer to columns that you’ve just created:
 class: yourturn
 # Your turn
 
+- Calculate the air speed of each flight in miles per minute (create `mpm`) using `distance` and `air_time`.  
 
-Compare `air_time` with `arr_time - dep_time`. What do you expect to see? What do you see? What do you need to do to fix it?
+- Add to the `mutate()` statement from above to calculate the air speed in miles per hour (create `mph`).  
 
-Compare `dep_time`, `sched_dep_time`, and `dep_delay.` How would you expect those three numbers to be related?
+- Compute `arr_hour` and `arr_min` from `arr_time`. (Hint: use modular arithmetic `%/%` for hour and `%%` for minute)  
 
-Find the 10 most delayed flights using a ranking function. How do you want to handle ties? Check `?min_rank` vs. `?row_number` vs. `?dense_rank`
+- Find the 10 most delayed flights using a ranking function. How do you want to handle ties? Check `?min_rank` vs. `?row_number` vs. <br> `?dense_rank` Print the top 10 in descending order according to the amount of delay.
+
+- Compare `dep_time`, `sched_dep_time`, and `dep_delay.` What do you expect to see? What do you see? What do you need to do to fix it?
+
+---
+## Grouping 
+
+### `group_by()` 
+
+Do calculations on groups.  
+
+When you use the dplyr verbs on a grouped data frame they'll be automatically applied "by group". 
 
 
 ---
@@ -204,7 +217,7 @@ Find the 10 most delayed flights using a ranking function. How do you want to ha
 
 ### `summarise()`
 
-summarise to reduce variables to values:  
+summarise to reduce variables to a value:  
 
 &nbsp;&nbsp;&nbsp;&nbsp; `flights %>% `  
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `summarise(delay = mean(dep_delay, na.rm = TRUE))`
@@ -242,16 +255,22 @@ A combination of `summarise()` and `n()`: `flights %>% group_by(dest) %>% tally(
 
 A further shortcut of `group_by()` and `tally()`: `flights %>% count(dest)`
 
-### `ungroup()` 
-
-remove a grouping structure: `flights %>% group_by(carrier) %>% ungroup()`
+You can even add a weight variable: `flights %>% count(tailnum, wt = distance)`
 
 
+---
+class: yourturn
+# Your turn
 
-???
+- Calculate the average delay per date.
 
-- necessary to make changes to a grouping variable (such as re-ordering or re-labelling)
+- What time of day should you fly if you want to avoid delays as much as possible?
 
+- Explore the relationship between the distance and average delay for each destination. Also calculate the number of flights flown to each destination. 
+
+- Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
+
+- Which carrier has the worst delays? 
 
 ---
 ## Grouped mutates & filters
@@ -270,22 +289,32 @@ Compute per group metrics:
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `arrange(arr_delay)`
   
 
-
-
-
-
 ---
 class: yourturn
 # Your turn
 
-Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
-
-Which carrier has the worst delays? 
-
-What time of day should you fly if you want to avoid delays as much as possible?
-
-Find all destinations that are flown by at least two carriers. Use that information to rank the carriers.
+- Rank airlines by the number of destinations that they fly to, considering only those airports that are flown to by two or more airlines.
  
+- For each destination, compute the total minutes of delay. For each flight, compute the proportion of the total delay for its destination. (**Hint**: only include delayed flights when calculating the total delay and proportion of delay.)
+
+---
+## Grouping & ungrouping
+
+### `ungroup()` 
+
+remove a grouping structure from a data set:  
+</br></br>
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% group_by(carrier) %>% select(origin)`
+
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% group_by(carrier) %>% ungroup() %>% select(origin)`
+
+</br>
+&nbsp;&nbsp;&nbsp;&nbsp; `daily <- flights %>% group_by(year, month, day)`
+
+&nbsp;&nbsp;&nbsp;&nbsp; `daily %>% summarise(flights = n())`
+
+&nbsp;&nbsp;&nbsp;&nbsp; `daily %>% ungroup() %>% summarise(flights = n())`
+
 
 ---
 ## Resources
