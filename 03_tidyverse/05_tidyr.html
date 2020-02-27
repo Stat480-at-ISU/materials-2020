@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Reshaping data  with tidyr</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../extras/x-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Reshaping data <br>with <code>tidyr</code>
+
+---
+
+
+
+class: inverse, center, top
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/tidyr_spread_gather.png)
+background-size: 450px
+background-position: 50% 70%
+# The `tidyr` package
+
+---
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/tidyr.png)
+background-size: 120px
+background-position: 92% 5%
+## Tidy data
+&lt;br&gt;&lt;br&gt;
+### &amp;nbsp;&amp;nbsp; Happy families are all alike; every unhappy  &lt;/br&gt;  &amp;nbsp;&amp;nbsp; family is unhappy in its own way.  &lt;br&gt;&lt;/br&gt;  &amp;nbsp;&amp;nbsp; - Leo Tolstoy
+
+&lt;br&gt;&lt;br&gt;
+**Resource**: follow along tidyr vignette 
+- available as 
+`vignette("tidy-data", package="tidyr")`  
+
+- vignette is version of the [tidy data paper](https://www.jstatsoft.org/article/view/v059i10) with updated code
+
+---
+## Outline
+
+&lt;br&gt;
+What is tidy data?
+
+Different sources of messiness
+
+Key-Value pairs
+
+`tidyr` functions: `pivot_longer()` and `pivot_wider()`
+
+---
+## Data is usually in a spreadsheet format, but ...
+
+There are different ways to encode the same information:
+
+.left-third[
+.center[
+&lt;br&gt;
+Option #1
+]
+]
+.right-two-thirds[
+
+```
+##           name treatmenta treatmentb
+## 1   John Smith         NA         18
+## 2     Jane Doe          4          1
+## 3 Mary Johnson          6          7
+```
+]
+
+.left-third[
+.center[
+&lt;br&gt;&lt;br&gt;
+Option #2  
+&lt;br&gt;
+]
+]
+
+.right-two-thirds[
+
+```
+##   treatment John.Smith Jane.Doe Mary.Johnson
+## 1         a         NA        4            6
+## 2         b         18        1            7
+```
+
+]
+
+.full[
+
+Neither #1 nor #2 are "clean" versions of the data: observed information is part of the data structure; some implicit information is assumed
+
+]
+---
+background-image: url("images/r4ds_data-science-tidyverse.png")
+background-size: 600px
+background-position: 30% 75%
+## Why does this matter?
+
+A "tidy" dataset, will be much easier to work with inside the tidyverse.
+
+
+---
+background-image: url(https://d33wubrfki0l68.cloudfront.net/6f1ddb544fc5c69a2478e444ab8112fb0eea23f8/91adc/images/tidy-1.png)
+background-size: 900px
+background-position: 50% 65%
+## What is tidy data?
+
+
+1. Each **variable** is one column.  
+
+2. Each **observation** is one row.  
+
+3. Each **value** must have its own cell.
+
+???
+A variable is a characteristic that is being measured, counted or described with data. Like: car type, salinity, year, population, or whale mass.
+
+An observation is a single “data point” for which the measure, count or description of one or more variables is recorded. For example, if you are recording variables height, mass, and color of dragons, then each dragon is an observation.
+
+A value is the recorded measure, count or description of a variable.
+
+---
+## Sources of Messiness
+
+1. Column headers are values, not variable names.&lt;br&gt;
+e.g. *treatmenta, treatmentb*  &lt;br&gt;&lt;br&gt;
+  
+2. Multiple variables are stored in one column.&lt;br&gt;
+e.g. *Fall 2015, Spring 2016* or *"1301 8th St SE, Orange City, Iowa 51041
+(42.99755, -96.04149)", "2102 Durant, Harlan, Iowa 51537
+(41.65672, -95.33780)"*  &lt;br&gt;&lt;br&gt;
+
+3. Multiple observational units are stored in the same table.  &lt;br&gt;&lt;br&gt;
+
+4. A single observational unit is stored in multiple tables.
+
+---
+## Clean version of the example
+
+
+.left-third[
+.center[
+&lt;br&gt;
+Option #1
+]
+]
+.right-two-thirds[
+
+```
+##           name treatmenta treatmentb
+## 1   John Smith         NA         18
+## 2     Jane Doe          4          1
+## 3 Mary Johnson          6          7
+```
+]
+
+.left-third[
+.center[
+&lt;br&gt;&lt;br&gt;
+Option #2
+]
+]
+
+.right-two-thirds[
+
+```
+##   treatment John.Smith Jane.Doe Mary.Johnson
+## 1         a         NA        4            6
+## 2         b         18        1            7
+```
+
+]
+
+.left-third[
+.center[
+&lt;br&gt;&lt;br&gt;
+"tidy"  
+&lt;br&gt;
+]
+]
+
+.right-two-thirds[
+
+```
+##   treatment      patient score
+## 1         a   John Smith    NA
+## 2         b   John Smith    18
+## 3         a     Jane Doe     4
+## 4         b     Jane Doe     1
+## 5         a Mary Johnson     6
+## 6         b Mary Johnson     7
+```
+]
+
+
+
+---
+## Clean version of the example
+
+.left-third[
+.center[
+&lt;br&gt;&lt;br&gt;
+"tidy"  
+&lt;br&gt;
+]
+]
+
+.right-two-thirds[
+
+```
+##   treatment      patient score
+## 1         a   John Smith    NA
+## 2         b   John Smith    18
+## 3         a     Jane Doe     4
+## 4         b     Jane Doe     1
+## 5         a Mary Johnson     6
+## 6         b Mary Johnson     7
+```
+]
+
+
+.full[
+&lt;/br&gt;
+- `treatment` and `patient` uniquely describe a single row in the dataset.  
+
+- `treatment` and `patient` are **key variables**,
+
+- `score` is a **measurement variable**
+
+- this makes `treatment-patient` and `score` a **key-value pair**
+
+]
+---
+## Key-value pairs (KVP)
+ 
+**Key-Value pairs** (KVP) - also *attribute-value*, *field-value*, *name-value*:
+abstract data representation that allows a lot of flexibility  
+
+One way of telling whether a data set is tidy is to check that all keys for a value are aligned in one row:  
+
+
+.pull-left[
+.center[
+### Untidy data  
+
+&lt;img src="images/kvp-unhappy.png" width=150&gt;
+
+]
+]
+.pull-right[
+
+### Tidy data  
+
+&lt;img src="images/kvp-happy.png" width=150&gt;  
+
+
+]
+---
+## Tidying data: Plan of attack
+
+Very few functions are needed for tidying data:
+
+**Messy (1)**: `tidyr` functions `pivot_longer()` and `pivot_wider()`.  
+- `pivot_longer(data, cols, names_to = "key", values_to = "value")`: take multiple columns and collapse into key-value pairs  
+- `pivot_wider(data, names_from = name, values_from = key)`: spread a key-value pair across multiple columns.
+
+**Messy (2)**: `tidyr` function `separate(data, col, into, sep = "[^[:alnum:]]+")`:  
+- separate one column into multiple columns
+
+**Messy (3)**: `dplyr` - some combination of the functions discussed previously  
+
+**Messy (4)**: `dplyr` functionality `join` (and friends) to combine multiple data sets 
+
+---
+## French fries data
+
+
+```r
+data(french_fries, package="reshape2")
+```
+
+- data from sensory experiment conducted at Iowa State University in 2004
+
+- investigators were interested in comparing effects of three different fryer oils on taste of fries
+
+
+```r
+french_fries %&gt;% head()
+```
+
+```
+##    time treatment subject rep potato buttery grassy rancid painty
+## 61    1         1       3   1    2.9     0.0    0.0    0.0    5.5
+## 25    1         1       3   2   14.0     0.0    0.0    1.1    0.0
+## 62    1         1      10   1   11.0     6.4    0.0    0.0    0.0
+## 26    1         1      10   2    9.9     5.9    2.9    2.2    0.0
+## 63    1         1      15   1    1.2     0.1    0.0    1.1    5.1
+## 27    1         1      15   2    8.8     3.0    3.6    1.5    2.3
+```
+
+
+---
+## wide data `\(\rightarrow\)` long data
+
+
+```r
+french_fries %&gt;% head()
+```
+
+```
+##    time treatment subject rep potato buttery grassy rancid painty
+## 61    1         1       3   1    2.9     0.0    0.0    0.0    5.5
+## 25    1         1       3   2   14.0     0.0    0.0    1.1    0.0
+## 62    1         1      10   1   11.0     6.4    0.0    0.0    0.0
+## 26    1         1      10   2    9.9     5.9    2.9    2.2    0.0
+## 63    1         1      15   1    1.2     0.1    0.0    1.1    5.1
+## 27    1         1      15   2    8.8     3.0    3.6    1.5    2.3
+```
+
+&lt;/br&gt;
+To tidy a dataset like this, we need to pivot the offending columns into a new pair of variables. To describe that operation we need three parameters:
+
+1. The **set of columns** whose names are values, not variables. In this example, those are the columns `potato`, `buttery`, `grassy`, `rancid`, and `painty`.
+
+2. The name of the variable to move the **column names** to. Here it is `scale`.
+
+3. The name of the variable to move the **column values** to. Here it is `score`
+
+Together those parameters generate the call to `pivot_longer()`:
+
+
+
+---
+background-image: url(images/pivot-longer-charts.png)
+background-size: 900px
+background-position: 35% 50%
+
+### `pivot_longer(data, `&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;`cols = c("a1", "a2", "a3"),` &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;`names_to = "key",` &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;`values_to = "value")`
+
+.footnote[
+see full graphic [here](https://swcarpentry.github.io/r-novice-gapminder/fig/14-tidyr-fig3.png)
+]
+
+---
+## Tidying the french fries data
+
+
+```r
+ff_long &lt;- french_fries %&gt;% 
+  pivot_longer(cols = potato:painty, 
+               names_to = "scale", 
+               values_to = "score")
+ff_long
+```
+
+```
+## # A tibble: 3,480 x 6
+##    time  treatment subject   rep scale   score
+##    &lt;fct&gt; &lt;fct&gt;     &lt;fct&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+##  1 1     1         3           1 potato    2.9
+##  2 1     1         3           1 buttery   0  
+##  3 1     1         3           1 grassy    0  
+##  4 1     1         3           1 rancid    0  
+##  5 1     1         3           1 painty    5.5
+##  6 1     1         3           2 potato   14  
+##  7 1     1         3           2 buttery   0  
+##  8 1     1         3           2 grassy    0  
+##  9 1     1         3           2 rancid    1.1
+## 10 1     1         3           2 painty    0  
+## # … with 3,470 more rows
+```
+
+
+---
+## long data `\(\rightarrow\)` wide data
+
+
+---
+background-image: url(images/pivot-wider-chart.png)
+background-size: 900px
+background-position: 35% 50%
+
+### `pivot_wider(data, `&lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;`values_from = value,` &lt;br&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;`names_from = key)`
+
+
+---
+## Resources
+
+
+- reference/document: http://tidyr.tidyverse.org/reference/
+
+- RStudio cheat sheet for [tidyr](https://github.com/rstudio/cheatsheets/blob/master/data-import.pdf)
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
+- Chart infrographics from [Software Carpentry](https://swcarpentry.github.io/r-novice-gapminder/14-tidyr/)
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "tomorrow",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

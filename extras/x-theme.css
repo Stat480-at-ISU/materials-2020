@@ -132,7 +132,11 @@ strong{color:#84a9cd;}
 }
 
 
-
+.full {
+  width: 100%;
+  height: 92%;
+  float: left;
+}
 /* Two-column layout */
 .left-column {
   width: 20%;
@@ -209,6 +213,14 @@ strong{color:#84a9cd;}
   width: 30%;
   float: left;
   padding-top: 1em;
+}
+.left-third-top {
+  width: 30%;
+  float: left;
+}
+.right-two-thirds-top {
+  width: 70%;
+  float: right;
 }
 .right-two-thirds {
   width: 70%;

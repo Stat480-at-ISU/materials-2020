@@ -195,8 +195,7 @@ class: yourturn
 
 mutate to add new variables: 
 
-&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% `  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `mutate(gain = dep_delay - arr_delay)`
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% mutate(gain = dep_delay - arr_delay)`
 
 </br>
 refer to columns that you’ve just created: 
@@ -207,6 +206,11 @@ refer to columns that you’ve just created:
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `hours = air_time / 60,`  
 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;  `gain_per_hour = gain / hours`  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; `)`  
+
+</br>
+transform existing variable: 
+
+&nbsp;&nbsp;&nbsp;&nbsp; `flights %>% mutate(origin = factor(origin))`
 
  
 
