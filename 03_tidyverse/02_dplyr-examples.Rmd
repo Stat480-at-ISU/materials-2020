@@ -296,9 +296,10 @@ Filter per group:
 Compute per group metrics: 
 
 &nbsp;&nbsp;&nbsp;&nbsp; `flights %>%`  
-&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `  group_by(hour) %>%`  
-&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `summarise(arr_delay = mean(arr_delay, na.rm = TRUE)) %>%`  
-&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `arrange(arr_delay)`
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `  filter(arr_delay > 0) %>%`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `mutate(prop_delay = arr_delay / sum(arr_delay)) %>%`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `select(year:day, dest, arr_delay, prop_delay) %>%`  
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; `arrange(desc(prop_delay))`
   
 
 ---
@@ -318,7 +319,7 @@ class: yourturn
 - Which carrier has the worst delays? 
 
 - Rank airlines by the number of destinations that they fly to, considering only those airports that are flown to by two or more airlines.
-
+  
 - Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
 
 ---
