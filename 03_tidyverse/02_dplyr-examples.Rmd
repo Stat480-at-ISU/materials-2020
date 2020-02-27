@@ -285,20 +285,6 @@ You can even add a weight variable: `flights %>% count(tailnum, wt = distance)`
 
 
 ---
-class: yourturn
-# Your turn
-
-- Calculate the average delay per date.
-
-- What time of day should you fly if you want to avoid delays as much as possible?
-
-- Explore the relationship between the distance and average delay for each destination. Also calculate the number of flights flown to each destination. 
-
-- Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
-
-- Which carrier has the worst delays? 
-
----
 ## Grouped mutates & filters
 
 Filter per group: 
@@ -319,9 +305,21 @@ Compute per group metrics:
 class: yourturn
 # Your turn
 
+- Calculate the average delay per date.
+
+- What time of day should you fly if you want to avoid delays as much as possible?
+
+- Explore the relationship between the distance and average delay for each destination. Also calculate the number of flights flown to each destination. 
+
+---
+class: yourturn
+# Your turn
+
+- Which carrier has the worst delays? 
+
 - Rank airlines by the number of destinations that they fly to, considering only those airports that are flown to by two or more airlines.
- 
-- For each destination, compute the total minutes of delay. For each flight, compute the proportion of the total delay for its destination. <br><br> **Hint**: only include delayed flights when calculating the total delay and proportion of delay.
+
+- Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
 
 ---
 ## Grouping & ungrouping
