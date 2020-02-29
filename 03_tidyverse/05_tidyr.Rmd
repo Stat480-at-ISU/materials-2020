@@ -32,7 +32,7 @@ background-position: 92% 5%
 ### &nbsp;&nbsp; Happy families are all alike; every unhappy  </br>  &nbsp;&nbsp; family is unhappy in its own way.  <br></br>  &nbsp;&nbsp; - Leo Tolstoy
 
 <br><br>
-**Resource**: follow along tidyr vignette 
+**Resource**: follow along with the tidyr vignette 
 - available as 
 `vignette("tidy-data", package="tidyr")`  
 
@@ -242,6 +242,7 @@ Very few functions are needed for tidying data:
 
 **Messy (1)**: `tidyr` functions `pivot_longer()` and `pivot_wider()`.  
 - `pivot_longer(data, cols, names_to = "key", values_to = "value")`: take multiple columns and collapse into key-value pairs  
+
 - `pivot_wider(data, names_from = name, values_from = key)`: spread a key-value pair across multiple columns.
 
 **Messy (2)**: `tidyr` function `separate(data, col, into, sep = "[^[:alnum:]]+")`:  
@@ -290,12 +291,21 @@ Together those parameters generate the call to `pivot_longer()`:
 ---
 background-image: url(images/pivot-longer-charts.png)
 background-size: 900px
-background-position: 35% 50%
+background-position: 30% 45%
+## wide data $\rightarrow$ long data  
 
-### `pivot_longer(data, `<br>&nbsp;&nbsp;&nbsp;&nbsp;`cols = c("a1", "a2", "a3"),` <br>&nbsp;&nbsp;&nbsp;&nbsp;`names_to = "key",` <br>&nbsp;&nbsp;&nbsp;&nbsp;`values_to = "value")`
+
+```{r eval = FALSE}
+pivot_longer(data, 
+             cols = c("a1", "a2", "a3"), 
+             names_to = "key", 
+             values_to = "value")
+
+```
+
 
 .footnote[
-see full graphic [here](https://swcarpentry.github.io/r-novice-gapminder/fig/14-tidyr-fig3.png)
+see full graphic [here](https://swcarpentry.github.io/r-novice-gapminder/14-tidyr/)
 ]
 
 ---
@@ -314,12 +324,140 @@ ff_long
 ## long data $\rightarrow$ wide data
 
 
+```{r}
+ff_long %>% head()
+```
+
+Sometimes, we’ll have data that we want to spread over multiple columns.
+
+For our data, we’ll use `pivot_wider()` to spread the replicates across multiple columns
+
+`pivot_wider()` is the opposite of `pivot_longer()`. This time we need two parameters:
+
+  - The column to take variable names from. Here, it's `rep`.
+
+  - The column to take values from. Here it's `score`.
+
+
+
+
 ---
 background-image: url(images/pivot-wider-chart.png)
 background-size: 900px
-background-position: 35% 50%
+background-position: 45% 50%
 
-### `pivot_wider(data, `<br>&nbsp;&nbsp;&nbsp;&nbsp;`values_from = value,` <br>&nbsp;&nbsp;&nbsp;&nbsp;`names_from = key)`
+## long data $\rightarrow$ wide data
+
+```{r eval = FALSE}
+pivot_wider(data, 
+            values_from = value, 
+            names_from = key)
+```
+
+
+
+---
+## Widening the french fries data
+
+```{r}
+ff_long %>% 
+  pivot_wider(names_from = rep, values_from = score) %>% 
+  head()
+```
+
+---
+## Widening the french fries data
+
+```{r fig.height=5, message=FALSE, warning=FALSE}
+ff_long %>% 
+  pivot_wider(names_from = rep, values_from = score) %>% 
+  ggplot(aes(x = `1`, y = `2`)) + 
+  geom_point() + 
+  geom_abline(colour = "grey50") +
+  facet_wrap(~scale) 
+```
+
+
+---
+class: yourturn
+# your turn
+
+For this your turn use the `french_fries` data from the `reshape2` package: `data("french_fries", package="reshape2")` 
+
+- Use `pivot_longer()` from the `tidyr` package to combine the different scales for assessing french fries into a single variable. Call the key-value pair "scale" and "score". 
+
+- Use `pivot_wider()` from the `tidyr` package to get a format in which you can directly compare values from week 1 to week 10. Plot a scatterplot of values in week 1 against week 10. Facet by treatment and scale, color by individuals   and use different shapes for the replicates. Is there a pattern visible?
+
+
+---
+class: yourturn
+# Your turn 
+
+
+For this your turn use the `fbiwide` data from the `classdata` package: `data("fbiwide", package="classdata")` 
+
+- Use `pivot_longer()` from the `tidyr` package to combine the variables for the different types of crimes into one variable. Call the key-value pair "Type" and "Incidences". Compute a crime rate
+
+- Only consider crime rates for Iowa and Minnesota. Use `pivot_wider()` to create incidence columns for each of these states. Plot crimes in Iowa against crimes in Minnesota, colour by type of crime. Note: you need to exclude some variables. 
+
+---
+background-image: url(images/inverse.png)
+background-size: 900px
+background-position: 45% 70%
+## `pivot_wider()` works (*almost*) as an inverse of `pivot_longer()`
+
+
+---
+background-image: url(images/inverse-issue.png)
+background-size: 900px
+background-position: 45% 70%
+## Front part is not identical -<br> not collapsible
+
+
+
+---
+## Where `pivot_wider()` is tricky
+
+- `pivot_wider()` is the (almost) inverse operation of `pivot_longer()`
+
+- when we use `pivot_longer()` the key information is duplicated
+
+- when using `pivot_wider()` we need to make sure that the information outside the key and value is identical for all levels (and combinations of levels) of the `key` variable.
+
+- If the info is not identical across levels, missing values are introduced into the new data set.
+
+---
+## `pivot_wider()` in the example
+
+```{r echo = FALSE}
+library(classdata)
+library(dplyr)
+```
+
+```{r}
+fbi %>% 
+  dplyr::filter(Year==2014, State %in% c("Iowa", "Minnesota"), Type=="Burglary")
+```
+
+Other state specific values don't allow spread to collapse the front part and introduce missing values:
+
+```{r}
+fbi %>% 
+  dplyr::filter(Year==2014, State %in% c("Iowa", "Minnesota"), Type=="Burglary") %>% 
+  pivot_wider(names_from=State, values_from=Count)
+```
+
+---
+## fixing `pivot_wider()` in the ex.
+
+Negative selection of all state specific variables gets the example to "work": 
+
+```{r}
+fbi %>% 
+  dplyr::filter(Year==2014, State %in% c("Iowa", "Minnesota"), Type=="Burglary") %>% 
+  select(-Abb, -Population) %>% 
+  pivot_wider(names_from = State, values_from = Count)
+```
 
 
 ---
@@ -332,7 +470,7 @@ background-position: 35% 50%
 
 - Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
 
-- Chart infrographics from [Software Carpentry](https://swcarpentry.github.io/r-novice-gapminder/14-tidyr/)
+- Chart infrographics adapted from [Software Carpentry](https://swcarpentry.github.io/r-novice-gapminder/14-tidyr/)
 
 
 
