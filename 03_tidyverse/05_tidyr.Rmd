@@ -461,6 +461,30 @@ fbi %>%
 
 
 ---
+class: yourturn
+# Your turn
+
+- Why are `pivot_longer()` and `pivot_wider()` not perfectly symmetrical? Carefully consider the following example:  
+  
+```{r eval = FALSE}
+stocks <- tibble(
+  year   = c(2015, 2015, 2016, 2016),
+  half  = c(   1,    2,     1,    2),
+  return = c(1.88, 0.59, 0.92, 0.17)
+)
+
+stocks %>% 
+  pivot_wider(names_from = year, values_from = return) %>% 
+  pivot_longer(`2015`:`2016`, names_to = "year", values_to = "return")
+```
+
+</br>
+ **Hint**: look at the variable types and think about column names
+
+ **Hint**: `pivot_longer()` has a `names_ptype` argument, e.g. `names_ptype = list(year = double())`. What does it do?  
+
+
+---
 ## Resources
 
 
