@@ -39,16 +39,14 @@ background-position: 92% 5%
 - vignette is version of the [tidy data paper](https://www.jstatsoft.org/article/view/v059i10) with updated code
 
 ---
-## Outline
+## Outline: <br>
+### - What is tidy data?
 
-<br>
-What is tidy data?
+### - Different sources of messiness
 
-Different sources of messiness
+### - Key-Value pairs
 
-Key-Value pairs
-
-`tidyr` functions: `pivot_longer()` and `pivot_wider()`
+### - `tidyr` functions: <br><br> &nbsp;&nbsp;&nbsp;&nbsp; - `pivot_longer()` & `pivot_wider()`
 
 ---
 ## Data is usually in a spreadsheet format, but ...

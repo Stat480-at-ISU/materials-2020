@@ -1,0 +1,138 @@
+---
+title: "Tidying data"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: tomorrow
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = TRUE)
+#xaringan::inf_mr(cast_from = '..') 
+library(tidyverse)
+```
+
+
+## Outline: <br>
+### - Dealing with messy (2)
+
+### - `tidyr` functions: <br><br> &nbsp;&nbsp;&nbsp;&nbsp; - `separate()` & `unite()`
+
+---
+class: inverse, center, middle
+# Messy (2): 
+## Multiple variables are <br>stored in one column
+
+---
+## one col $\rightarrow$ multiple cols  
+
+Use `separate()` to split values wherever a separator character appears
+
+&nbsp;&nbsp;&nbsp;&nbsp;   `data %>%` <br> &nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp; `separate(combined_var, into = c("var1", "var2"))`
+
+<br>
+`separate()` arguments:   
+
+  1. the name of the column to separate  
+  
+  2. the names of the columns to separate into
+  
+<br>
+Optional `separate()` arguments:  
+
+- `sep` : a specific character to use to separate a column (interpreted as a regular expression) OR a vector of integers (positions to split at)
+
+- `convert = TRUE` : attempt to convert variable types to something more suitable than the existing type.
+---
+
+
+```{r}
+df <- data_frame(x = c(NA, "a.1", "a.4", "b.3"))
+df 
+df %>% separate(x, into = c("A", "B")) 
+df %>% separate(x, into = c("A", "B"), sep = "([.])", convert = TRUE)
+```
+
+---
+class: yourturn
+# Your Turn
+
+
+The Iowa Data Portal is a wealth of information on and about the State of Iowa. The website 
+[Campaign Expenditures](https://data.iowa.gov/Government/Campaign-Expenditures/3adi-mht4/data) provides data on campaign expenditures. The code below reads the data into an R session.
+
+```
+url <- "https://data.iowa.gov/api/views/3adi-mht4/rows.csv"
+campaign <- readr::read_csv(url)
+```
+
+Assess the 'messiness' of the data. List issues that prevent us from working with the data directly. Which of these issues are of type (1) or (2) of messiness?
+
+---
+## Problems with the data:
+
+No **messy 1**?  
+- problems of type **Messy 1** are typically hard to detect and often up to interpretation/dependent on the analysis to be done.
+
+<br>
+**messy 2**? 
+- `Date` is text, in the format of Month/Day/Year 
+
+- city coordinates are a combination of City name, state, zip code and geographic latitude and longitude. 
+
+<br>
+**Other messiness**? 
+- expenditure amount is a textual expression, not a number 
+
+
+---
+background-image: url(https://github.com/allisonhorst/stats-illustrations/raw/master/rstats-artwork/parse_number.png)
+background-size: 400px
+background-position: 50% 90%
+## Some extra tidying
+
+Use `parse_number()` from the `readr` package to drop any non-numeric characters before or after the first number.  
+
+Other parsers: `col_skip()`, `cols_condense()`, `cols()`, `parse_datetime()`, `parse_factor()`, `parse_guess()`, `parse_logical()`, `parse_vector()`
+
+
+---
+class: yourturn
+# Your Turn 
+
+-  Check the help for the function `parse_number()` in the `readr` package and use it on the campaign expenditure data.
+
+- Use `separate()` to split the date variable into year, month and day.
+
+- Use `separate()` again to extract geographic latitude and longitude <br> **Hint**: you might need several steps of `separate()`
+
+
+---
+class: yourturn
+# Your Turn - exploration
+
+Use `dplyr` functionality to answer the following questions:
+
+  1. What is the total amount of campaign expenditure?
+  
+  2. What is the single largest cost in the campaign expenditures?
+  
+  3. Plot geographic longitude and latitude. Do campaign expenditures stay in the State of IA? Investigate oddities.
+
+
+
+---
+## Resources
+
+
+- reference/document: http://tidyr.tidyverse.org/reference/
+
+- RStudio cheat sheet for [tidyr](https://github.com/rstudio/cheatsheets/blob/master/data-import.pdf)
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
