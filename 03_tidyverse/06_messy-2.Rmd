@@ -23,6 +23,9 @@ library(tidyverse)
 
 ### - `tidyr` functions: <br><br> &nbsp;&nbsp;&nbsp;&nbsp; - `separate()` & `unite()`
 
+### - `readr` functions: <br><br> &nbsp;&nbsp;&nbsp;&nbsp; - `parse_number()` & others...
+
+
 ---
 class: inverse, center, middle
 # Messy (2): 
