@@ -98,13 +98,14 @@ df %&gt;% separate(x, into = c("A", "B"), sep = "([.])", convert = TRUE)
 class: yourturn
 # Your Turn
 
+The Iowa Data Portal is a wealth of information on and about the State of Iowa.
 
-The Iowa Data Portal is a wealth of information on and about the State of Iowa. The website 
-[Campaign Expenditures](https://data.iowa.gov/Government/Campaign-Expenditures/3adi-mht4/data) provides data on campaign expenditures. The code below reads the data into an R session.
+The website [Liquor Sales](https://data.iowa.gov/Sales-Distribution/Iowa-Liquor-Sales/m3tr-qhgy) provides data on every liquor sale in a licensed store in Iowa. The code below reads (part of) the data into an R session.
 
 ```
-url &lt;- "https://data.iowa.gov/api/views/3adi-mht4/rows.csv"
-campaign &lt;- readr::read_csv(url)
+url &lt;- "https://github.com/Stat579-at-ISU/materials/blob/master/03_tidyverse/data/Iowa_Liquor_Sales.csv.zip?raw=TRUE"
+download.file(url, "iowa.zip", mode="wb")
+iowa &lt;- readr::read_csv("iowa.zip")
 ```
 
 Assess the 'messiness' of the data. List issues that prevent us from working with the data directly. Which of these issues are of type (1) or (2) of messiness?
@@ -119,11 +120,11 @@ No **messy 1**?
 **messy 2**? 
 - `Date` is text, in the format of Month/Day/Year 
 
-- city coordinates are a combination of City name, state, zip code and geographic latitude and longitude. 
+- store location is a textual expression of form POINT (...) and geographic latitude and longitude.
 
 &lt;br&gt;
 **Other messiness**? 
-- expenditure amount is a textual expression, not a number 
+
 
 
 ---
@@ -141,7 +142,7 @@ Other parsers: `col_skip()`, `cols_condense()`, `cols()`, `parse_datetime()`, `p
 class: yourturn
 # Your Turn 
 
--  Check the help for the function `parse_number()` in the `readr` package and use it on the campaign expenditure data.
+-  Check the help for the function `parse_number()` in the `readr` package and use it on store location. What result did you get?
 
 - Use `separate()` to split the date variable into year, month and day.
 
@@ -154,11 +155,11 @@ class: yourturn
 
 Use `dplyr` functionality to answer the following questions:
 
-  1. What is the total amount of campaign expenditure?
-  
-  2. What is the single largest cost in the campaign expenditures?
-  
-  3. Plot geographic longitude and latitude. Do campaign expenditures stay in the State of IA? Investigate oddities.
+  1. What is the total amount spent on Liquor Sales?
+
+  2. What is the single largest sale (in volume/in dollar amount)?
+
+  3. Plot geographic longitude and latitude. Where are liquor sales in Ames happening?
 
 
 

@@ -1,0 +1,285 @@
+---
+title: "Cleaning data: <br>messy 3 & 4"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: tomorrow
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = TRUE, eval = FALSE)
+#xaringan::inf_mr(cast_from = '..') 
+library(tidyverse)
+```
+
+class: inverse, middle, center
+
+# Messy (3): 
+## Multiple observational units are stored in the same table.
+
+---
+class: inverse, center, middle
+# Keys & Measurements
+---
+## Finding your keys - Example (1)
+
+100 patients are randomly assigned to a treatment for heart attack, <br> measured 5 different clinical outcomes.  <br><br>
+
+--
+
+- **key**: patient ID
+
+- **factor variable (design)**: treatment
+
+- **measured variables**: 5 clinical outcomes
+
+---
+## Finding your keys - Example (2)
+
+Randomized complete block trial with four fields, four different types of <br> fertilizer, over four years.  
+
+Recorded total corn yield, and fertilizer run off.  <br><br>
+
+--
+
+- **key**: fields, types of fertilizer, year
+
+- **measurement**: total corn yield, fertilizer run off
+
+---
+## Finding your keys - Example (3)
+
+Cluster sample of twenty students in thirty different schools.  For each school, recorded distance from ice rink.  
+
+For each student, asked how often they go ice skating, and whether or not their parents like ice skating  <br><br>
+
+--
+
+- **key**: student ID, school ID
+
+- **measurement**: distance to rink, # of times ice skating, parents' preference
+
+
+---
+## Finding your keys - Example (4)
+
+For each person, recorded age, sex, height and target weight, and then at multiple times recorded their weight  <br><br>
+
+--
+
+- **key**: *patient ID*, date
+
+- **measurement**: *age, sex, height, target weight*, current weight
+
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; *only patient ID is needed for variables in italics*
+
+---
+## Messy (3)
+
+**Messy (3)**: Multiple observational units are stored in the same table.
+
+**What does that mean?** The key is split,  
+- i.e. for some values all key variables are necessary, while other values only need some key variables.
+  
+```{r eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+messy3 <- tibble(`Student ID` = rep(c(1234, 5678), each = 3),
+                 Name = rep(c("Always there", "Sometimes"), each = 3),
+                 Date = rep(c("Jan 12", "Jan 14", "Jan 19"), 2),
+                 Absent = c(rep("No", 4), "Yes", "No"),
+                 `Homework submitted` = c("Yes", NA, "Yes", "No", NA, "Yes"))
+library(gt)
+messy3 %>% 
+  gt() %>% 
+  tab_style(
+    style = cell_fill(color = "white"),
+    locations = cells_data(
+      rows = everything())
+  ) %>% 
+   tab_style(
+      style = cell_borders(sides = "all", color = "#e6e6e6"),
+      locations = cells_data(
+        columns = everything(),
+        rows = everything()
+      )) %>% 
+  tab_style(
+    style = cell_fill(color = "grey95"),
+    locations = cells_data(
+      rows = c(2,4,6))
+    )%>% 
+  tab_style(
+    style = cell_fill(color = "yellowgreen"),
+    locations = cells_data(
+      columns = c("Student ID", "Date"))
+  )  %>% 
+  tab_options(
+    table.background.color = NULL,
+    column_labels.font.size = px(16),
+    column_labels.font.weight = "normal",
+    column_labels.background.color = "olivedrab"
+  ) 
+```
+
+
+![](images/normal-not-2.png)
+
+---
+## Why do we need to take care <br> of split keys?
+
+- Data redundancy introduces potential problems  
+  - same student *should* have the same student ID
+
+- to check data consistency, we split data set into parts  
+  - this process is called **normalizing**
+
+- normalization reduces overall data size
+
+- useful way of thinking about objects under study
+
+---
+## Tidying Messy (3)
+
+Splitting into separate datasets:
+
+![](images/normal-split.png)
+
+---
+## Example: Box office gross
+
+The-Numbers website publishes [weekly charts](http://www.the-numbers.com/weekend-box-office-chart) of the gross income of all movies playing across the US. A set of cleaned data called `box` with movies for the last five years is available in the `classdata` package.
+
+```{r, warning=FALSE, message=FALSE}
+# devtools::install_github("haleyjeppson/classdata")
+data(box, package = "classdata")
+head(box, 4)
+```
+
+</br>
+What are the key variables? Why is the key split?
+
+---
+## Keys and measurements
+
+- **Key variables**: `Movie` name,  `Date` and `Distributor`. 
+
+- **Measurement variables**: `Gross`, `Thtrs.`
+
+- All other variables are derived from these variables
+
+- **Good practice**: re-calculate the derived variabes to check for consistency. 
+
+---
+## Taking care of the split key
+
+**Plan**:  
+- separate movie information from box office information
+
+**Idea for separation**:  
+- we want to get a set of movies together with their distributor and *ideally* with their release date (which we do not have)  
+
+- instead of release date, we can get the date of the first time that we see a movie in the boxoffice  
+
+- let's also keep track of how many weeks a movie has been released at that time (should be 1 - when will it be different?)
+
+---
+class: yourturn
+# Your turn 
+
+For this your turn use the `box` data from the `classdata` package.
+
+- **Big goal**: we want to create a new dataset `movie` that consists of movie, distributor, date of first time the movie shows up in the box office, and the number of weeks the movie has been released at that time.
+
+- What are the key variables for the new dataset?
+
+- For the key variable(s), use `summarize()` to find the first time a movie shows up in the box office and find the related number of weeks.
+
+---
+## Key variables 
+
+Does `Movie` uniquely describe a movie?
+
+```{r}
+movies <- box %>% select(Movie, Distributor) %>% distinct()
+```
+
+Does that make a movie unique?
+
+```{r}
+movies %>% count(Movie) %>% arrange(desc(n))
+```
+
+
+---
+## Movie data - take 2
+
+
+Get the week info for the first time we see each movie and distributor combo:
+
+```{r}
+movies <- box %>% 
+  group_by(Movie, Distributor) %>% 
+  summarise(
+    firstDate = Date[which.min(Week)], 
+    firstWeek = min(Week, na.rm=TRUE))
+
+head(movies)
+```
+
+
+---
+## Looking into inconsistencies
+
+```{r}
+movies %>% group_by(Movie) %>% mutate(n = n()) %>% arrange(desc(n))
+```
+
+
+---
+## Using IMDb: Beauty and the Beast  
+
+According to IMDb there are at least four movies released with the name Beauty and the Beast: 2017 (Walt Disney Pictures), 2014 (Spanish Production), 1991 (Walt Disner Pictures), and 1946 (French Production, released by Lopert Films in the US).
+
+Can't distinguish between the 2017 and the 1991 movie. The Lopert produced movie was only shown for two weeks in at most 3 theaters.
+
+```{r}
+box %>% dplyr::filter(Movie=="Beauty and the Beast") %>% tail(6)
+```
+
+---
+## Using IMDb (2)
+
+- Girlhood is the name of two movies - one that was released in 2003, one in 2014; most likely the Oct 4 boxoffice mention is only mistakenly referring to the 2003 movie
+
+```{r}
+box %>% dplyr::filter(Movie=="Girlhood") %>% head(6)
+```
+
+---
+## Using IMDb:
+
+- Mama Africa refers to two movies, one released in 2002, one in 2011; likely the duplicate  on Jan 19 is erroneous, but we still don't know which of the two movies is showing (in 1 theater)
+
+```{r}
+box %>% dplyr::filter(Movie=="Mama Africa")
+```
+
+---
+## why do we normalize?
+
+- Normalization helps identify inconsistencies in data
+
+- Checking up on inconsistencies is a lot of manual labor
+
+
+
+---
+## Resources
+
+- reference/document: http://tidyr.tidyverse.org/reference/
+
+- RStudio cheat sheet for [tidyr](https://github.com/rstudio/cheatsheets/blob/master/data-import.pdf)
+
