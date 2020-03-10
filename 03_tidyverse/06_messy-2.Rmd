@@ -48,6 +48,8 @@ Optional `separate()` arguments:
 - `sep` : a specific character to use to separate a column (interpreted as a regular expression) OR a vector of integers (positions to split at)
 
 - `convert = TRUE` : attempt to convert variable types to something more suitable than the existing type.
+
+- `remove = FALSE` : remove input column from output data frame.
 ---
 
 
@@ -55,7 +57,7 @@ Optional `separate()` arguments:
 df <- data_frame(x = c(NA, "a.1", "a.4", "b.3"))
 df 
 df %>% separate(x, into = c("A", "B")) 
-df %>% separate(x, into = c("A", "B"), sep = "([.])", convert = TRUE)
+df %>% separate(x, into = c("A", "B"), sep = "([.])", convert = TRUE, remove = FALSE)
 ```
 
 ---
@@ -110,7 +112,7 @@ class: yourturn
 
 - Use `separate()` to split the date variable into year, month and day.
 
-- Use `separate()` again to extract geographic latitude and longitude <br> **Hint**: you might need several steps of `separate()`
+- Use `separate()` again to extract geographic latitude and longitude <br> **Hint**: this will take multiple steps
 
 
 ---
