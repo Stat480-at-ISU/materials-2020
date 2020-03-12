@@ -1,0 +1,74 @@
+---
+title: "Working with <br> missing values"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: tomorrow
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = TRUE)
+#xaringan::inf_mr(cast_from = '..') 
+library(tidyverse)
+```
+
+## Missing values in R
+
+- R allows consistent handling of mising values
+
+- `NA` is the special code for "not available"
+
+- `NaN` is the code for "not a number",  
+  - e.g. in 0/0
+
+- missing values propagate in calculus,  
+  - e.g. for any object `x` we get `NA + x = NA`, `NA * x = NA`
+
+---
+## Essential functions 
+
+Direct testing for missing values is resulting in an `NA`:
+
+```{r}
+x <- c(1, NA)
+x == NA
+```
+
+</br>
+Instead use function `is.na()` for vector `x`:
+
+```{r}
+is.na(x)
+```
+
+</br>
+`complete.cases()` does the same for a data.frame
+
+---
+## Missing values essentials (2)
+
+- **DANGER ZONE**: `na.omit()` removes all instances of mising values in an object (all rows with any missing value in case `x` is a data frame)
+
+- Many functions have parameter `na.rm`
+
+---
+class: yourturn
+# Your turn
+
+Use the `box` data from the package `classdata`
+
+- Are there any missing values in the dataset `box`?
+
+- What are the values of `Rank` when `Rank.Last.Week` is missing?
+
+- What is the dimension of the data set `box`, when removing all missing values with the function `na.omit()`?
+
+- Why does the following statement fail? <br>
+`box$Rank.Last.Week <- na.omit(box$Rank.Last.Week)` 
+
+
