@@ -18,9 +18,31 @@ class: center, middle, inverse, title-slide
 
 ## Messy (4)
 
+&lt;br&gt;
 **Messy (4)**: Values for a single observational unit are stored across multiple tables.
 
+
+&lt;br&gt;
 After data are normalized by splitting, we want to de-normalize again by *joining* datasets.
+
+The variables used to connect each pair of tables are the **keys**.
+
+---
+## Relational data
+
+
+It is not uncommon for a data analysis to involve many tables of data and you must combine them to answer the questions that you’re interested in.  
+
+Collectively, multiple tables of data are called **relational data** because it is the relations, not just the individual datasets, that are important.
+
+To work with relational data you need **verbs** that work with pairs of tables. There are three families of verbs designed to work with relational data:
+
+1. **Mutating joins**, which add new variables to one data frame from matching observations in another.
+
+2. **Filtering joins**, which filter observations from one data frame based on whether or not they match an observation in the other table.
+
+3. **Set operations**, which treat observations as if they were set elements.
+
 
 ---
 class: inverse, middle, center
@@ -40,13 +62,20 @@ LahmanData %&gt;% head()
 ```
 
 ```
-##                  file      class  nobs nvar                     title
-## 1         AllstarFull data.frame  4993    8         AllstarFull table
-## 2         Appearances data.frame 99466   21         Appearances table
-## 3      AwardsManagers data.frame   171    6      AwardsManagers table
-## 4       AwardsPlayers data.frame  6026    6       AwardsPlayers table
-## 5 AwardsShareManagers data.frame   401    7 AwardsShareManagers table
-## 6  AwardsSharePlayers data.frame  6705    7  AwardsSharePlayers table
+##                  file      class  nobs nvar
+## 1         AllstarFull data.frame  4993    8
+## 2         Appearances data.frame 99466   21
+## 3      AwardsManagers data.frame   171    6
+## 4       AwardsPlayers data.frame  6026    6
+## 5 AwardsShareManagers data.frame   401    7
+## 6  AwardsSharePlayers data.frame  6705    7
+##                       title
+## 1         AllstarFull table
+## 2         Appearances table
+## 3      AwardsManagers table
+## 4       AwardsPlayers table
+## 5 AwardsShareManagers table
+## 6  AwardsSharePlayers table
 ```
 
 ---
@@ -71,13 +100,20 @@ HallOfFame %&gt;% dplyr::filter(yearID == 2017) %&gt;% head()
 ```
 
 ```
-##    playerID yearID votedBy ballots needed votes inducted category needed_note
-## 1 bagweje01   2017   BBWAA     442    332   381        Y   Player        &lt;NA&gt;
-## 2 raineti01   2017   BBWAA     442    332   380        Y   Player        &lt;NA&gt;
-## 3 rodriiv01   2017   BBWAA     442    332   336        Y   Player        &lt;NA&gt;
-## 4 hoffmtr01   2017   BBWAA     442    332   327        N   Player        &lt;NA&gt;
-## 5 guerrvl01   2017   BBWAA     442    332   317        N   Player        &lt;NA&gt;
-## 6 martied01   2017   BBWAA     442    332   259        N   Player        &lt;NA&gt;
+##    playerID yearID votedBy ballots needed votes inducted
+## 1 bagweje01   2017   BBWAA     442    332   381        Y
+## 2 raineti01   2017   BBWAA     442    332   380        Y
+## 3 rodriiv01   2017   BBWAA     442    332   336        Y
+## 4 hoffmtr01   2017   BBWAA     442    332   327        N
+## 5 guerrvl01   2017   BBWAA     442    332   317        N
+## 6 martied01   2017   BBWAA     442    332   259        N
+##   category needed_note
+## 1   Player        &lt;NA&gt;
+## 2   Player        &lt;NA&gt;
+## 3   Player        &lt;NA&gt;
+## 4   Player        &lt;NA&gt;
+## 5   Player        &lt;NA&gt;
+## 6   Player        &lt;NA&gt;
 ```
 
 ---
@@ -100,12 +136,12 @@ For this your turn use the `HallOfFame` and `Master` data from the `Lahman` pack
 
 - In `dplyr` there are several join functions: `left_join()`, `inner_join()`, `full_join()`, ...
 
-- Differences between join functions only visible, if not all values in one set have values in the other
+- The differences between join functions are only visible if values in one set do not all have values in the other set.
 
 
 ---
+## Example data
 
-&lt;/br&gt;
 
 ```r
 df1 &lt;- data.frame(id = 1:6, trt = rep(c("A", "B", "C"), rep=c(2,1,3)), value = c(5,3,7,1,2,3))
@@ -138,15 +174,29 @@ df2
 ## 6  7      1 110
 ```
 
+
 ---
-## Left join
+## Mutating joins
 
-- all elements in the *left* data set are kept
+A mutating join allows you to combine variables from two tables. 
 
-- non-matches are filled in by `NA`
+We first match observations by their keys, then copy across variables from one table to the other.
 
-- `right_join()` works symmetric
+There are 4 mutating join functions:
 
+- `left_join(x, y, by = "key")`: keeps all observations in `x`
+  
+- `right_join(x, y, by = "key")`: keeps all observations in `y`
+
+- `full_join(x, y, by = "key")`: keeps all observations in `x` and `y`
+
+- `inner_join(x, y, by = "key")`: keeps only observations that appear in both `x` and `y`
+
+---
+## `left_join(x, y, by = "key")`
+
+
+.pull-left-small[
 
 ```r
 left_join(df1, df2, by="id")
@@ -163,11 +213,25 @@ left_join(df1, df2, by="id")
 ## 7  5   B     2      1 136
 ## 8  6   C     3     NA  NA
 ```
+]
+.pull-right-large[
+
+- all elements in the *left* data set are kept
+
+- non-matches are filled in by `NA`
+
+- most commonly used; should be your default
+
+- use this when you look up additional data from another table since it preserves the original observations even when there isn’t a match 
+- `right_join()` works symmetric
+]
 
 ---
-## Inner join
+## `inner_join(x, y, by = "key")`
 
-- only matches from both data sets are kept
+
+
+.pull-left-small[
 
 
 ```r
@@ -181,12 +245,22 @@ inner_join(df1, df2, by = "id")
 ## 3  5   B     2      0  74
 ## 4  5   B     2      1 136
 ```
+]
+.pull-right-large[
 
+- ONLY matches pairs of observations whenever their keys are equal
+
+- output is a new data frame that contains the key, the x values, and the y values. 
+
+
+- **most important property**: unmatched rows are NOT included in the result. 
+
+- inner joins are usually not appropriate for use in analysis because it is too easy to lose observations.
+  
+]
 ---
-## Full join
-
-- all ids are kept, missings are filled in with `NA`
-
+## `full_join(x, y, by = "key")`
+.pull-left-small[
 
 ```r
 full_join(df1, df2, by = "id")
@@ -205,18 +279,23 @@ full_join(df1, df2, by = "id")
 ## 9   7 &lt;NA&gt;    NA      0  48
 ## 10  7 &lt;NA&gt;    NA      1 110
 ```
+]
+.pull-right-large[
 
+- all ids are kept, missings are filled in with `NA`
+
+]
 ---
 class: yourturn
-# Your turn (10 mins) 
+# Your turn
 
-- Load the `Lahman` package into your R session.
+For this exercise, use the data from the `Lahman` package.
 
 - Join (relevant pieces of) the `Master` data set and the `HallOfFame` data.
 
-- Find all Hall of Famers who were alive as of 2017.
+- Find all Hall of Famers who were alive as of 2019. &lt;br&gt;(use the data resulted from the joining done in question 1)
 
-- How many attempts at being inducted to the HoF does Sammy Sosa have already?
+- How many attempts at being inducted to the HoF does Sammy Sosa have already? (use the data resulted from the joining done in question 1)
 
 ---
 ## Traps of joins
@@ -229,14 +308,26 @@ class: yourturn
 
 - always make sure to check dimensions of data before and after a join
 
-- check on missing values; help with that: `anti_join()`
+- check on missing values:
+
+  - to get help with that, we can use `anti_join()`, a filtering join
 
 ---
-## Anti-join
+## Filtering joins
 
-- a neat function in `dplyr`
+Filtering joins match observations in the same way as mutating joins, but affect the observations, not the variables. 
 
-- careful, not symmetric!  
+There are two types:
+
+- `anti_join(x, y, by = "key")` drops all observations in `x` that have a match in `y`.
+
+
+- `semi_join(x, y, by = "key")` keeps all observations in `x` that have a match in `y`.  
+
+---
+## `anti_join(x, y, by = "key")`
+
+.pull-left-small[
 
 
 ```r
@@ -260,12 +351,20 @@ anti_join(df2, df1, by="id") # no values for id in df1
 ## 1  7      0  48
 ## 2  7      1 110
 ```
+]
+.pull-right-large[
+- keeps rows the *don't* have a match
 
+- be careful, it is NOT symmetric!  
+
+- useful for diagnosing join mismatches.
+
+]
 ---
 class: yourturn
-# Your turn (10 mins) 
+# Your turn
 
-For this example, use the data from the `classdata` package
+For this exercise, use the data from the `classdata` package
 
 - Load the `classdata` package into your R session.
 
@@ -276,6 +375,256 @@ For this example, use the data from the `classdata` package
 - Check on the dimensions of the data sets before and after the join. Where are potential problems?
 
 - Use `anti_join` to detect problematic cases. 
+
+---
+class: inverse, middle, center
+# As requested, &lt;br&gt;more examples!
+
+---
+## `nycflights13` 
+
+The `nycflights13` package contains 4 data sets related to the `flights` data that we have used previously.
+
+- `airlines` lets you look up the full carrier name from its abbreviated code
+
+- `airports` gives information about each airport, identified by the faa airport code:
+
+- `planes` gives information about each plane, identified by its `tailnum`:
+
+- `weather` gives the weather at each NYC airport for each hour:
+
+---
+- `airlines` lets you look up the full carrier name from its abbreviated code
+
+
+```
+## # A tibble: 2 x 2
+##   carrier name                  
+##   &lt;chr&gt;   &lt;chr&gt;                 
+## 1 9E      Endeavor Air Inc.     
+## 2 AA      American Airlines Inc.
+```
+
+- `airports` gives information about each airport, identified by the faa airport code:
+
+
+```
+## # A tibble: 2 x 8
+##   faa   name              lat   lon   alt    tz dst   tzone    
+##   &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;    
+## 1 04G   Lansdowne Airp…  41.1 -80.6  1044    -5 A     America/…
+## 2 06A   Moton Field Mu…  32.5 -85.7   264    -6 A     America/…
+```
+
+- `planes` gives information about each plane, identified by its `tailnum`:
+
+
+```
+## # A tibble: 2 x 9
+##   tailnum  year type  manufacturer model engines seats speed
+##   &lt;chr&gt;   &lt;int&gt; &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;   &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1 N10156   2004 Fixe… EMBRAER      EMB-…       2    55    NA
+## 2 N102UW   1998 Fixe… AIRBUS INDU… A320…       2   182    NA
+## # … with 1 more variable: engine &lt;chr&gt;
+```
+
+- `weather` gives the weather at each NYC airport for each hour:
+
+
+```
+## # A tibble: 2 x 15
+##   origin  year month   day  hour  temp  dewp humid wind_dir
+##   &lt;chr&gt;  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
+## 1 EWR     2013     1     1     1  39.0  26.1  59.4      270
+## 2 EWR     2013     1     1     2  39.0  27.0  61.6      250
+## # … with 6 more variables: wind_speed &lt;dbl&gt;, wind_gust &lt;dbl&gt;,
+## #   precip &lt;dbl&gt;, pressure &lt;dbl&gt;, visib &lt;dbl&gt;,
+## #   time_hour &lt;dttm&gt;
+```
+
+
+---
+background-image: url(https://d33wubrfki0l68.cloudfront.net/245292d1ea724f6c3fd8a92063dcd7bfb9758d02/5751b/diagrams/relational-nycflights.png)
+
+One way to show the relationships between the different tables is with a drawing:
+
+---
+## `nycflights13` relations
+
+- `flights` connects to `planes` via a single variable, `tailnum.`
+
+- `flights` connects to `airlines` through the `carrier` variable.
+
+- `flights` connects to `airports` in two ways: via the `origin` and `dest` variables.
+
+- `flights` connects to `weather` via `origin` (the location), and `year`, `month`, `day` and `hour` (the time).
+
+---
+## defining the variables to join by
+
+The default, `by = NULL`, uses all variables that appear in both tables.
+
+For example, the `flights` and `weather` tables have the common vaiables `year`, `month`, `day`, `hour`, and `origin`, but we do not need to define this when calling `left_join()`:
+
+
+```r
+flights %&gt;% left_join(weather)
+```
+
+```
+## Joining, by = c("year", "month", "day", "origin", "hour", "time_hour")
+```
+
+```
+## # A tibble: 336,776 x 28
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # … with 336,766 more rows, and 21 more variables:
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+## #   time_hour &lt;dttm&gt;, temp &lt;dbl&gt;, dewp &lt;dbl&gt;, humid &lt;dbl&gt;,
+## #   wind_dir &lt;dbl&gt;, wind_speed &lt;dbl&gt;, wind_gust &lt;dbl&gt;,
+## #   precip &lt;dbl&gt;, pressure &lt;dbl&gt;, visib &lt;dbl&gt;
+```
+
+
+---
+## defining the variables to join by
+
+Instead, we can request that only some on the common variables be used by using a character vector, `by = "x"`:
+
+For example, `flights` and `planes` have `year` variables, but they mean different things, so we only want to join by `tailnum`: 
+
+(note the changes to the `year` variables)
+
+
+```r
+flights %&gt;% left_join(planes, by = "tailnum")
+```
+
+```
+## # A tibble: 336,776 x 27
+##    year.x month   day dep_time sched_dep_time dep_delay
+##     &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;
+##  1   2013     1     1      517            515         2
+##  2   2013     1     1      533            529         4
+##  3   2013     1     1      542            540         2
+##  4   2013     1     1      544            545        -1
+##  5   2013     1     1      554            600        -6
+##  6   2013     1     1      554            558        -4
+##  7   2013     1     1      555            600        -5
+##  8   2013     1     1      557            600        -3
+##  9   2013     1     1      557            600        -3
+## 10   2013     1     1      558            600        -2
+## # … with 336,766 more rows, and 21 more variables:
+## #   arr_time &lt;int&gt;, sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;,
+## #   carrier &lt;chr&gt;, flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;,
+## #   dest &lt;chr&gt;, air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;,
+## #   minute &lt;dbl&gt;, time_hour &lt;dttm&gt;, year.y &lt;int&gt;, type &lt;chr&gt;,
+## #   manufacturer &lt;chr&gt;, model &lt;chr&gt;, engines &lt;int&gt;,
+## #   seats &lt;int&gt;, speed &lt;int&gt;, engine &lt;chr&gt;
+```
+
+---
+## defining the variables to join by
+
+We can use a named character vector, `by = c("a" = "b")`, when the key is not named the same in the two table. This will match variable `a` in table `x` to variable `b` in table `y`. The variables from `x` will be used in the output.
+
+We want to combine `flights` with `airports` which contains the location (`lat` and `lon`) of each airport, but each flight has an `origin` and `destination` airport, so we need to specify which one we want to join to:
+
+
+```r
+flights %&gt;% left_join(airports, by = c("dest" = "faa"))
+```
+
+```
+## # A tibble: 336,776 x 26
+##     year month   day dep_time sched_dep_time dep_delay arr_time
+##    &lt;int&gt; &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;     &lt;dbl&gt;    &lt;int&gt;
+##  1  2013     1     1      517            515         2      830
+##  2  2013     1     1      533            529         4      850
+##  3  2013     1     1      542            540         2      923
+##  4  2013     1     1      544            545        -1     1004
+##  5  2013     1     1      554            600        -6      812
+##  6  2013     1     1      554            558        -4      740
+##  7  2013     1     1      555            600        -5      913
+##  8  2013     1     1      557            600        -3      709
+##  9  2013     1     1      557            600        -3      838
+## 10  2013     1     1      558            600        -2      753
+## # … with 336,766 more rows, and 19 more variables:
+## #   sched_arr_time &lt;int&gt;, arr_delay &lt;dbl&gt;, carrier &lt;chr&gt;,
+## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;,
+## #   air_time &lt;dbl&gt;, distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;,
+## #   time_hour &lt;dttm&gt;, name &lt;chr&gt;, lat &lt;dbl&gt;, lon &lt;dbl&gt;,
+## #   alt &lt;dbl&gt;, tz &lt;dbl&gt;, dst &lt;chr&gt;, tzone &lt;chr&gt;
+```
+
+---
+class: yourturn
+# YOUR TURN
+
+For this exercise, use the data from the `nycflight13` package.
+
+- Add the location of the origin and destination (i.e. the `lat` and `lon`) from the `airports` data to the `flights` data
+
+- Is there a relationship between the age of a plane and its arrival delays?  
+  - Join the tables `flights` and `planes` and calculate the average arrival delay for each age of a flight. Since there are few planes older than 25 years, truncate age at 25 years.
+  - Plot age against the average arrival delay.
+
+- What weather conditions make it more likely to see a departure delay?  
+  - Join the tables `flights` and `weather`, calculate the mean departure delay for each amount of precipitation, and plot your results.
+
+---
+## Add'l filtering join examples
+
+Recall that anti-joins are useful for diagnosing join mismatches. 
+
+For example, when connecting `flights` and `planes`, you might be interested to know that there are many `flights` that don’t have a match in `planes`:
+
+
+```r
+flights %&gt;%
+  anti_join(planes, by = "tailnum") %&gt;%
+  count(tailnum, sort = TRUE)
+```
+
+```
+## # A tibble: 722 x 2
+##    tailnum     n
+##    &lt;chr&gt;   &lt;int&gt;
+##  1 &lt;NA&gt;     2512
+##  2 N725MQ    575
+##  3 N722MQ    513
+##  4 N723MQ    507
+##  5 N713MQ    483
+##  6 N735MQ    396
+##  7 N0EGMQ    371
+##  8 N534MQ    364
+##  9 N542MQ    363
+## 10 N531MQ    349
+## # … with 712 more rows
+```
+
+---
+class: yourturn
+# YOUR TURN
+
+For this exercise, use the data from the `nycflight13` package.
+
+What does `anti_join(flights, airports, by = c("dest" = "faa"))` tell you? 
+
+What does `anti_join(airports, flights, by = c("faa" = "dest"))` tell you?
 
 
 ---
