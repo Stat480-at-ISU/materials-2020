@@ -1,0 +1,243 @@
+---
+title: "JOINING DATA: MESSY 4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+### Your turn 1
+
+For this your turn use the `HallOfFame` and `Master` data from the `Lahman` package
+
+##### Identify all players who were inducted in the Hall of Fame in 2017, by filtering the `Master` data for their player IDs. 
+
+Load the package and take a look at the metadata for the 24 included data sets. You can also take a look at the first couple of observations in a few of the data sets.
+
+```{r}
+library(tidyverse)
+library(Lahman)
+LahmanData
+AllstarFull %>%  head()
+Master %>% head()
+```
+
+To answer this question we will use `dplyr` verbs to obtain a vector of all of the players inducted into the Hall of Fame in 2017 according to their player ids:
+
+```{r}
+player_ids <- HallOfFame %>% filter(yearID == 2017) %>% pull(playerID)
+head(player_ids)
+```
+
+We can then use that vector to filter the `Master` data by the player ids:
+
+```{r}
+Master %>% filter(playerID %in% player_ids) %>% str()
+```
+
+
+### Your turn 2
+
+##### Join (relevant pieces of) the `Master` data set and the `HallOfFame` data.
+
+The trick here is to recognize that we want to add the relevant materials from the `Master` data to the `HallOfFame` data. 
+
+```{r}
+dim(HallOfFame)
+fame_master <- HallOfFame %>% 
+  left_join(Master, by="playerID")
+dim(fame_master)
+```
+
+What would happen if we had (incorrectly) reversed this? 
+
+```{r}
+master_fame <- Master %>% 
+  left_join(HallOfFame, by="playerID")
+dim(master_fame)
+```
+
+##### Find all Hall of Famers who were alive as of 2019. (use the data resulted from the joining done in question 1)
+
+```{r}
+fame_master %>% 
+  filter(inducted=="Y", is.na(deathYear)) %>% 
+  select(nameFirst, nameLast) %>% 
+  arrange(nameLast) %>% 
+  head()
+```
+
+
+##### How many attempts at being inducted to the HoF does Sammy Sosa have already?
+
+```{r}
+fame_master %>% filter(nameLast == "Sosa")
+```
+
+
+### Your turn 3
+
+For this exercise, use the data from the `classdata` package
+
+##### Load the `classdata` package into your R session.
+
+You will need to install the most current version of the package in order to complete this exercise. 
+```{r}
+# devtools::install_github("haleyjeppson/classdata", force = TRUE)
+library(classdata)
+```
+
+##### Investigate data sets `box` and `budget`.
+
+First, load the data:
+
+```{r}
+data(box)
+data(budget)
+```
+
+Take a first look at the datasets:
+
+```{r}
+str(box)
+str(budget)
+```
+
+##### Join the two datasets to incorporate the release date of movies into the `box`  data.
+
+```{r}
+new_box <- box %>% left_join(budget, by = "Movie")
+```
+
+##### Check on the dimensions of the data sets before and after the join. Where are potential problems?
+
+```{r}
+dim(box) 
+dim(new_box)
+```
+
+There are more observation in `new_box` than there were in `box` -- this means we have introduced duplicates!
+
+```{r}
+budget %>% filter(Movie=="Beauty and the Beast")
+```
+
+##### Use `anti_join` to detect problematic cases. 
+
+First, we can look at the movies where we don't know - for whatever reason - the budget:
+
+```{r}
+anti1 <- box %>% anti_join(budget, by="Movie")
+head(anti1) 
+```
+
+We can also look at the movies that we have budget information for, but no box office data:
+
+```{r}
+anti2 <- budget %>% anti_join(box, by="Movie")
+head(anti2)
+```
+
+### Your turn 4
+
+For this exercise, use the data from the `nycflight13` package.
+
+```{r}
+library(nycflights13)
+```
+
+##### Add the location of the origin and destination (i.e. the `lat` and `lon`) from the `airports` data to the `flights` data
+
+You can perform one join after another. If duplicate variables are found, by default, dplyr will distinguish the two by adding `.x`, and `.y` to the ends of the variable names to solve naming conflicts. However, we can use the `suffix` argument to override this default behavior. Since is always good practice to have clear variable names, I will use the suffixes `"_dest"` and `"_origin"` to specify whether the column refers to the destination or origin airport.
+
+```{r}
+airport_locations <- airports %>%
+  select(faa, lat, lon)
+
+flights %>%
+  select(year:day, hour, origin, dest) %>%
+  left_join(
+    airport_locations,
+    by = c("origin" = "faa")
+  ) %>%
+  left_join(
+    airport_locations,
+    by = c("dest" = "faa"),
+    suffix = c("_origin", "_dest")
+    # existing lat and lon variables in tibble gain the "_origin" suffix
+    # new lat and lon variables are given "_dest" suffix
+  )
+```
+
+
+##### Is there a relationship between the age of a plane and its arrival delays?  
+
+To answer this question, we need to take the follwing steps:  
+  - join the tables `flights` and `planes`  
+  - calculate the average arrival delay for each age of a flight
+  - since there are few planes older than 25 years, truncate age at 25 years  
+  - plot age against the average arrival delay
+  
+```{r}
+plane_ages <- planes %>% 
+  select(tailnum, plane_year = year) # rename year to be plane_year for clarity
+
+flights %>% 
+  inner_join(plane_ages, by = "tailnum") %>%
+  mutate(plane_age = year - plane_year) %>%
+  filter(!is.na(plane_age)) %>%
+  mutate(plane_age = if_else(plane_age > 25, 25L, plane_age)) %>%
+  group_by(plane_age) %>%
+  summarise(
+    arr_delay_mean = mean(arr_delay, na.rm = TRUE),
+    n_arr_delay = sum(!is.na(arr_delay))
+    ) %>% 
+  ggplot(aes(x = plane_age, y = arr_delay_mean)) +
+  geom_point()  +
+  labs(x = "Age of plane (years)", y = "Mean Arrival Delay (minutes)")
+
+```
+
+
+##### What weather conditions make it more likely to see a departure delay?  
+
+To answer this question, we need to take the follwing steps:  
+  - join the tables `flights` and `weather`  
+  - calculate the mean departure delay for each amount of precipitation  
+  - plot the results
+  
+```{r}
+flight_weather <-
+  flights %>%
+  inner_join(weather, by = c(
+    "origin" = "origin",
+    "year" = "year",
+    "month" = "month",
+    "day" = "day",
+    "hour" = "hour"
+  ))
+
+flight_weather %>%
+  group_by(precip) %>%
+  summarise(delay = mean(dep_delay, na.rm = TRUE)) %>%
+  ggplot(aes(x = precip, y = delay)) +
+  geom_line() + geom_point()
+```
+
+Almost any amount of precipitation is associated with a delay. However, there is not a strong a trend above 0.02 in. of precipitation.
+
+### Your turn 5
+
+##### What does `anti_join(flights, airports, by = c("dest" = "faa"))` tell you? 
+
+The expression `anti_join(flights, airports, by = c("dest" = "faa"))` returns the flights that went to an airport that is not in the FAA list of destinations. Since the FAA list only contains domestic airports, these are likely foreign flights.
+
+##### What does `anti_join(airports, flights, by = c("faa" = "dest"))` tell you?
+
+The expression `anti_join(airports, flights, by = c("faa" = "dest"))` returns the US airports that were not the destination of any flight in the data. Since the data contains all flights from New York City airports, this is also the list of US airports that did not have a nonstop flight from New York City in 2013.
