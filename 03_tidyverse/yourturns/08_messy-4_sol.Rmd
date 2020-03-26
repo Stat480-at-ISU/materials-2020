@@ -12,11 +12,11 @@ knitr::opts_chunk$set(
 ```
 
 
-### Your turn 1
+### YOUR TURN #1
 
-For this your turn use the `HallOfFame` and `Master` data from the `Lahman` package
+For this YOUR TURN use the `HallOfFame` and `Master` data from the `Lahman` package
 
-##### Identify all players who were inducted in the Hall of Fame in 2017, by filtering the `Master` data for their player IDs. 
+#### Q: Identify all players who were inducted in the Hall of Fame in 2017, by filtering the `Master` data for their player IDs. 
 
 Load the package and take a look at the metadata for the 24 included data sets. You can also take a look at the first couple of observations in a few of the data sets.
 
@@ -42,9 +42,9 @@ Master %>% filter(playerID %in% player_ids) %>% str()
 ```
 
 
-### Your turn 2
+### YOUR TURN #2
 
-##### Join (relevant pieces of) the `Master` data set and the `HallOfFame` data.
+#### Q: Join (relevant pieces of) the `Master` data set and the `HallOfFame` data.
 
 The trick here is to recognize that we want to add the relevant materials from the `Master` data to the `HallOfFame` data. 
 
@@ -63,7 +63,7 @@ master_fame <- Master %>%
 dim(master_fame)
 ```
 
-##### Find all Hall of Famers who were alive as of 2019. (use the data resulted from the joining done in question 1)
+#### Q: Find all Hall of Famers who were alive as of 2019. (use the data resulted from the joining done in question 1)
 
 ```{r}
 fame_master %>% 
@@ -74,18 +74,18 @@ fame_master %>%
 ```
 
 
-##### How many attempts at being inducted to the HoF does Sammy Sosa have already?
+#### Q: How many attempts at being inducted to the HoF does Sammy Sosa have already?
 
 ```{r}
 fame_master %>% filter(nameLast == "Sosa")
 ```
 
 
-### Your turn 3
+### YOUR TURN #3
 
 For this exercise, use the data from the `classdata` package
 
-##### Load the `classdata` package into your R session.
+#### Q: Load the `classdata` package into your R session.
 
 You will need to install the most current version of the package in order to complete this exercise. 
 ```{r}
@@ -93,7 +93,7 @@ You will need to install the most current version of the package in order to com
 library(classdata)
 ```
 
-##### Investigate data sets `box` and `budget`.
+#### Q: Investigate data sets `box` and `budget`.
 
 First, load the data:
 
@@ -109,13 +109,13 @@ str(box)
 str(budget)
 ```
 
-##### Join the two datasets to incorporate the release date of movies into the `box`  data.
+#### Q: Join the two datasets to incorporate the release date of movies into the `box`  data.
 
 ```{r}
 new_box <- box %>% left_join(budget, by = "Movie")
 ```
 
-##### Check on the dimensions of the data sets before and after the join. Where are potential problems?
+#### Q: Check on the dimensions of the data sets before and after the join. Where are potential problems?
 
 ```{r}
 dim(box) 
@@ -128,7 +128,7 @@ There are more observation in `new_box` than there were in `box` -- this means w
 budget %>% filter(Movie=="Beauty and the Beast")
 ```
 
-##### Use `anti_join` to detect problematic cases. 
+#### Q: Use `anti_join` to detect problematic cases. 
 
 First, we can look at the movies where we don't know - for whatever reason - the budget:
 
@@ -144,7 +144,7 @@ anti2 <- budget %>% anti_join(box, by="Movie")
 head(anti2)
 ```
 
-### Your turn 4
+### YOUR TURN #4
 
 For this exercise, use the data from the `nycflight13` package.
 
@@ -152,7 +152,7 @@ For this exercise, use the data from the `nycflight13` package.
 library(nycflights13)
 ```
 
-##### Add the location of the origin and destination (i.e. the `lat` and `lon`) from the `airports` data to the `flights` data
+#### Q: Add the location of the origin and destination (i.e. the `lat` and `lon`) from the `airports` data to the `flights` data
 
 You can perform one join after another. If duplicate variables are found, by default, dplyr will distinguish the two by adding `.x`, and `.y` to the ends of the variable names to solve naming conflicts. However, we can use the `suffix` argument to override this default behavior. Since is always good practice to have clear variable names, I will use the suffixes `"_dest"` and `"_origin"` to specify whether the column refers to the destination or origin airport.
 
@@ -176,7 +176,7 @@ flights %>%
 ```
 
 
-##### Is there a relationship between the age of a plane and its arrival delays?  
+#### Q: Is there a relationship between the age of a plane and its arrival delays?  
 
 To answer this question, we need to take the follwing steps:  
   - join the tables `flights` and `planes`  
@@ -205,7 +205,7 @@ flights %>%
 ```
 
 
-##### What weather conditions make it more likely to see a departure delay?  
+#### Q: What weather conditions make it more likely to see a departure delay?  
 
 To answer this question, we need to take the follwing steps:  
   - join the tables `flights` and `weather`  
@@ -232,12 +232,12 @@ flight_weather %>%
 
 Almost any amount of precipitation is associated with a delay. However, there is not a strong a trend above 0.02 in. of precipitation.
 
-### Your turn 5
+### YOUR TURN #5
 
-##### What does `anti_join(flights, airports, by = c("dest" = "faa"))` tell you? 
+#### Q: What does `anti_join(flights, airports, by = c("dest" = "faa"))` tell you? 
 
 The expression `anti_join(flights, airports, by = c("dest" = "faa"))` returns the flights that went to an airport that is not in the FAA list of destinations. Since the FAA list only contains domestic airports, these are likely foreign flights.
 
-##### What does `anti_join(airports, flights, by = c("faa" = "dest"))` tell you?
+#### Q: What does `anti_join(airports, flights, by = c("faa" = "dest"))` tell you?
 
 The expression `anti_join(airports, flights, by = c("faa" = "dest"))` returns the US airports that were not the destination of any flight in the data. Since the data contains all flights from New York City airports, this is also the list of US airports that did not have a nonstop flight from New York City in 2013.
