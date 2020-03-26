@@ -114,11 +114,35 @@ Otherwise, there are three ways you’re likely to create a date/time:
 
 - separators are automatically determined, then assumed to be the same  
 
-<br/>
-Example:  
+???
+- identify the order in which year, month, and day appear in your dates  
+
+- arrange "y", "m", and "d" in the same order
+
+- this will gives you the name of the lubridate function that will parse your date
+
+---
+## Converter function Examples
+
 
 ```{r message=FALSE}
-mdy("03-01-2018")
+ymd("2020-03-26")
+mdy("03-26-2020")
+mdy("March 26th, 2020")
+ymd(20200326)
+```
+
+---
+## Converter function Examples
+
+```{r}
+mdy_hm("03/26/2020 09:00")
+```
+
+You can also force the creation of a date-time from a date by supplying a timezone:
+
+```{r}
+ymd("2020-03-26", tz = "UTC")
 ```
 
 ---
