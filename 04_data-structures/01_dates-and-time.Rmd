@@ -1,0 +1,218 @@
+---
+title: "Working with <br>dates & time"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: tomorrow
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = TRUE)
+#xaringan::inf_mr(cast_from = '..') 
+library(tidyverse)
+library(lubridate)
+```
+
+## deceptively tricky
+
+At first glance, dates and times seem simple, but consider these questions:  
+
+1. Does every year have 365 days?  
+
+2. Does every day have 24 hours?  
+
+3. Does every minute have 60 seconds? 
+
+</br></br>
+Dates and times are hard because they have to reconcile:
+
+- two physical phenomena (the rotation of the Earth and its orbit around <br>the sun)  
+
+- a whole raft of geopolitical phenomena including months, time zones, <br>and daylight savings time.
+???
+I’m sure you know that not every year has 365 days, but do you know the full rule for determining if a year is a leap year? (It has three parts.) 
+
+You might have remembered that many parts of the world use daylight savings time (DST), so that some days have 23 hours, and others have 25. 
+
+You might not have known that some minutes have 61 seconds because every now and then leap seconds are added because the Earth’s rotation is gradually slowing down.
+
+---
+background-image: url(https://pbs.twimg.com/media/CEwVKWbWgAAzFS2.png)
+background-size: 600px
+background-position: 25% 65%
+
+## Comprehensive map of all countries that use the <br>MM-DD-YYYY format
+
+.footnote[
+From [https://twitter.com/donohoe/status/597876118688026624](https://twitter.com/donohoe/status/597876118688026624).
+]
+
+---
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/lubridate.png)
+background-size: 120px
+background-position: 92% 5%
+
+## `lubridate` 
+
+package for working with dates and times  
+
+defines different classes of time: instants, periods, intervals, durations
+
+defines converter and accessor functions, enables time calculations
+
+
+.center[
+<img src="images/lubridate_ymd.png" height="400">
+]
+---
+## date/time data
+
+Three types of date/time data: dates, times, and date-times.  
+
+- If you can use a date instead of a date-time, you should. (it's simpler)  
+
+- Date-times are substantially more complicated because of the need to handle time zones.
+
+---
+## creating date/times
+To get the current date or date-time you can use `today()` or `now()`:
+
+```{r}
+today()
+now()
+```
+
+</br></br>
+Otherwise, there are three ways you’re likely to create a date/time:
+
+1. From a string.
+
+2. From individual date-time components.
+
+3. From an existing date/time object.
+
+
+---
+## Converter functions & <br>instants in time
+
+- time instants: one (absolute) moment in time, e.g. `now()`, `Jan-1-2000`  
+
+- easy-to-use converter functions:  
+
+    - date: `ymd()`, `mdy()`, `dmy()`, ...  
+    
+    - time: `hm()`, `hms()`, ...  
+    
+    - date & time: `ymd_hms()`, `mdy_hm()`, ...  
+    
+- order of letters determines how strings are parsed  
+
+- separators are automatically determined, then assumed to be the same  
+
+<br/>
+Example:  
+
+```{r message=FALSE}
+mdy("03-01-2018")
+```
+
+---
+class: yourturn
+# Your Turn
+
+- Create date objects for today's date by typing the date in text format and converting it with one of the `lubridate` converter functions.   
+
+- Try different formats of writing the date and compare the end results.  
+
+
+
+---
+## Accessor functions
+
+
+- accessor functions: `year()`, `month()`, `week()`, `wday()`, `mday()`, `yday()`, `hour()`, `minute()`, ...  
+
+- accessor functions can also be used for setting elements of date and time, e.g. `hour(x) <- 12`  
+
+<br/>
+Examples:  
+
+```{r}
+month(now())
+wday(now(), label = TRUE)
+```
+
+---
+## Intervals and Durations
+
+- Intervals have a **start** and an **end** date/time: absolute difference  
+
+- Durations are potentially of relative length (months, leap year, <br>leap second, ...)
+
+```{r}
+end_date <- now()
+# span is interval, years(1) is duration
+span <- end_date - years(1)
+span
+end_date - days(10)
+```
+
+---
+## Example: Movies
+
+```{r, message=FALSE}
+library(classdata)
+summary(box$Date) # date variable: allows date calculus
+```
+
+---
+## Example: Movies (cont'd)
+
+```{r, fig.height = 3.25}
+library(tidyverse)
+
+box %>% ggplot(aes(x = Date)) + geom_histogram(binwidth=7)
+```
+
+---
+## Example: Movies (cont'd)
+
+Is there a seasonal effect in the number of movies in the box office?
+
+```{r, fig.height = 3.25}
+library(lubridate)
+
+box %>% ggplot(aes(x = month(Date, label=TRUE))) + geom_bar()
+```
+
+---
+class: yourturn
+# Your Turn
+
+
+- inspect the `budget` data set from the `classdata` package
+
+- make sure the variable `Release Date` is a date format
+
+- plot a histogram of the variable
+
+- merge (`join`) budget and box office data (by movie name)  
+
+- is the time between the release of a movie and the date is equal to the number of weeks in theaters?
+
+
+
+---
+## Resources
+
+- reference/document: https://lubridate.tidyverse.org/index.html
+
+- RStudio cheat sheet for [lubridate](https://rawgit.com/rstudio/cheatsheets/master/lubridate.pdf)
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
