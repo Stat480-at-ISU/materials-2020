@@ -44,7 +44,7 @@ a, a > code {
     color: #b58900;
     text-decoration: none;
 }
-strong{color:#84a9cd;}
+strong{color:#333333;} /*84a9cd;}*/
 .inverse strong{color:#fdf6e3;}
 .inverse2 strong{color:#fdf6e3;}
 .yourturn strong{color:#fdf6e3;}

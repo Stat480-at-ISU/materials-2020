@@ -1,0 +1,50 @@
+---
+title: "JOINING DATA: MESSY 4"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+### Your turn 
+
+Use the `box` data from the package `classdata`
+
+```{r}
+library(tidyverse)
+library(classdata)
+```
+
+#### Are there any missing values in the dataset `box`?
+
+```{r}
+summary(box) # there are missing values!
+```
+
+#### What are the values of `Rank` when `Rank.Last.Week` is missing?
+
+```{r}
+box %>% 
+  filter(is.na(Rank.Last.Week)) %>% 
+  head()
+```
+
+
+#### What is the dimension of the data set `box`, when removing all missing values with the function `na.omit()`?
+
+```{r}
+dim(box)
+dim(na.omit(box)) # don't use na.omit
+```
+
+
+#### Why does the following statement fail? `box$Rank.Last.Week <- na.omit(box$Rank.Last.Week)` 
+
+There is a mismatch in the dimensions.
+

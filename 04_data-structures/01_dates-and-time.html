@@ -96,7 +96,7 @@ now()
 ```
 
 ```
-## [1] "2020-03-31 08:50:25 CDT"
+## [1] "2020-03-31 15:30:46 CDT"
 ```
 
 &lt;/br&gt;&lt;/br&gt;
@@ -258,7 +258,7 @@ now()
 ```
 
 ```
-## [1] "2020-03-31 08:50:25 CDT"
+## [1] "2020-03-31 15:30:47 CDT"
 ```
 ]
 .pull-right[
@@ -330,7 +330,7 @@ wday(now(), label = TRUE, abbr = FALSE)
 
 ```
 ## [1] Tuesday
-## 7 Levels: Sunday &lt; Monday &lt; Tuesday &lt; Wednesday &lt; Thursday &lt; ... &lt; Saturday
+## Levels: Sunday &lt; Monday &lt; Tuesday &lt; Wednesday &lt; Thursday &lt; Friday &lt; Saturday
 ```
 
 ???
@@ -360,7 +360,7 @@ flights_dt %&gt;%
 ```
 
 ```
-## [1] "2020-03-31 08:50:27 CDT"
+## [1] "2020-03-31 15:30:48 CDT"
 ```
 
 ```r
@@ -369,7 +369,7 @@ date
 ```
 
 ```
-## [1] "1920-03-31 08:50:27 LMT"
+## [1] "1920-03-31 15:30:48 LMT"
 ```
 
 ```r
@@ -378,7 +378,7 @@ date
 ```
 
 ```
-## [1] "1920-03-31 10:50:27 LMT"
+## [1] "1920-03-31 17:30:48 LMT"
 ```
 
 
@@ -537,6 +537,12 @@ To find out how many periods fall into an interval, you need to use integer divi
 ```
 
 ```
+## Note: method with signature 'Timespan#Timespan' chosen for function '%/%',
+##  target signature 'Interval#Duration'.
+##  "Interval#ANY" would also be valid
+```
+
+```
 ## [1] 52
 ```
 
@@ -552,10 +558,8 @@ summary(box$Date) # date variable: allows date arithmetic
 ```
 
 ```
-##         Min.      1st Qu.       Median         Mean      3rd Qu. 
-## "2013-03-08" "2014-10-24" "2016-06-17" "2016-06-12" "2018-01-26" 
-##         Max. 
-## "2019-10-11"
+##         Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+## "2013-03-08" "2014-10-24" "2016-06-17" "2016-06-12" "2018-01-26" "2019-10-11"
 ```
 
 ---
