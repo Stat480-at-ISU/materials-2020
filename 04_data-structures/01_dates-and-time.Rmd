@@ -16,6 +16,7 @@ options(htmltools.dir.version = FALSE, echo = TRUE)
 #xaringan::inf_mr(cast_from = '..') 
 library(tidyverse)
 library(lubridate)
+library(nycflights13)
 ```
 
 ## deceptively tricky
@@ -78,6 +79,8 @@ Three types of date/time data: dates, times, and date-times.
 
 - Date-times are substantially more complicated because of the need to handle time zones.
 
+???
+- time instants: one (absolute) moment in time, e.g. `now()`, `Jan-1-2000`  
 ---
 ## creating date/times
 To get the current date or date-time you can use `today()` or `now()`:
@@ -90,7 +93,7 @@ now()
 </br></br>
 Otherwise, there are three ways you’re likely to create a date/time:
 
-1. From a string.
+1. From a string. (use a converter function)
 
 2. From individual date-time components.
 
@@ -98,9 +101,9 @@ Otherwise, there are three ways you’re likely to create a date/time:
 
 
 ---
-## Converter functions & <br>instants in time
+## From strings (or numbers)
 
-- time instants: one (absolute) moment in time, e.g. `now()`, `Jan-1-2000`  
+Want to convert strings or numbers to date-times.
 
 - easy-to-use converter functions:  
 
@@ -139,11 +142,13 @@ ymd(20200326)
 mdy_hm("03/26/2020 09:00")
 ```
 
+<br/><br/>
 You can also force the creation of a date-time from a date by supplying a timezone:
 
 ```{r}
 ymd("2020-03-26", tz = "UTC")
 ```
+
 
 ---
 class: yourturn
@@ -153,45 +158,206 @@ class: yourturn
 
 - Try different formats of writing the date and compare the end results.  
 
+- Use the appropriate converter function to parse each of the following dates:
+<br><br>
+`d1 <- "January 1, 2010"`<br>
+`d2 <- "2015-Mar-07"`<br>
+`d3 <- "06-Jun-2017"`<br>
+`d4 <- c("August 19 (2015)", "July 1 (2015)")`<br>
+`d5 <- "12/30/14"`<br>
+
+
+---
+## From individual components  
+
+Functions to create date/time from individual components spread across multiple columns:  `make_date()`, `make_datetime()`
+
+```{r}
+flights %>% 
+  select(year, month, day, hour, minute) %>% 
+  mutate(departure = make_datetime(year, month, day, hour, minute)) %>% 
+  head()
+```
+
+---
+## From a date/time object
+
+
+Functions to switch between a date-time and a date:  `as_date()`, `as_datetime()`
+
+.pull-left[
+```{r}
+today()
+now()
+```
+]
+.pull-right[
+```{r}
+as_datetime(today())
+as_date(now())
+```
+]
+
+---
+class: yourturn
+# Your Turn
+
+For this question use the `flights` data from the `nycflights13` package.
+
+- Use `make_datetime()` to create a date-time variable for `dep_time` and `arr_time`. <br><br>
+**Hint**: use modular arithmetic `%/%` for hour and `%%` for minute
+
+
 
 
 ---
 ## Accessor functions
 
+Want to get or assign a component of a date/time object.  
 
-- accessor functions: `year()`, `month()`, `week()`, `wday()`, `mday()`, `yday()`, `hour()`, `minute()`, ...  
+- Use accessor functions to get a component: `year()`, `month()`, `week()`, `wday()`, `mday()`, `yday()`, `hour()`, `minute()`, ...  
 
-- accessor functions can also be used for setting elements of date and time, e.g. `hour(x) <- 12`  
+- Assign into an accessor functionsto set elements of date and time, e.g. `hour(x) <- 12`  
 
-<br/>
-Examples:  
+???
+You can pull out individual parts of the date with the accessor functions
+---
+## Accessor function examples
 
 ```{r}
 month(now())
 wday(now(), label = TRUE)
+wday(now(), label = TRUE, abbr = FALSE)
+```
+
+???
+
+For month() and wday() you can set label = TRUE to return the abbreviated name of the month or day of the week. Set abbr = FALSE to return the full name.
+---
+## Accessor function examples
+
+```{r include = FALSE}
+flights_dt <- flights %>% 
+  dplyr::filter(!is.na(dep_time), !is.na(arr_time)) %>% 
+  mutate(dep_hour = dep_time %/% 100,
+         dep_min = dep_time %% 100,
+         dep_time = make_datetime(year, month, day, dep_hour, dep_min),
+         arr_hour = arr_time %/% 100,
+         arr_min = arr_time %% 100,
+         arr_time = make_datetime(year, month, day, arr_hour, arr_min)) 
+```
+
+```{r fig.height=4, fig.width=8}
+flights_dt %>% 
+  mutate(wday = wday(dep_time, label = TRUE)) %>% 
+  ggplot(aes(x = wday)) +
+    geom_bar()
 ```
 
 ---
-## Intervals and Durations
-
-- Intervals have a **start** and an **end** date/time: absolute difference  
-
-- Durations are potentially of relative length (months, leap year, <br>leap second, ...)
+## Accessor function examples
 
 ```{r}
-end_date <- now()
-# span is interval, years(1) is duration
-span <- end_date - years(1)
-span
-end_date - days(10)
+(date <- now())
+year(date) <- 1920
+date
+hour(date) <- hour(date) + 2
+date
 ```
+
+
+---
+class: yourturn
+# YOUR TURN
+
+For this question, use the `flights_dt` data created in the last your turn.
+
+- Use an accessor function to calculate the average departure delay by minute within the hour.
+
+- Use ggplot2 to plot your results.
+
+---
+## Intervals, Durations, & PERIODS
+
+Three important classes that represent time spans:  
+
+- **Periods** track changes in clock times, which ignore time line irregularities
+
+  - make a period with the name of a time unit plyralized, e.g. `years()`, `months()`
+
+- **Durations** are potentially of relative length (months, leap year, <br>leap second, ...)
+
+  - make a duration with the name of the perios prefixed with a d, e.g. `dyears()`, `dmonths()`
+  
+- **Intervals** have a start and an end date/time: absolute difference  
+
+  - make an interval with `interval()` or `%--%`
+
+
+
+???
+periods work with "human" times, likes days and months
+
+intervals represent specific intervals of the timeline, bounded by start and end date-times
+
+durations track the passage of physical time, which deviates from clock time when irregularities occur
+
+---
+## Time span examples
+
+```{r}
+years(1)
+dyears(1)
+(tomorrow <- today() + ddays(1))
+# A leap year
+ymd("2016-01-01") + dyears(1)
+ymd("2016-01-01") + years(1)
+```
+
+---
+## Time span examples
+
+When you subtract two dates, you get a difftime object:  
+
+```{r}
+# How old am I?
+h_age <- today() - ymd(19900327)
+h_age
+```
+
+<br>
+As a **duration**:  
+
+```{r}
+as.duration(h_age)
+```
+
+
+---
+## Time span examples
+
+```{r}
+next_year <- today() + years(1)
+today() %--% next_year
+(today() %--% next_year) / ddays(1)
+(today() %--% next_year) / dhours(1)
+```
+
+To find out how many periods fall into an interval, you need to use integer division:
+
+```{r}
+(today() %--% next_year) / dweeks(1)
+(today() %--% next_year) %/% dweeks(1)
+```
+
+
 
 ---
 ## Example: Movies
 
 ```{r, message=FALSE}
 library(classdata)
-summary(box$Date) # date variable: allows date calculus
+summary(box$Date) # date variable: allows date arithmetic
 ```
 
 ---

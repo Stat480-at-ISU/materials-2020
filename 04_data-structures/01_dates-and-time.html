@@ -76,6 +76,8 @@ Three types of date/time data: dates, times, and date-times.
 
 - Date-times are substantially more complicated because of the need to handle time zones.
 
+???
+- time instants: one (absolute) moment in time, e.g. `now()`, `Jan-1-2000`  
 ---
 ## creating date/times
 To get the current date or date-time you can use `today()` or `now()`:
@@ -86,7 +88,7 @@ today()
 ```
 
 ```
-## [1] "2020-03-26"
+## [1] "2020-03-31"
 ```
 
 ```r
@@ -94,13 +96,13 @@ now()
 ```
 
 ```
-## [1] "2020-03-26 09:27:10 CDT"
+## [1] "2020-03-31 08:50:25 CDT"
 ```
 
 &lt;/br&gt;&lt;/br&gt;
 Otherwise, there are three ways you’re likely to create a date/time:
 
-1. From a string.
+1. From a string. (use a converter function)
 
 2. From individual date-time components.
 
@@ -108,9 +110,9 @@ Otherwise, there are three ways you’re likely to create a date/time:
 
 
 ---
-## Converter functions &amp; &lt;br&gt;instants in time
+## From strings (or numbers)
 
-- time instants: one (absolute) moment in time, e.g. `now()`, `Jan-1-2000`  
+Want to convert strings or numbers to date-times.
 
 - easy-to-use converter functions:  
 
@@ -180,6 +182,7 @@ mdy_hm("03/26/2020 09:00")
 ## [1] "2020-03-26 09:00:00 UTC"
 ```
 
+&lt;br/&gt;&lt;br/&gt;
 You can also force the creation of a date-time from a date by supplying a timezone:
 
 
@@ -191,6 +194,7 @@ ymd("2020-03-26", tz = "UTC")
 ## [1] "2020-03-26 UTC"
 ```
 
+
 ---
 class: yourturn
 # Your Turn
@@ -199,18 +203,108 @@ class: yourturn
 
 - Try different formats of writing the date and compare the end results.  
 
+- Use the appropriate converter function to parse each of the following dates:
+&lt;br&gt;&lt;br&gt;
+`d1 &lt;- "January 1, 2010"`&lt;br&gt;
+`d2 &lt;- "2015-Mar-07"`&lt;br&gt;
+`d3 &lt;- "06-Jun-2017"`&lt;br&gt;
+`d4 &lt;- c("August 19 (2015)", "July 1 (2015)")`&lt;br&gt;
+`d5 &lt;- "12/30/14"`&lt;br&gt;
+
+
+---
+## From individual components  
+
+Functions to create date/time from individual components spread across multiple columns:  `make_date()`, `make_datetime()`
+
+
+```r
+flights %&gt;% 
+  select(year, month, day, hour, minute) %&gt;% 
+  mutate(departure = make_datetime(year, month, day, hour, minute)) %&gt;% 
+  head()
+```
+
+```
+## # A tibble: 6 x 6
+##    year month   day  hour minute departure          
+##   &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dttm&gt;             
+## 1  2013     1     1     5     15 2013-01-01 05:15:00
+## 2  2013     1     1     5     29 2013-01-01 05:29:00
+## 3  2013     1     1     5     40 2013-01-01 05:40:00
+## 4  2013     1     1     5     45 2013-01-01 05:45:00
+## 5  2013     1     1     6      0 2013-01-01 06:00:00
+## 6  2013     1     1     5     58 2013-01-01 05:58:00
+```
+
+---
+## From a date/time object
+
+
+Functions to switch between a date-time and a date:  `as_date()`, `as_datetime()`
+
+.pull-left[
+
+```r
+today()
+```
+
+```
+## [1] "2020-03-31"
+```
+
+```r
+now()
+```
+
+```
+## [1] "2020-03-31 08:50:25 CDT"
+```
+]
+.pull-right[
+
+```r
+as_datetime(today())
+```
+
+```
+## [1] "2020-03-31 UTC"
+```
+
+```r
+as_date(now())
+```
+
+```
+## [1] "2020-03-31"
+```
+]
+
+---
+class: yourturn
+# Your Turn
+
+For this question use the `flights` data from the `nycflights13` package.
+
+- Use `make_datetime()` to create a date-time variable for `dep_time` and `arr_time`. &lt;br&gt;&lt;br&gt;
+**Hint**: use modular arithmetic `%/%` for hour and `%%` for minute
+
+
 
 
 ---
 ## Accessor functions
 
+Want to get or assign a component of a date/time object.  
 
-- accessor functions: `year()`, `month()`, `week()`, `wday()`, `mday()`, `yday()`, `hour()`, `minute()`, ...  
+- Use accessor functions to get a component: `year()`, `month()`, `week()`, `wday()`, `mday()`, `yday()`, `hour()`, `minute()`, ...  
 
-- accessor functions can also be used for setting elements of date and time, e.g. `hour(x) &lt;- 12`  
+- Assign into an accessor functionsto set elements of date and time, e.g. `hour(x) &lt;- 12`  
 
-&lt;br/&gt;
-Examples:  
+???
+You can pull out individual parts of the date with the accessor functions
+---
+## Accessor function examples
 
 
 ```r
@@ -226,36 +320,227 @@ wday(now(), label = TRUE)
 ```
 
 ```
-## [1] Thu
+## [1] Tue
 ## Levels: Sun &lt; Mon &lt; Tue &lt; Wed &lt; Thu &lt; Fri &lt; Sat
 ```
 
+```r
+wday(now(), label = TRUE, abbr = FALSE)
+```
+
+```
+## [1] Tuesday
+## 7 Levels: Sunday &lt; Monday &lt; Tuesday &lt; Wednesday &lt; Thursday &lt; ... &lt; Saturday
+```
+
+???
+
+For month() and wday() you can set label = TRUE to return the abbreviated name of the month or day of the week. Set abbr = FALSE to return the full name.
 ---
-## Intervals and Durations
+## Accessor function examples
 
-- Intervals have a **start** and an **end** date/time: absolute difference  
 
-- Durations are potentially of relative length (months, leap year, &lt;br&gt;leap second, ...)
 
 
 ```r
-end_date &lt;- now()
-# span is interval, years(1) is duration
-span &lt;- end_date - years(1)
-span
+flights_dt %&gt;% 
+  mutate(wday = wday(dep_time, label = TRUE)) %&gt;% 
+  ggplot(aes(x = wday)) +
+    geom_bar()
+```
+
+![](01_dates-and-time_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+---
+## Accessor function examples
+
+
+```r
+(date &lt;- now())
 ```
 
 ```
-## [1] "2019-03-26 09:27:10 CDT"
+## [1] "2020-03-31 08:50:27 CDT"
 ```
 
 ```r
-end_date - days(10)
+year(date) &lt;- 1920
+date
 ```
 
 ```
-## [1] "2020-03-16 09:27:10 CDT"
+## [1] "1920-03-31 08:50:27 LMT"
 ```
+
+```r
+hour(date) &lt;- hour(date) + 2
+date
+```
+
+```
+## [1] "1920-03-31 10:50:27 LMT"
+```
+
+
+---
+class: yourturn
+# YOUR TURN
+
+For this question, use the `flights_dt` data created in the last your turn.
+
+- Use an accessor function to calculate the average departure delay by minute within the hour.
+
+- Use ggplot2 to plot your results.
+
+---
+## Intervals, Durations, &amp; PERIODS
+
+Three important classes that represent time spans:  
+
+- **Periods** track changes in clock times, which ignore time line irregularities
+
+  - make a period with the name of a time unit plyralized, e.g. `years()`, `months()`
+
+- **Durations** are potentially of relative length (months, leap year, &lt;br&gt;leap second, ...)
+
+  - make a duration with the name of the perios prefixed with a d, e.g. `dyears()`, `dmonths()`
+  
+- **Intervals** have a start and an end date/time: absolute difference  
+
+  - make an interval with `interval()` or `%--%`
+
+
+
+???
+periods work with "human" times, likes days and months
+
+intervals represent specific intervals of the timeline, bounded by start and end date-times
+
+durations track the passage of physical time, which deviates from clock time when irregularities occur
+
+---
+## Time span examples
+
+
+```r
+years(1)
+```
+
+```
+## [1] "1y 0m 0d 0H 0M 0S"
+```
+
+```r
+dyears(1)
+```
+
+```
+## [1] "31536000s (~52.14 weeks)"
+```
+
+```r
+(tomorrow &lt;- today() + ddays(1))
+```
+
+```
+## [1] "2020-04-01"
+```
+
+```r
+# A leap year
+ymd("2016-01-01") + dyears(1)
+```
+
+```
+## [1] "2016-12-31"
+```
+
+```r
+ymd("2016-01-01") + years(1)
+```
+
+```
+## [1] "2017-01-01"
+```
+
+---
+## Time span examples
+
+When you subtract two dates, you get a difftime object:  
+
+
+```r
+# How old am I?
+h_age &lt;- today() - ymd(19900327)
+h_age
+```
+
+```
+## Time difference of 10962 days
+```
+
+&lt;br&gt;
+As a **duration**:  
+
+
+```r
+as.duration(h_age)
+```
+
+```
+## [1] "947116800s (~30.01 years)"
+```
+
+
+---
+## Time span examples
+
+
+```r
+next_year &lt;- today() + years(1)
+today() %--% next_year
+```
+
+```
+## [1] 2020-03-31 UTC--2021-03-31 UTC
+```
+
+```r
+(today() %--% next_year) / ddays(1)
+```
+
+```
+## [1] 365
+```
+
+```r
+(today() %--% next_year) / dhours(1)
+```
+
+```
+## [1] 8760
+```
+
+To find out how many periods fall into an interval, you need to use integer division:
+
+
+```r
+(today() %--% next_year) / dweeks(1)
+```
+
+```
+## [1] 52.14286
+```
+
+```r
+(today() %--% next_year) %/% dweeks(1)
+```
+
+```
+## [1] 52
+```
+
+
 
 ---
 ## Example: Movies
@@ -263,12 +548,14 @@ end_date - days(10)
 
 ```r
 library(classdata)
-summary(box$Date) # date variable: allows date calculus
+summary(box$Date) # date variable: allows date arithmetic
 ```
 
 ```
-##         Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
-## "2013-03-08" "2014-10-24" "2016-06-17" "2016-06-12" "2018-01-26" "2019-10-11"
+##         Min.      1st Qu.       Median         Mean      3rd Qu. 
+## "2013-03-08" "2014-10-24" "2016-06-17" "2016-06-12" "2018-01-26" 
+##         Max. 
+## "2019-10-11"
 ```
 
 ---
@@ -281,7 +568,7 @@ library(tidyverse)
 box %&gt;% ggplot(aes(x = Date)) + geom_histogram(binwidth=7)
 ```
 
-![](01_dates-and-time_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+![](01_dates-and-time_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
 
 ---
 ## Example: Movies (cont'd)
@@ -295,7 +582,7 @@ library(lubridate)
 box %&gt;% ggplot(aes(x = month(Date, label=TRUE))) + geom_bar()
 ```
 
-![](01_dates-and-time_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+![](01_dates-and-time_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
 
 ---
 class: yourturn
