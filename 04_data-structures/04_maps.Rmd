@@ -1,0 +1,256 @@
+---
+title: "Drawing Maps"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: tomorrow
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = TRUE)
+#xaringan::inf_mr(cast_from = '..') 
+library(tidyverse)
+library(lubridate)
+```
+
+## Outline
+
+### what is a map
+
+### maps and map data in ggplot
+
+### drawing choropleth maps
+
+---
+## Maps 
+
+.pull-left[
+Maps are points in latitude and longitude
+<br/><br/>
+```{r, echo=FALSE, fig.width=4, fig.height = 8/3}
+library(ggplot2)
+iowa <- map_data("state") %>% dplyr::filter(region=="iowa")
+ggplot(iowa, aes(x = long, y = lat)) + geom_point()
+```
+
+]
+.pull-right[
+that are connected in the 'right' order <br>(determined by order in the data)
+
+```{r, echo=FALSE, fig.width=4, fig.height = 8/3}
+ggplot(iowa, aes(x = long, y = lat)) + 
+  geom_point() + 
+  geom_path()
+```
+
+]
+
+---
+## Maps 
+
+.pull-left[
+The `group` aesthetic is used to distinguish between different regions
+
+```{r, echo=FALSE, fig.width=5, fig.height = 4}
+iowa_cali <- map_data("state") %>% dplyr::filter(region %in% c("iowa", "california"))
+ggplot(iowa_cali, aes(x = long, y = lat)) + geom_path(aes(group=region))
+```
+]
+.pull-right[
+& those regions can be filled in  
+<br/><br/>
+```{r, echo=FALSE, fig.width=5, fig.height = 4}
+ggplot(iowa_cali, aes(x = long, y = lat)) + geom_polygon(aes(group=region))
+```
+
+]
+
+---
+## map data
+
+```{r}
+states <- map_data("state")
+head(states)
+```
+
+---
+## Maps in code (1)
+
+
+```{r fig.width=10, fig.height = 6}
+ggplot(states, aes(x = long, y = lat)) + geom_point()
+```
+
+---
+## Maps in code (2)
+
+
+```{r fig.width=10, fig.height = 6}
+ggplot(states, aes(x = long, y = lat)) + geom_path(aes(group = group))
+```
+
+---
+## Maps in code (3)
+
+```{r fig.width=10, fig.height = 6}
+ggplot(states, aes(x = long, y = lat)) + geom_polygon(aes(group = group))
+```
+
+---
+## Maps in code (4)
+
+```{r fig.width=10, fig.height = 6}
+ggplot(states, aes(x = long, y = lat)) + geom_polygon(aes(group = group, fill=lat))
+```
+
+---
+## World maps
+
+```{r fig.width=10, fig.height = 6}
+world <- map_data("world")
+world <- world %>% arrange(order)
+ggplot(world, aes(x = long, y = lat)) + 
+  geom_polygon(aes(group=group), size=.1, 
+               colour="white") +
+  theme_void()
+```
+
+
+---
+class: yourturn
+# Your Turn 
+
+- Use ggplot2 and pull out map data for all
+US counties: <br> `counties <- map_data("county")`
+
+- Draw a map of counties (polygons & path geom)
+
+- Colour all counties called "story"
+
+- **Advanced**: What county names are used often?
+
+
+---
+## Choropleth maps
+
+- Choropleth maps are thematic maps: areas are shaded in proportion to the values of a variable
+
+- Join datasets: content and map
+
+---
+## Join content and map: content
+
+```{r}
+data(fbi, package="classdata")
+fbi14 <- fbi %>% dplyr::filter(Year == 2014)
+head(fbi14)
+```
+
+---
+## Join content and map: map
+
+
+```{r}
+head(states)
+```
+
+---
+## Prepare for join
+
+- want to combine fbi and states by state name, but we need to make the spelling the same
+
+- for simplification, introduce new variable with all lower case letters
+
+- generally, content data is more important, but we will see missing states on the map: `anti_join()`
+
+```{r}
+fbi14$region <- tolower(fbi14$State)
+
+nomatch1 <- fbi14 %>% anti_join(states, by="region")
+# States for which we do not have map data
+unique(nomatch1$State)
+
+
+nomatch2 <- states %>% anti_join(fbi14, by="region")
+# States for which we do not have crime data
+unique(nomatch2$State)
+```
+
+---
+## Join and then map
+
+```{r fig.width=10, fig.height = 6}
+fbi.map <- fbi14 %>% left_join(states, by="region")
+fbi.map %>% dplyr::filter(Type=="Burglary") %>% 
+  ggplot(aes(x = long, y = lat, fill=Count/Population)) +
+  geom_polygon(aes(group=group))
+```
+
+---
+class: yourturn
+# Your Turn  
+
+- Draw a choropleth map of the rate of motor vehicle thefts in 2012 across the US.
+
+- `scale_fill_gradient2()` allows you to set a color scheme with two main colors. Read up on it and change the scheme in the first choropleth map.
+
+---
+## Geographic data in layers
+
+- For data collected with GPS coordinates we can use maps as background layers
+
+- In that situation, we do not need to join the map information and the content data, but use layers with separate data sets of the form
+
+```
+map %>% ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group)) +
+  geom_point(data = content, aes(x=longitude, y = latitude)) 
+```
+
+---
+## FARS data
+
+- US Department of transportation is keeping a record of every accident that results in a fatality in the FARS Data base (fatal accident report system, http://www.nhtsa.gov/FARS)
+
+- FARS consists of 20+ tables consisting of various aspects of each accident
+
+- Documentation at https://www-fars.nhtsa.dot.gov/Main/index.aspx
+
+- three of the main tables are `accident`, `person`, and `vehicle`
+
+---
+## Data 
+
+- Data of all accidents are available at:
+
+```{r}
+acc <- read.csv("https://raw.githubusercontent.com/DS202-at-ISU/labs/master/data/fars2016/accident.csv", stringsAsFactors = FALSE)
+names(acc)
+```
+
+---
+class: yourturn
+# Your Turn  
+
+- Use the accident data to plot the geographic location of all accidents in the US in 2016.
+
+- Plot accidents on a map of the US (use the map of the US as first layer)
+
+
+- Why would it be tricky to plot a choropleth map of the number of accidents by state?
+
+---
+class: yourturn
+# Your Turn 
+
+- The numbers for each state (`STATE`) are so-called fips codes. 
+
+- Sketch out the steps necessary to draw a choropleth map of the rate of fatal accidents by state.
+
+
+

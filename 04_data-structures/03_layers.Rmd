@@ -1,0 +1,197 @@
+---
+title: "Layers in `ggplot2`"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: tomorrow
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, echo = TRUE)
+#xaringan::inf_mr(cast_from = '..') 
+library(tidyverse)
+library(lubridate)
+```
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/ggplot2_masterpiece.png)
+background-size: 550px
+background-position: 50% 90%
+## Outline:
+
+### The grammar of graphics, again
+
+### Layer specifications
+
+---
+
+## A layered grammar of graphics
+
+
+- ggplot2 works on the philosophy of adding layers to the visualization
+
+- there are 7 layers of grammatical elements  
+
+<br>
+.center[
+<img src="images/layers2.png" width="500">
+]
+
+---
+
+## A layered grammar of graphics
+
+- only 3 of these layers are necessary to make a plot:  
+
+  - **data** are the subjects & objects of the data visualization  
+  
+  - The **geom** is what relates the data to a visual element.  
+  
+  - **Aesthetic mappings** (aes) substitute visual properties (aesthetics) for the data
+
+
+- these three layers allows us maximum flexibility to make subtle changes in each layer to clearly communicate our message.
+
+.center[
+<br/><br/>
+<img src="images/layers1.png" width="500">
+]
+
+---
+## A layered grammar of graphics
+
+A graphical representation (plot) in ggplot2 consists of:
+
+1. **default data and mappings** (`aes`):  data variables are mapped to visual properties of the graphical elements
+
+2. **one or more layers**:  
+  - geometric element (`geom`, such as point, line, rectangle, text, ...), 
+  - statistical transformation (`stat`, such as identity, counts, bins, ...), 
+  - position adjustment,  
+  - (optional) one dataset and set of aesthetic mappings
+
+3. **scales**: map values in the data space to values in an aesthetic space 
+
+4. **coordinate system** (`coord`): normally Cartesian, but could use polar coordinates for pie charts or different mapping coordinates
+
+5. **facetting**: for small multiples (subsets) and their arrangement
+
+6. **theme**: fine-tune display items, such as font and its size, color of background, margins, ...
+
+---
+## Previous example
+
+```{r, fig.width=9.5, fig.height = 3}
+data(nasa, package = "GGally")
+nasa1 <- nasa %>% 
+  dplyr::filter(id== "1-1") 
+
+nasa1 %>%
+  ggplot(aes(x = time, y = temperature)) + 
+  geom_point()
+```
+
+---
+## Adding a line
+
+```{r, fig.width=9.5, fig.height = 3}
+ggplot(nasa1, aes(x = time, y = temperature)) + 
+  geom_point() +
+  geom_line()
+```
+
+---
+## Adding additional lines
+
+```{r, fig.width=9.5, fig.height = 3}
+nasa_subset <- nasa %>% 
+  dplyr::filter(id %in% c("1-1", "13-1", "5-12")) 
+
+nasa_subset %>%
+  ggplot(aes(x = time, y = temperature, group = id)) + 
+  geom_line()
+```
+
+---
+## Adding additional text
+
+```{r, fig.width=9.5, fig.height = 3}
+ggplot(nasa_subset, aes(x = time, y = temperature, group = id)) + 
+  geom_line() +
+  geom_text(data = nasa_subset[nasa_subset$time == 72, ], 
+            aes(label = id, x = time + 0.5), 
+            colour = "dodgerblue3", hjust = "left", size = 5)
+```
+
+---
+## Layers
+
+Each layer has several parts, the two most important are:
+
+- **data**: the dataset used in the layer 
+
+- **mapping**: using the `aes()` function, we specify mappings between variables and aesthetics of the chart
+
+
+<br/><br>
+`ggplot` is the layer that sets the defaults,  
+<br><br>
+`geom_XXX` creates a layer:  
+
+- the default mappings will automatically be applied
+
+- you can override the defaults by specifyng new mappings in each layer
+
+- you can add additional mappings 
+
+---
+## Default vs Layer Specification
+
+Specifying the aesthetics as the defaults:  
+
+```{r, fig.width=9.5, fig.height = 3, message = FALSE}
+ggplot(nasa_subset, aes(x = time, y = temperature, color = id)) + 
+  geom_line() +
+  geom_text(data = nasa_subset[nasa_subset$time == 72, ], 
+            aes(label = id, x = time + 0.5), hjust = "left", size = 5)
+```
+
+
+---
+## Default vs Layer Specification
+
+Specifying the aesthetics in the layer:  
+
+```{r, fig.width=9.5, fig.height = 3, message = FALSE}
+ggplot(nasa_subset, aes(x = time, y = temperature, group = id)) + 
+  geom_line() +
+  geom_text(data = nasa_subset[nasa_subset$time == 72, ], 
+            aes(label = id, colour = id, x = time + 0.5), hjust = "left", size = 5)
+```
+
+---
+class: yourturn
+# Your Turn 
+
+- Load the `box` data from the package `classdata`,
+
+- Plot a time line for each movie: plot total gross by the number of weeks that the movie is out. 
+
+- Label the three movies with the highest total gross.
+
+- Color the label of these three movies with a color of your choice.
+
+---
+## Resources
+
+- reference/document: http://ggplot2.tidyverse.org/reference/
+
+
+- RStudio cheat sheet for [ggplot2](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+

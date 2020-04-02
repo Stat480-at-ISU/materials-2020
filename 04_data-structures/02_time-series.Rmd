@@ -88,7 +88,7 @@ Variables encoded as dates and times work with `ggplot2`
 ```{r fig.height = 5, fig.width = 10}
 data(box, package="classdata")
 box %>% 
-  dplyr::filter(Movie == "The Avengers: Age of Ultron") %>%
+  dplyr::filter(Movie == "Star Wars Ep. VII: The Forc...") %>%
   ggplot(aes(x = Date, y = Total.Gross)) + geom_line()
 ```
 
@@ -117,6 +117,8 @@ class: yourturn
     (2) the last date (and week) the movie was shown in theaters,  
   
     (3) the gross the movie made in the first week it was featured on the box office list.  
+
+    (4) the number of times the movie appears on the box office list
 
 
 ```{r fig.height = 5, fig.width = 10, echo=FALSE}
