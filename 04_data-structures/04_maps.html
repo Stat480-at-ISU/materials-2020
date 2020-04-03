@@ -295,7 +295,7 @@ lakes &lt;- read_sf('data/ME-GIS/Lakes.shp')
 ## `geom_sf()` 
 
 &lt;br&gt;
-Create a map with a layer for each shapefiles:
+Create a map with a layer for each shapefile:
 
 
 ```r
@@ -369,20 +369,13 @@ head(fbi14)
 ```
 
 ```
-##        State Abb Year Population                                 Type
-## 1    Alabama  AL 2014    4849377 Murder.and.nonnegligent.Manslaughter
-## 2     Alaska  AK 2014     736732 Murder.and.nonnegligent.Manslaughter
-## 3    Arizona  AZ 2014    6731484 Murder.and.nonnegligent.Manslaughter
-## 4   Arkansas  AR 2014    2966369 Murder.and.nonnegligent.Manslaughter
-## 5 California  CA 2014   38802500 Murder.and.nonnegligent.Manslaughter
-## 6   Colorado  CO 2014    5355866 Murder.and.nonnegligent.Manslaughter
-##   Count Violent.crime
-## 1   276          TRUE
-## 2    41          TRUE
-## 3   319          TRUE
-## 4   165          TRUE
-## 5  1699          TRUE
-## 6   151          TRUE
+##        State Abb Year Population                                 Type Count Violent.crime
+## 1    Alabama  AL 2014    4849377 Murder.and.nonnegligent.Manslaughter   276          TRUE
+## 2     Alaska  AK 2014     736732 Murder.and.nonnegligent.Manslaughter    41          TRUE
+## 3    Arizona  AZ 2014    6731484 Murder.and.nonnegligent.Manslaughter   319          TRUE
+## 4   Arkansas  AR 2014    2966369 Murder.and.nonnegligent.Manslaughter   165          TRUE
+## 5 California  CA 2014   38802500 Murder.and.nonnegligent.Manslaughter  1699          TRUE
+## 6   Colorado  CO 2014    5355866 Murder.and.nonnegligent.Manslaughter   151          TRUE
 ```
 
 ---
@@ -495,17 +488,14 @@ names(acc)
 ```
 
 ```
-##  [1] "STATE"      "ST_CASE"    "VE_TOTAL"   "VE_FORMS"   "PVH_INVL"  
-##  [6] "PEDS"       "PERNOTMVIT" "PERMVIT"    "PERSONS"    "COUNTY"    
-## [11] "CITY"       "DAY"        "MONTH"      "YEAR"       "DAY_WEEK"  
-## [16] "HOUR"       "MINUTE"     "NHS"        "RUR_URB"    "FUNC_SYS"  
-## [21] "RD_OWNER"   "ROUTE"      "TWAY_ID"    "TWAY_ID2"   "MILEPT"    
-## [26] "LATITUDE"   "LONGITUD"   "SP_JUR"     "HARM_EV"    "MAN_COLL"  
-## [31] "RELJCT1"    "RELJCT2"    "TYP_INT"    "WRK_ZONE"   "REL_ROAD"  
-## [36] "LGT_COND"   "WEATHER1"   "WEATHER2"   "WEATHER"    "SCH_BUS"   
-## [41] "RAIL"       "NOT_HOUR"   "NOT_MIN"    "ARR_HOUR"   "ARR_MIN"   
-## [46] "HOSP_HR"    "HOSP_MN"    "CF1"        "CF2"        "CF3"       
-## [51] "FATALS"     "DRUNK_DR"
+##  [1] "STATE"      "ST_CASE"    "VE_TOTAL"   "VE_FORMS"   "PVH_INVL"   "PEDS"       "PERNOTMVIT"
+##  [8] "PERMVIT"    "PERSONS"    "COUNTY"     "CITY"       "DAY"        "MONTH"      "YEAR"      
+## [15] "DAY_WEEK"   "HOUR"       "MINUTE"     "NHS"        "RUR_URB"    "FUNC_SYS"   "RD_OWNER"  
+## [22] "ROUTE"      "TWAY_ID"    "TWAY_ID2"   "MILEPT"     "LATITUDE"   "LONGITUD"   "SP_JUR"    
+## [29] "HARM_EV"    "MAN_COLL"   "RELJCT1"    "RELJCT2"    "TYP_INT"    "WRK_ZONE"   "REL_ROAD"  
+## [36] "LGT_COND"   "WEATHER1"   "WEATHER2"   "WEATHER"    "SCH_BUS"    "RAIL"       "NOT_HOUR"  
+## [43] "NOT_MIN"    "ARR_HOUR"   "ARR_MIN"    "HOSP_HR"    "HOSP_MN"    "CF1"        "CF2"       
+## [50] "CF3"        "FATALS"     "DRUNK_DR"
 ```
 
 ---
@@ -540,9 +530,9 @@ class: yourturn
 
 - Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
 
-- Some material by [Angela Li](bit.ly/dc-spatial)
+- Some material taken from [Angela Li](bit.ly/dc-spatial)
 
-- Some material by [Sam Tyner]()
+- Some material taken from  [Sam Tyner](https://sctyner.github.io/user20-proposal.html)
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -256,7 +256,7 @@ lakes <- read_sf('data/ME-GIS/Lakes.shp')
 ## `geom_sf()` 
 
 <br>
-Create a map with a layer for each shapefiles:
+Create a map with a layer for each shapefile:
 
 ```{r fig.height=5}
 p <- ggplot() + 
@@ -435,9 +435,9 @@ class: yourturn
 
 - Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
 
-- Some material by [Angela Li](bit.ly/dc-spatial)
+- Some material taken from [Angela Li](bit.ly/dc-spatial)
 
-- Some material by [Sam Tyner]()
+- Some material taken from  [Sam Tyner](https://sctyner.github.io/user20-proposal.html)
 
 
 
