@@ -17,14 +17,55 @@ options(htmltools.dir.version = FALSE, echo = TRUE)
 library(tidyverse)
 library(lubridate)
 ```
+class:inverse
 
 ## Outline
+<br>
+### 1. Types of map data
 
-### what is a map
+### 2. Maps and map data in ggplot
 
-### maps and map data in ggplot
+### 3. Drawing choropleth maps
 
-### drawing choropleth maps
+
+---
+## map data
+
+**Map data is NOT**: addresses, zip codes, counties, cities  
+
+<br>
+**Map data is**:  
+1. lat & long pairs  
+
+2. shapefiles:  
+  - polygons: closed shapes such as country borders  
+  
+  - lines: linear shapes that are not filled with any aspect, such as highways, streams, or roads  
+  
+  - points: used to specify specific positions, such as city or landmark locations
+
+
+???
+Knowing what elements are required to enhance your data is key into making effective maps.
+
+Basic elements of a map that should be considered are polygon, points, lines, and text. 
+
+Polygons, on a map, are closed shapes such as country borders. 
+
+Lines are considered to be linear shapes that are not filled with any aspect, such as highways, streams, or roads. Finally, points are used to specify specific positions, such as city or landmark locations. 
+
+---
+class: inverse, center, middle
+
+# map data: type 1
+
+---
+## map data: type 1
+
+```{r}
+states <- map_data("state")
+head(states)
+```
 
 ---
 ## Maps 
@@ -71,14 +112,6 @@ ggplot(iowa_cali, aes(x = long, y = lat)) + geom_polygon(aes(group=region))
 ]
 
 ---
-## map data
-
-```{r}
-states <- map_data("state")
-head(states)
-```
-
----
 ## Maps in code (1)
 
 
@@ -113,10 +146,9 @@ ggplot(states, aes(x = long, y = lat)) + geom_polygon(aes(group = group, fill=la
 
 ```{r fig.width=10, fig.height = 6}
 world <- map_data("world")
-world <- world %>% arrange(order)
-ggplot(world, aes(x = long, y = lat)) + 
-  geom_polygon(aes(group=group), size=.1, 
-               colour="white") +
+world %>% arrange(order) %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group=group), size=.1, colour="white") +
   theme_void()
 ```
 
@@ -134,13 +166,150 @@ US counties: <br> `counties <- map_data("county")`
 
 - **Advanced**: What county names are used often?
 
+---
+class: inverse, center, top
+background-image: url(https://github.com/allisonhorst/stats-illustrations/blob/master/rstats-artwork/sf.png?raw=true)
+background-size: 650px
+background-position: 50% 80%
+# map data: type 2
+
+---
+## MAP DATA: TYPE 2
+
+**Shapefiles**:  
+
+  - polygons: closed shapes such as country borders  
+  
+  - lines: linear shapes that are not filled with any aspect, such as highways, streams, or roads  
+  
+  - points: used to specify specific positions, such as city or landmark locations  
+  
+<br/><br/>
+**Why shapefiles?**
+
+A lot of government agencies use shapefiles to publish spatial information, such as states, counties, congressional districts, exact locations of state and national parks, etc.
+
+
+---
+## MAP DATA: TYPE 2
+
+The sf package
+
+- tidyverse-compatible spatial data frames
+
+- "geometry" column stores the spatial information
+
+
+```{r message=FALSE, warning=FALSE}
+library(sf)
+states <- USAboundaries::us_boundaries()
+states %>% select(name, geometry) %>% slice(1:10)
+```
+
+---
+## `geom_sf()`
+
+`geom_sf()` requires the `geometry` aes value and will automatically detect column named "geometry"
+
+```{r fig.width=9, fig.height=4}
+states48 <- states %>% dplyr::filter(stringr::str_detect(name, "Hawaii|Alaska|Puerto", negate = T))
+ggplot() + geom_sf(data = states48, aes(geometry = geometry))
+```
+
+---
+## `geom_sf()`
+
+Use the `fill` aes to color geometries by another variable in the data. 
+
+```{r fig.width=9, fig.height=4}
+ggplot() + geom_sf(data = states48, aes(fill = name), show.legend = FALSE)
+```
+
+???
+In this example, we color by the water area in the state.
+---
+class: inverse, center, top
+background-image: url(https://angela-li.github.io/slides/2018-11-08/img/middle-earth.jpg)
+background-size: 650px
+background-position: 50% 80%
+# Fun with middle earth
+
+---
+## `read_sf()` 
+
+Not just the government, dedicated fan bases alike provide information in shapefiles. The ME-DEM team recreates Tolkien's Middle Earth in shapefile format at https://github.com/jvangeld/ME-GIS
+
+<br>
+Read in the shapefiles:
+
+```{r message=FALSE, warning=FALSE}
+roads <- read_sf("data/ME-GIS/Roads.shp")
+coastline <- read_sf("data/ME-GIS/Coastline2.shp")
+rivers <- read_sf("data/ME-GIS/Rivers.shp")
+cities <- read_sf("data/ME-GIS/Cities.shp")
+contours <- read_sf('data/ME-GIS/Contours_18.shp')
+forests <- read_sf('data/ME-GIS/Forests.shp')
+lakes <- read_sf('data/ME-GIS/Lakes.shp')
+```
+
+---
+## `geom_sf()` 
+
+<br>
+Create a map with a layer for each shapefiles:
+
+```{r fig.height=5}
+p <- ggplot() + 
+  geom_sf(data = contours, color = '#f0f0f0', fill='#f0f0f0', size = 0.2) + 
+  geom_sf(data = forests, color = 'darkolivegreen3', fill='darkolivegreen3') + 
+  geom_sf(data = lakes, color = 'steelblue', fill='steelblue') +
+  geom_sf(data = coastline, colour="grey40") +
+  geom_sf(data = rivers, colour="steelblue", size=0.3) +
+  geom_sf(data = roads %>% dplyr::filter(TYPE == "PRIMARY"), size = 0.5, colour="grey30") +
+  geom_sf(data = cities) + 
+  theme_bw()
+```
+
+---
+
+```{r}
+p
+```
+
+
+---
+## `geom_sf_text()` & annotations
+
+<br>
+Add text to your map with `geom_sf_text()` and add annoatations with various functions from the `ggspatial` package:
+
+
+```{r fig.height=5}
+library(ggspatial)
+p2 <- p + 
+  geom_sf_text(data = cities, aes(label=Name), vjust=-.5, size = 2.5) +
+  annotation_scale() +
+  annotation_north_arrow()
+```
+
+---
+```{r}
+p2
+```
+
+---
+class: inverse, center, top
+background-image: url(https://angela-li.github.io/slides/2018-11-08/img/xkcd-heatmap.png)
+background-size: 450px
+background-position: 50% 80%
+# Choropleth maps
 
 ---
 ## Choropleth maps
 
 - Choropleth maps are thematic maps: areas are shaded in proportion to the values of a variable
 
-- Join datasets: content and map
+- Join datasets: content + map
 
 ---
 ## Join content and map: content
@@ -156,6 +325,7 @@ head(fbi14)
 
 
 ```{r}
+states <- map_data("state")
 head(states)
 ```
 
@@ -206,7 +376,7 @@ class: yourturn
 
 - In that situation, we do not need to join the map information and the content data, but use layers with separate data sets of the form
 
-```
+```{r eval = FALSE}
 map %>% ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group)) +
   geom_point(data = content, aes(x=longitude, y = latitude)) 
@@ -251,6 +421,24 @@ class: yourturn
 - The numbers for each state (`STATE`) are so-called fips codes. 
 
 - Sketch out the steps necessary to draw a choropleth map of the rate of fatal accidents by state.
+
+
+
+---
+## Resources
+
+- reference/document: http://ggplot2.tidyverse.org/reference/
+
+
+- RStudio cheat sheet for [ggplot2](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
+- Some material by [Angela Li](bit.ly/dc-spatial)
+
+- Some material by [Sam Tyner]()
+
 
 
 

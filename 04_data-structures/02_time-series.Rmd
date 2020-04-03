@@ -105,7 +105,7 @@ box %>%
 
 ---
 class: yourturn
-## Your Turn  
+# Your Turn  
   
 
 - Load the `box` data from the package `classdata`  

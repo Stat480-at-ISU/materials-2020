@@ -15,48 +15,50 @@ class: center, middle, inverse, title-slide
 
 
 
+class:inverse
 
 ## Outline
+&lt;br&gt;
+### 1. Types of map data
 
-### what is a map
+### 2. Maps and map data in ggplot
 
-### maps and map data in ggplot
+### 3. Drawing choropleth maps
 
-### drawing choropleth maps
-
----
-## Maps 
-
-.pull-left[
-Maps are points in latitude and longitude
-&lt;br/&gt;&lt;br/&gt;
-![](04_maps_files/figure-html/unnamed-chunk-1-1.png)&lt;!-- --&gt;
-
-]
-.pull-right[
-that are connected in the 'right' order &lt;br&gt;(determined by order in the data)
-
-![](04_maps_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
-
-]
-
----
-## Maps 
-
-.pull-left[
-The `group` aesthetic is used to distinguish between different regions
-
-![](04_maps_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
-]
-.pull-right[
-&amp; those regions can be filled in  
-&lt;br/&gt;&lt;br/&gt;
-![](04_maps_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
-
-]
 
 ---
 ## map data
+
+**Map data is NOT**: addresses, zip codes, counties, cities  
+
+&lt;br&gt;
+**Map data is**:  
+1. lat &amp; long pairs  
+
+2. shapefiles:  
+  - polygons: closed shapes such as country borders  
+  
+  - lines: linear shapes that are not filled with any aspect, such as highways, streams, or roads  
+  
+  - points: used to specify specific positions, such as city or landmark locations
+
+
+???
+Knowing what elements are required to enhance your data is key into making effective maps.
+
+Basic elements of a map that should be considered are polygon, points, lines, and text. 
+
+Polygons, on a map, are closed shapes such as country borders. 
+
+Lines are considered to be linear shapes that are not filled with any aspect, such as highways, streams, or roads. Finally, points are used to specify specific positions, such as city or landmark locations. 
+
+---
+class: inverse, center, middle
+
+# map data: type 1
+
+---
+## map data: type 1
 
 
 ```r
@@ -73,6 +75,37 @@ head(states)
 ## 5 -87.57087 30.32665     1     5 alabama      &lt;NA&gt;
 ## 6 -87.58806 30.32665     1     6 alabama      &lt;NA&gt;
 ```
+
+---
+## Maps 
+
+.pull-left[
+Maps are points in latitude and longitude
+&lt;br/&gt;&lt;br/&gt;
+![](04_maps_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+]
+.pull-right[
+that are connected in the 'right' order &lt;br&gt;(determined by order in the data)
+
+![](04_maps_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+]
+
+---
+## Maps 
+
+.pull-left[
+The `group` aesthetic is used to distinguish between different regions
+
+![](04_maps_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+&amp; those regions can be filled in  
+&lt;br/&gt;&lt;br/&gt;
+![](04_maps_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+]
 
 ---
 ## Maps in code (1)
@@ -122,10 +155,9 @@ ggplot(states, aes(x = long, y = lat)) + geom_polygon(aes(group = group, fill=la
 
 ```r
 world &lt;- map_data("world")
-world &lt;- world %&gt;% arrange(order)
-ggplot(world, aes(x = long, y = lat)) + 
-  geom_polygon(aes(group=group), size=.1, 
-               colour="white") +
+world %&gt;% arrange(order) %&gt;% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group=group), size=.1, colour="white") +
   theme_void()
 ```
 
@@ -145,13 +177,186 @@ US counties: &lt;br&gt; `counties &lt;- map_data("county")`
 
 - **Advanced**: What county names are used often?
 
+---
+class: inverse, center, top
+background-image: url(https://github.com/allisonhorst/stats-illustrations/blob/master/rstats-artwork/sf.png?raw=true)
+background-size: 650px
+background-position: 50% 80%
+# map data: type 2
+
+---
+## MAP DATA: TYPE 2
+
+**Shapefiles**:  
+
+  - polygons: closed shapes such as country borders  
+  
+  - lines: linear shapes that are not filled with any aspect, such as highways, streams, or roads  
+  
+  - points: used to specify specific positions, such as city or landmark locations  
+  
+&lt;br/&gt;&lt;br/&gt;
+**Why shapefiles?**
+
+A lot of government agencies use shapefiles to publish spatial information, such as states, counties, congressional districts, exact locations of state and national parks, etc.
+
+
+---
+## MAP DATA: TYPE 2
+
+The sf package
+
+- tidyverse-compatible spatial data frames
+
+- "geometry" column stores the spatial information
+
+
+
+```r
+library(sf)
+states &lt;- USAboundaries::us_boundaries()
+states %&gt;% select(name, geometry) %&gt;% slice(1:10)
+```
+
+```
+## Simple feature collection with 10 features and 1 field
+## geometry type:  MULTIPOLYGON
+## dimension:      XY
+## bbox:           xmin: -179.1743 ymin: 18.91747 xmax: 179.7739 ymax: 71.35256
+## epsg (SRID):    4326
+## proj4string:    +proj=longlat +datum=WGS84 +no_defs
+##                    name                       geometry
+## 1                 Maine MULTIPOLYGON (((-68.92401 4...
+## 2                Hawaii MULTIPOLYGON (((-156.0497 1...
+## 3               Arizona MULTIPOLYGON (((-114.7997 3...
+## 4              Arkansas MULTIPOLYGON (((-94.61792 3...
+## 5              Delaware MULTIPOLYGON (((-75.77379 3...
+## 6               Georgia MULTIPOLYGON (((-85.60516 3...
+## 7             Minnesota MULTIPOLYGON (((-97.22904 4...
+## 8                Alaska MULTIPOLYGON (((179.4813 51...
+## 9            California MULTIPOLYGON (((-118.594 33...
+## 10 District of Columbia MULTIPOLYGON (((-77.11976 3...
+```
+
+---
+## `geom_sf()`
+
+`geom_sf()` requires the `geometry` aes value and will automatically detect column named "geometry"
+
+
+```r
+states48 &lt;- states %&gt;% dplyr::filter(stringr::str_detect(name, "Hawaii|Alaska|Puerto", negate = T))
+ggplot() + geom_sf(data = states48, aes(geometry = geometry))
+```
+
+![](04_maps_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+---
+## `geom_sf()`
+
+Use the `fill` aes to color geometries by another variable in the data. 
+
+
+```r
+ggplot() + geom_sf(data = states48, aes(fill = name), show.legend = FALSE)
+```
+
+![](04_maps_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+???
+In this example, we color by the water area in the state.
+---
+class: inverse, center, top
+background-image: url(https://angela-li.github.io/slides/2018-11-08/img/middle-earth.jpg)
+background-size: 650px
+background-position: 50% 80%
+# Fun with middle earth
+
+---
+## `read_sf()` 
+
+Not just the government, dedicated fan bases alike provide information in shapefiles. The ME-DEM team recreates Tolkien's Middle Earth in shapefile format at https://github.com/jvangeld/ME-GIS
+
+&lt;br&gt;
+Read in the shapefiles:
+
+
+```r
+roads &lt;- read_sf("data/ME-GIS/Roads.shp")
+coastline &lt;- read_sf("data/ME-GIS/Coastline2.shp")
+rivers &lt;- read_sf("data/ME-GIS/Rivers.shp")
+cities &lt;- read_sf("data/ME-GIS/Cities.shp")
+contours &lt;- read_sf('data/ME-GIS/Contours_18.shp')
+forests &lt;- read_sf('data/ME-GIS/Forests.shp')
+lakes &lt;- read_sf('data/ME-GIS/Lakes.shp')
+```
+
+---
+## `geom_sf()` 
+
+&lt;br&gt;
+Create a map with a layer for each shapefiles:
+
+
+```r
+p &lt;- ggplot() + 
+  geom_sf(data = contours, color = '#f0f0f0', fill='#f0f0f0', size = 0.2) + 
+  geom_sf(data = forests, color = 'darkolivegreen3', fill='darkolivegreen3') + 
+  geom_sf(data = lakes, color = 'steelblue', fill='steelblue') +
+  geom_sf(data = coastline, colour="grey40") +
+  geom_sf(data = rivers, colour="steelblue", size=0.3) +
+  geom_sf(data = roads %&gt;% dplyr::filter(TYPE == "PRIMARY"), size = 0.5, colour="grey30") +
+  geom_sf(data = cities) + 
+  theme_bw()
+```
+
+---
+
+
+```r
+p
+```
+
+![](04_maps_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+
+
+---
+## `geom_sf_text()` &amp; annotations
+
+&lt;br&gt;
+Add text to your map with `geom_sf_text()` and add annoatations with various functions from the `ggspatial` package:
+
+
+
+```r
+library(ggspatial)
+p2 &lt;- p + 
+  geom_sf_text(data = cities, aes(label=Name), vjust=-.5, size = 2.5) +
+  annotation_scale() +
+  annotation_north_arrow()
+```
+
+---
+
+```r
+p2
+```
+
+![](04_maps_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+
+---
+class: inverse, center, top
+background-image: url(https://angela-li.github.io/slides/2018-11-08/img/xkcd-heatmap.png)
+background-size: 450px
+background-position: 50% 80%
+# Choropleth maps
 
 ---
 ## Choropleth maps
 
 - Choropleth maps are thematic maps: areas are shaded in proportion to the values of a variable
 
-- Join datasets: content and map
+- Join datasets: content + map
 
 ---
 ## Join content and map: content
@@ -164,20 +369,20 @@ head(fbi14)
 ```
 
 ```
-##        State Abb Year Population                                 Type Count
-## 1    Alabama  AL 2014    4849377 Murder.and.nonnegligent.Manslaughter   276
-## 2     Alaska  AK 2014     736732 Murder.and.nonnegligent.Manslaughter    41
-## 3    Arizona  AZ 2014    6731484 Murder.and.nonnegligent.Manslaughter   319
-## 4   Arkansas  AR 2014    2966369 Murder.and.nonnegligent.Manslaughter   165
-## 5 California  CA 2014   38802500 Murder.and.nonnegligent.Manslaughter  1699
-## 6   Colorado  CO 2014    5355866 Murder.and.nonnegligent.Manslaughter   151
-##   Violent.crime
-## 1          TRUE
-## 2          TRUE
-## 3          TRUE
-## 4          TRUE
-## 5          TRUE
-## 6          TRUE
+##        State Abb Year Population                                 Type
+## 1    Alabama  AL 2014    4849377 Murder.and.nonnegligent.Manslaughter
+## 2     Alaska  AK 2014     736732 Murder.and.nonnegligent.Manslaughter
+## 3    Arizona  AZ 2014    6731484 Murder.and.nonnegligent.Manslaughter
+## 4   Arkansas  AR 2014    2966369 Murder.and.nonnegligent.Manslaughter
+## 5 California  CA 2014   38802500 Murder.and.nonnegligent.Manslaughter
+## 6   Colorado  CO 2014    5355866 Murder.and.nonnegligent.Manslaughter
+##   Count Violent.crime
+## 1   276          TRUE
+## 2    41          TRUE
+## 3   319          TRUE
+## 4   165          TRUE
+## 5  1699          TRUE
+## 6   151          TRUE
 ```
 
 ---
@@ -186,6 +391,7 @@ head(fbi14)
 
 
 ```r
+states &lt;- map_data("state")
 head(states)
 ```
 
@@ -242,7 +448,7 @@ fbi.map %&gt;% dplyr::filter(Type=="Burglary") %&gt;%
   geom_polygon(aes(group=group))
 ```
 
-![](04_maps_files/figure-html/unnamed-chunk-14-1.png)&lt;!-- --&gt;
+![](04_maps_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
 
 ---
 class: yourturn
@@ -259,7 +465,8 @@ class: yourturn
 
 - In that situation, we do not need to join the map information and the content data, but use layers with separate data sets of the form
 
-```
+
+```r
 map %&gt;% ggplot(aes(x = long, y = lat)) + 
   geom_polygon(aes(group = group)) +
   geom_point(data = content, aes(x=longitude, y = latitude)) 
@@ -319,6 +526,23 @@ class: yourturn
 - The numbers for each state (`STATE`) are so-called fips codes. 
 
 - Sketch out the steps necessary to draw a choropleth map of the rate of fatal accidents by state.
+
+
+
+---
+## Resources
+
+- reference/document: http://ggplot2.tidyverse.org/reference/
+
+
+- RStudio cheat sheet for [ggplot2](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
+- Some material by [Angela Li](bit.ly/dc-spatial)
+
+- Some material by [Sam Tyner]()
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
