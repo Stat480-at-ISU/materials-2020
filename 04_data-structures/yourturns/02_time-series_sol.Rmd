@@ -1,0 +1,85 @@
+---
+title: "TIME SERIES"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE, fig.height=3, fig.width=5
+)
+```
+
+
+### YOUR TURN #1
+
+#### Q: Load the `nasa` data from the package `GGally`
+
+```{r}
+library(tidyverse)
+data(nasa, package="GGally")
+```
+
+
+#### Q:  for one location, draw a time line of Ozone over the time frame (`time`).  
+
+```{r}
+nasa %>% filter(id =="1-1") %>%
+  ggplot(aes(x = time, y=temperature)) + 
+  geom_point()
+```
+
+
+#### Q:  Plot separate lines for each of the years, i.e. put `month` on the x-axis and `ozone` on the y-axis for the same location. Is there a seasonal pattern apparent?  
+
+```{r}
+nasa %>% filter(id== "1-1") %>%
+  ggplot(aes(x = month, y = ozone, group = year)) +
+  geom_line(aes(colour = factor(year))) +
+  geom_point()
+```
+
+
+#### Q:  Pick locations with x in 1:10 and y in 7:10. Plot temperature over time. Comment on the result.  
+
+```{r}
+nasa %>% 
+  filter(x %in% 1:10, y %in% 7:10) %>%
+  ggplot(aes(x = date, y=temperature, group=id)) +
+  geom_line(alpha = .3) 
+```
+
+
+### YOUR TURN #2
+
+#### Q: Load the box data from the package classdata
+
+```{r}
+data(box, package="classdata")
+```
+
+#### Q: For each movie and distributor, find:
+
+(1) the highest total gross,
+
+(2) the last date (and week) the movie was shown in theaters,
+
+(3) the gross the movie made in the first week it was featured on the box office list
+
+(4) the number of times the movie appears on the box office list
+
+```{r}
+box_summary <- box %>%
+  group_by(Movie, Distributor) %>%
+  summarize(
+    maxGross = max(Total.Gross, na.rm=T),
+    lastDate = max(Date, na.rm=T),
+    lastWeek = max(Week, na.rm=T),
+    minGross = min(Total.Gross, na.rm=T),
+    n = n()
+  )
+
+box_summary %>% head()
+```
+
