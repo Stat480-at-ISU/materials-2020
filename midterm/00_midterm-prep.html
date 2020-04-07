@@ -246,6 +246,8 @@ A **bar chart** displays counts of a categorical variable, and is the categorica
 
 - requires the `x` aesthetic inside `aes()`  
 
+- optional `weight` aesthetic 
+
 - Can change appearance of the bars with `color`, `fill`, `alpha` arguments
 
 - Can modify the order of the bars by reordering the factor
@@ -322,14 +324,16 @@ Add a third variable to a plot with:
 ### `facet_grid()`
 
 - create a grid of graphs, by rows and columns 
-- use `vars()` to call on the variables 
-- adjust scales with `scales = "free"`
+
+- has formula specification: `rows ~ cols`
+
+- no variable is written as `.`; i.e. `rowvar ~ .` are plots in a single column.
 
 ### `facet_wrap()`
 
 - create small multiples by "wrapping" a series of plots
-- use `vars()` to call on the variables 
-- `nrow` and `ncol` arguments for dictating shape of grid 
+
+- has specification `~ variables` 
 
 ---
 background-image: url(https://camo.githubusercontent.com/c1a290fbb20a6bb45e4c47fc2e7b7ddc8d8ccf12/68747470733a2f2f692e696d6775722e636f6d2f677965596c6b4c2e706e67)
