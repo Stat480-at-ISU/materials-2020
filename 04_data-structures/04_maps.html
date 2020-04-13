@@ -86,8 +86,7 @@ Maps are points in latitude and longitude
 
 ]
 .pull-right[
-that are connected in the 'right' order &lt;br&gt;(determined by order in the data)
-
+that are connected in the 'right' order &lt;br&gt;(determined by the variable `order` in the data)
 ![](04_maps_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
 
 ]
@@ -345,6 +344,21 @@ p2
 ![](04_maps_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
 
 ---
+class: yourturn
+# Your Turn  
+
+For this question use `usa_sf()` from the albersusa package to retreive a U.S. state composite map as a shapefile. (run the code below)  
+
+`# devtools::install_github("hrbrmstr/albersusa")`  
+`library(albersusa)`  
+`states &lt;- usa_sf()`  
+
+
+&lt;br/&gt;&lt;br/&gt;
+Use `geom_sf()` and the `states` data to create a map of the US.
+
+
+---
 class: inverse, center, top
 background-image: url(https://angela-li.github.io/slides/2018-11-08/img/xkcd-heatmap.png)
 background-size: 450px
@@ -488,14 +502,15 @@ names(acc)
 ```
 
 ```
-##  [1] "STATE"      "ST_CASE"    "VE_TOTAL"   "VE_FORMS"   "PVH_INVL"   "PEDS"       "PERNOTMVIT"
-##  [8] "PERMVIT"    "PERSONS"    "COUNTY"     "CITY"       "DAY"        "MONTH"      "YEAR"      
-## [15] "DAY_WEEK"   "HOUR"       "MINUTE"     "NHS"        "RUR_URB"    "FUNC_SYS"   "RD_OWNER"  
-## [22] "ROUTE"      "TWAY_ID"    "TWAY_ID2"   "MILEPT"     "LATITUDE"   "LONGITUD"   "SP_JUR"    
-## [29] "HARM_EV"    "MAN_COLL"   "RELJCT1"    "RELJCT2"    "TYP_INT"    "WRK_ZONE"   "REL_ROAD"  
-## [36] "LGT_COND"   "WEATHER1"   "WEATHER2"   "WEATHER"    "SCH_BUS"    "RAIL"       "NOT_HOUR"  
-## [43] "NOT_MIN"    "ARR_HOUR"   "ARR_MIN"    "HOSP_HR"    "HOSP_MN"    "CF1"        "CF2"       
-## [50] "CF3"        "FATALS"     "DRUNK_DR"
+##  [1] "STATE"      "ST_CASE"    "VE_TOTAL"   "VE_FORMS"   "PVH_INVL"   "PEDS"      
+##  [7] "PERNOTMVIT" "PERMVIT"    "PERSONS"    "COUNTY"     "CITY"       "DAY"       
+## [13] "MONTH"      "YEAR"       "DAY_WEEK"   "HOUR"       "MINUTE"     "NHS"       
+## [19] "RUR_URB"    "FUNC_SYS"   "RD_OWNER"   "ROUTE"      "TWAY_ID"    "TWAY_ID2"  
+## [25] "MILEPT"     "LATITUDE"   "LONGITUD"   "SP_JUR"     "HARM_EV"    "MAN_COLL"  
+## [31] "RELJCT1"    "RELJCT2"    "TYP_INT"    "WRK_ZONE"   "REL_ROAD"   "LGT_COND"  
+## [37] "WEATHER1"   "WEATHER2"   "WEATHER"    "SCH_BUS"    "RAIL"       "NOT_HOUR"  
+## [43] "NOT_MIN"    "ARR_HOUR"   "ARR_MIN"    "HOSP_HR"    "HOSP_MN"    "CF1"       
+## [49] "CF2"        "CF3"        "FATALS"     "DRUNK_DR"
 ```
 
 ---

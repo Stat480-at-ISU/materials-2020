@@ -81,8 +81,7 @@ ggplot(iowa, aes(x = long, y = lat)) + geom_point()
 
 ]
 .pull-right[
-that are connected in the 'right' order <br>(determined by order in the data)
-
+that are connected in the 'right' order <br>(determined by the variable `order` in the data)
 ```{r, echo=FALSE, fig.width=4, fig.height = 8/3}
 ggplot(iowa, aes(x = long, y = lat)) + 
   geom_point() + 
@@ -296,6 +295,21 @@ p2 <- p +
 ```{r}
 p2
 ```
+
+---
+class: yourturn
+# Your Turn  
+
+For this question use `usa_sf()` from the albersusa package to retreive a U.S. state composite map as a shapefile. (run the code below)  
+
+`# devtools::install_github("hrbrmstr/albersusa")`  
+`library(albersusa)`  
+`states <- usa_sf()`  
+
+
+<br/><br/>
+Use `geom_sf()` and the `states` data to create a map of the US.
+
 
 ---
 class: inverse, center, top
