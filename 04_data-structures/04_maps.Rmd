@@ -163,7 +163,7 @@ US counties: <br> `counties <- map_data("county")`
 
 - Colour all counties called "story"
 
-- **Advanced**: What county names are used often?
+- **Advanced**: What county names are used most often?
 
 ---
 class: inverse, center, top
