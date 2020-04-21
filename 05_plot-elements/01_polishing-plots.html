@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Polishing plots</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../extras/x-theme.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Polishing plots
+
+---
+
+
+
+
+
+
+
+background-image: url(https://raw.githubusercontent.com/allisonhorst/stats-illustrations/master/rstats-artwork/ggplot2_masterpiece.png)
+background-size: 450px
+background-position: 50% 90%
+## graphics for communication
+
+We have mostly been focused on **exploratory data analysis** 
+
+  - i.e.; used plots as tools for exploration  
+
+&lt;br&gt;
+
+After you understand your data, you need to **communicate** your understanding to others.
+
+
+---
+## `ggplot2` provides defaults ...
+
+- but every aspect of the plot can be changed
+
+- colors are controlled through **scales**
+
+- **themes** control presentation of non-data elements
+
+
+---
+class: inverse
+## Outline
+
+&lt;br&gt;
+### 1. labels &amp; annotations  
+
+### 2. ggplot2 scales
+
+### 3. scales &amp; color choices  
+
+### 4. themes  
+
+---
+## Adding labels
+
+You add labels with the `labs()` function.  
+
+- Labels that can be modified include:  
+  - `x`  
+  - `y`  
+  - `title`  
+  - `subtitle`  
+  - `caption`
+  - `color`
+
+&lt;br&gt;
+Other methods of modifying labels: 
+
+- `ggtitle(main, subtitle)`: plot title &amp; subtitle  
+
+- `xlab()`, `ylab()`: axes titles  
+
+---
+## Adding labels
+
+
+```r
+ggplot(mpg, aes(displ, hwy)) + geom_point(aes(color = class)) +
+  labs(title = "Fuel efficiency generally decreases with engine size",
+    subtitle = "Two seaters (sports cars) are an exception because of their light weight",
+    caption = "Data from fueleconomy.gov",
+    x = "Engine displacement (L)", y = "Highway fuel economy (mpg)",
+    colour = "Car type")
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+---
+## Adding text
+
+Use `geom_text()` or `geom_label()` to label interesting observations.
+
+
+
+
+
+
+```r
+best_in_class &lt;- mpg %&gt;% group_by(class) %&gt;%
+  dplyr::filter(row_number(desc(hwy)) == 1)
+
+ggplot(mpg, aes(displ, hwy)) +  geom_point(aes(colour = class)) +
+  geom_text(aes(label = model), data = best_in_class)
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+
+???
+**Example**: pull out the most efficient car in each class with dplyr, and then label it on the plot:
+---
+## Adding text
+
+
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(colour = class)) +
+  geom_point(size = 3, shape = 1, data = best_in_class) +
+  ggrepel::geom_label_repel(aes(label = model), data = best_in_class)
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+
+---
+## Annotations
+
+An **annotation** is a separate layer that doesn't connect to other elements in the plot and is used to add fixed elements to a data visualization
+
+The `annotate()` function creates an annotation layer
+
+  - arguments include `geom`, and positions (`x`, `y`, `xmin`, `ymin`, etc.)
+  
+---
+## Example
+
+
+```r
+p &lt;- ggplot(mpg, aes(displ, hwy)) +
+  geom_point(data = dplyr::filter(mpg, manufacturer == "subaru"), colour = "orange", size = 3) +
+  geom_point() 
+p
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-6-1.png)&lt;!-- --&gt;
+
+---
+## Adding annotations
+
+
+```r
+p + 
+  annotate(geom = "curve", x = 4, y = 35, xend = 2.65, yend = 27, 
+           curvature = .3, arrow = arrow(length = unit(2, "mm"))) +
+  annotate(geom = "text", x = 4.1, y = 35, label = "subaru", hjust = "left")
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-7-1.png)&lt;!-- --&gt;
+
+
+---
+## Scales
+
+**Recall**: Scales control the details of how data values are translated to visual properties.
+
+- Every aes value has a corresponding family of scales functions  
+
+  - `scale_{aes}_*()`, e.g. `scale_x_continuous()`  
+  - Values of the `*` depend on the aes
+  
+- These scale functions have many arguments including:
+  - `name`: label of the axis/legend
+  - `breaks`: numeric positions of breaks on axes/legends
+  - `labels`: labels of the breaks on axes/legends
+  - `limits`: continuous axis limits
+  - `expand`: padding around data
+  - `na.value`: what to do with missings
+  - `trans`: continuous transformations of data
+  - `guide`: function to create guide/legend
+  - `date_breaks`: breaks for date variables
+
+
+---
+## Scales for axes
+
+.pull-left[
+`scale_x_*()`, `scale_y_*()`
+- continuous
+- discrete
+- binned
+- log10
+- sqrt 
+- date
+- datetime
+- reverse
+]
+
+.pull-right[
+
+]
+
+
+
+
+---
+## Scales for color
+
+
+- Colors are controlled through scales
+`scale_colour_discrete` (`scale_colour_hue`) and `scale_colour_continuous` (`scale_colour_gradient`) are the default choices for factor variables and numeric variables
+
+- we can change parameters of the default scale, or we can change the scale function
+
+
+.pull-left[
+`scale_color_*()`, `scale_fill_*()`
+
+- manual 
+- continuous 
+- brewer/distiller/fermenter
+- gradient/gradient2/gradientn
+- steps
+- viridis 
+]
+
+---
+## Continuous color scales
+
+Default continuous colour scheme
+
+
+```r
+p1 &lt;- ggplot(mpg, aes(x = displ, y = hwy, colour = cyl)) +
+  geom_point()
+```
+
+
+
+```r
+p1 + scale_colour_continuous()
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-10-1.png)&lt;!-- --&gt;
+
+---
+## Discrete Color Scales
+
+Default discrete colour scheme
+
+
+```r
+p2 &lt;- ggplot(mpg, aes(x = displ, y = hwy, colour = factor(cyl))) +
+  geom_point()
+```
+
+
+
+```r
+p2 + scale_colour_discrete()
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-12-1.png)&lt;!-- --&gt;
+
+
+---
+## Color and Fill
+
+- Area geoms (barcharts, histograms, polygons) use `fill` to map values to the fill color
+
+- only discrete color scales can be used:  `scale_fill_hue`, `scale_fill_brewer`, `scale_fill_grey`, ...
+
+- most general: `scale_fill_manual(..., values)`  
+
+  - `values` is a vector of color values.  
+  
+  - At least as many colors as levels in the variable have to be listed
+  
+
+&lt;br&gt; 
+**Color Values**:
+
+  - can be defined as a hex value or a name of a color
+  
+  - [R colors pdf](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf)
+
+
+---
+## Colour gradients
+
+**Sequential schemes**:  
+
+`scale_colour_gradient(..., low = "#132B43", high = "#56B1F7", space = "Lab", na.value = "grey50", guide = “colourbar")`
+
+- colors can be specified by hex code, name or through rgb()
+
+- gradient goes from low to high - that should match the interpretation of the mapped variable
+
+&lt;br&gt;
+**Divergent schemes**:  
+
+`scale_colour_gradient2(..., low = muted("red"), mid = "white",  
+high = muted("blue"), midpoint = 0, space = "Lab", na.value = "grey50",  guide = "colourbar")`
+
+- midpoint is value of the ‘neutral’ color gradient2 is a divergent color scheme
+
+- best matches a variable that goes from large negative to zero to large positive (or below mean, above mean)
+
+
+---
+## Discrete color schemes
+
+**Manually created**:  
+
+`scale_color_hue (..., h = c(0, 360) + 15, c = 100, l = 65, h.start = 0, direction = 1, na.value = "grey50")`
+
+- uses hue, chroma and luminance (=value)
+
+- each level of a variable is assigned a different level of h
+
+
+**ColorBrewer**:
+
+
+`scale_colour_brewer(..., type = "seq", palette = 1, direction = 1)`
+
+- brewer schemes are defined in RColorBrewer (Neuwirth, 2014) palettes can be specified by name or index
+
+- see also http://colorbrewer2.org/ (Brewer et al 2002)
+
+---
+## All brewer schemes
+
+
+```r
+library(RColorBrewer)
+display.brewer.all()
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
+
+
+
+---
+background-image: url(https://www.datanovia.com/en/wp-content/uploads/dn-tutorials/ggplot2/figures/030-ggplot-colors-wes-anderson-color-palettes-r-1.png)
+background-size: 325px
+background-position: 85% 75%
+## Predefined ggplot color palettes
+
+.pull-left[
+The most commonly used color scales, include:
+
+- Viridis color scales &lt;br&gt;[[viridis package](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)]  
+
+- Colorbrewer palettes [[RColorBrewer package](http://colorbrewer2.org/)]  
+
+- Scientific journal color palettes [[ggsci package](https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html)]  
+
+- Wes Anderson color palettes [[wesanderson package](https://github.com/karthik/wesanderson/blob/master/README.md)]
+
+
+&lt;br/&gt;&lt;br/&gt;
+For the most extensive list I've found, look [here](https://github.com/EmilHvitfeldt/r-color-palettes)
+]
+---
+## Legends
+
+The **guide** or **legend** connects non-axis aesthetics in the data visualization like color and size to the data
+
+The `guides()` function controls all legends by connecting to the aes.
+
+- `guide_colorbar()`: continuous colors  
+
+- `guide_legend()`: discrete values (shapes, colors)
+
+- `guide_axis()`: control axis text/spacing, add a secondary axis
+
+- `guide_bins()`: creates "bins" of values in the legend
+
+- `guide_colorsteps()`: makes colorbar discrete
+
+---
+## Themes
+
+The **theme** describes the appearance of the plot, such as the background color, font size, positions of labels, etc.
+
+&lt;br&gt;
+Specific themes:  
+
+- `theme_grey()`: default
+
+- `theme_bw()`: white background, gray gridlines
+
+- `theme_classic()`: looks more like base R plots
+
+- `theme_void()`: removes all background elements, all axes elements, keeps legends  
+
+---
+## theme Examples
+
+
+```r
+p &lt;- ggplot(mpg, aes(x = displ, y =  cty, colour= factor(class))) + geom_point()
+```
+
+.pull-left[
+
+```r
+p + theme_grey()
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+p + theme_minimal()
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-16-1.png)&lt;!-- --&gt;
+]
+
+
+---
+## theme Examples
+
+
+```r
+p &lt;- ggplot(mpg, aes(x = displ, y =  cty, colour= factor(class))) + geom_point()
+```
+
+.pull-left[
+
+```r
+p + theme_light()
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-18-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+p + theme_dark()
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-19-1.png)&lt;!-- --&gt;
+]
+
+---
+## More themes
+
+
+```r
+library(ggthemes)
+```
+
+.pull-left[
+
+```r
+p + theme_excel() 
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-21-1.png)&lt;!-- --&gt;
+]
+.pull-right[
+
+```r
+p + theme_fivethirtyeight()
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-22-1.png)&lt;!-- --&gt;
+]
+
+---
+## Theme customization
+
+The `theme()` function can modify any non-data element of the plot.
+
+- adjust the appearance every "non-data element" of the viz  
+
+- fonts, background, text positioning, legend appearance, facet appearance, etc.  
+
+&lt;br&gt;
+**Rule of thumb**: when changing an element that shows data, use aes() and scales. Otherwise, use themes.
+
+---
+## Elements of themes
+
+- **Line elements**: axis lines, minor and major grid lines, plot panel border, axis ticks background color, etc. 
+
+- **Text elements**: plot title, axis titles, legend title and text, axis tick mark labels, etc.  
+
+- **Rectangle elements**: plot background, panel background, legend background, etc.  
+
+&lt;br/&gt;
+There is a specific function to modify each of these three elements :
+
+- `element_line()` to modify the line elements of the theme
+
+- `element_text()` to modify the text elements
+
+- `element_rect()` to change the appearance of the rectangle elements
+
+- `element_blank()` to draw nothing and assign no space
+  
+---
+## Elements of themes
+
+- Axis: `axis.line`, `axis.text.x`, `axis.text.y`, `axis.ticks`, `axis.title.x`, `axis.title.y`
+
+- Legend: `legend.background`, `legend.key`, `legend.text`, `legend.title`
+
+- Panel: `panel.background`, `panel.border`, `panel.grid.major`, `panel.grid.minor`
+
+- Strip (facetting): `strip.background`, `strip.text.x`, `strip.text.y`
+
+&lt;br/&gt;
+For a complete overview see `?theme`
+
+---
+## Changing elements manually
+
+- to change an element add the theme function and specify inside:
+
+
+```r
+ggplot(mpg, aes(x = manufacturer)) + 
+  geom_bar() +
+  theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1))
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-23-1.png)&lt;!-- --&gt;
+
+---
+
+## Saving your Work
+
+We can save the results of a plot to a file (as an image) using the `ggsave()` function:
+
+
+```r
+iris_plot &lt;- ggplot(data = iris, aes(x = Sepal.Width, y = Sepal.Length, color = Species)) + geom_point() +
+  scale_color_manual(values = c("turquoise3", "green3", "darkorchid2")) + 
+  theme(legend.position = "bottom", legend.background = element_blank())
+iris_plot 
+```
+
+![](01_polishing-plots_files/figure-html/unnamed-chunk-24-1.png)&lt;!-- --&gt;
+
+
+```r
+ggsave("iris-scatter.png", plot = iris_plot)
+```
+
+
+---
+## Resources
+
+- reference/document: http://ggplot2.tidyverse.org/reference/
+
+- RStudio cheat sheet for [ggplot2](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf)
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
+- Some material borrowed from [Sam Tyner](https://sctyner.github.io/user20-proposal.html)'s ggplot2 workshop
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

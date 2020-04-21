@@ -1,0 +1,53 @@
+---
+title: "LAYERING WITH GGPLOT2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+### YOUR TURN #1
+
+```{r}
+library(tidyverse)
+```
+
+#### Q: Load the box data from the package classdata
+
+```{r}
+data(box, package="classdata")
+```
+
+#### Q: Plot a time line for each movie:  
+
+- Plot total gross by number of weeks that the movie is out.  
+- Label the three movies with the highest total gross.  
+- Color the label of these three movies with a color of your choice.
+
+```{r}
+top3 <- box %>%
+  group_by(Movie, Distributor) %>%
+  summarize(
+    maxGross = max(Total.Gross, na.rm=T),
+    lastWeek = max(Week, na.rm=TRUE)
+  ) %>% 
+  arrange(desc(maxGross)) %>% 
+  ungroup() %>% 
+  slice(1:3)
+
+box %>% filter(Week < 100) %>%
+  ggplot(aes(x = Week, y= Total.Gross)) +
+  geom_line(aes(group=interaction(Movie, Distributor)),
+            alpha = 0.2) +
+  geom_text(aes(x=lastWeek, y=maxGross, label=Movie),
+            data=top3, hjust=0,
+            colour="turquoise3")
+```
+
+

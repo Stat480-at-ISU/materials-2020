@@ -1,0 +1,181 @@
+---
+title: "MAPS"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+
+### YOUR TURN #1
+
+```{r}
+library(tidyverse)
+```
+
+#### Q: Use ggplot2 and pull out map data for all US counties: `counties <- map_data("county")`
+
+```{r}
+counties <- map_data("county")
+```
+
+
+#### Q: Draw a map of counties (polygons & path geom)
+
+```{r}
+counties %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group=group), size=.1, colour="white")
+```
+
+
+#### Q: Colour all counties called "story"
+
+```{r}
+counties %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = subregion == "story"), size = .1, colour = "white")
+# 
+# 
+# counties %>% 
+#   mutate(filled = subregion == "story") %>% 
+#   ggplot(aes(x = long, y = lat)) + 
+#   geom_polygon(aes(group = group, fill = filled), size = .1, colour = "white")
+```
+
+
+#### Q: Advanced: What county names are used most often?
+
+Identify the counties: 
+
+```{r}
+counties %>% count(subregion) %>% arrange(desc(n)) # counts multiples
+
+counties %>% 
+  distinct(region, subregion) %>%
+  count(subregion) %>% 
+  arrange(desc(n))
+```
+
+Look at those countries on the map:
+
+```{r}
+counties %>% 
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill= subregion == "jefferson"))
+
+ggplot(counties, aes(x = long, y = lat)) + 
+  geom_polygon(aes(group = group, fill = subregion == "washington"))
+
+counties %>% 
+  mutate(wash_jeff = replace(subregion, !(subregion %in% c("jefferson", "washington")), NA)) %>% # arrange(wash_jeff)
+  ggplot(aes(x = long, y = lat)) + 
+  geom_polygon(aes(group=group, fill= wash_jeff))
+```
+
+
+### YOUR TURN #2
+
+For this question use usa_sf() from the albersusa package to retreive a U.S. state composite map as a shapefile. (run the code below)
+
+```{r}
+# devtools::install_github("hrbrmstr/albersusa")
+library(albersusa)
+states_sf <- usa_sf()
+```
+
+#### Q: Use geom_sf() and the states data to create a map of the US.
+
+
+```{r}
+library(sf)
+ggplot(data = states_sf) + geom_sf()
+```
+
+
+
+### YOUR TURN #3
+
+```{r}
+data(fbi, package="classdata")
+```
+
+#### Q: Draw a choropleth map of the rate of motor vehicle thefts in 2012 across the US.
+
+#### Q: `scale_fill_gradient2()` allows you to set a color scheme with two main colors. Read up on it and change the scheme in the first choropleth map.
+
+```{r}
+states <- map_data("state")
+library(classdata)
+
+fbi.map <- fbi %>% 
+  filter(Year==2012) %>% 
+  mutate(region = tolower(State), 
+         rate = Count/Population*60000) %>% 
+  left_join(states, by="region")
+
+fbi.map %>% 
+  filter(Type=="Motor.vehicle.theft") %>%
+  ggplot(aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group, fill = rate))+
+  scale_fill_gradient2(midpoint=200)
+```
+
+
+
+### YOUR TURN #4
+
+```{r}
+acc <- read.csv("https://raw.githubusercontent.com/DS202-at-ISU/labs/master/data/fars2016/accident.csv", stringsAsFactors = FALSE)
+```
+
+
+#### Q: Use the accident data to plot the geographic location of all accidents in the US in 2016.
+
+#### Q: Plot accidents on a map of the US (use the map of the US as first layer)
+
+```{r}
+states %>% 
+  ggplot(aes(x = long, y=lat)) +
+  geom_path(aes(group=group)) +
+  geom_point(data=filter(acc, between(LONGITUD, -130, 700)), 
+             aes(x = LONGITUD, y=LATITUDE), 
+             size = .1, alpha=.1, color = "violetred4"
+             ) 
+```
+
+
+#### Q: Why would it be tricky to plot a choropleth map of the number of accidents by state?
+
+
+
+### YOUR TURN #5
+
+
+#### Q: The numbers for each state (`STATE`) are so-called fips codes.
+
+
+#### Q: Sketch out the steps necessary to draw a choropleth map of the rate of fatal accidents by state.
+
+
+```{r eval = FALSE}
+states_sf <- usa_sf()
+states_modified <- states %>% 
+  mutate(STATE = as.numeric(as.character(states$fips_state)))
+acc_mod <- acc %>% 
+  group_by(STATE) %>% 
+  mutate(count = n()) %>% 
+  left_join(states_modified, by="STATE")
+
+acc_mod %>% 
+  #filter(between(LONGITUD, -130, 700)) %>% 
+  ggplot() +
+  geom_sf(aes(fill = count)) 
+
+```
+
