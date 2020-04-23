@@ -70,19 +70,18 @@ General format of the functions: `str_xxx(input_string, other_args)`
 ---
 ## Example data
 
-[http://bit.ly/585-passwords](http://bit.ly/585-passwords) contains a 100K sample from a database of &lt;br&gt; leaked passwords.
+[http://bit.ly/585-passwords](http://bit.ly/585-passwords) contains a 100K sample from a database of &lt;br&gt; leaked passwords. ([alternative link](https://raw.githubusercontent.com/Stat480-at-ISU/materials-2020/master/06_extra-topics/data/passwords.txt))
 
 
 ```r
 library(stringr)
-passwords &lt;- readLines("http://bit.ly/585-passwords") 
+passwords &lt;- readLines("data/passwords.txt") 
 head(passwords)
 ```
 
 ```
-## [1] "_____dragons_____" "_angel"           
-## [3] "_babytje_"         "_britney23"       
-## [5] "_BUNDI_"           "_JUNO_"
+## [1] "_____dragons_____" "_angel"            "_babytje_"        
+## [4] "_britney23"        "_BUNDI_"           "_JUNO_"
 ```
 
 ```r
@@ -91,11 +90,10 @@ passwords_sample
 ```
 
 ```
-##  [1] "us1north"           "hurleychick72005"  
-##  [3] "norbit9"            "pseudo-science-can"
-##  [5] "26573209"           "betong"            
-##  [7] "drivers-ed-extras"  "ARCTICGLACIERINC"  
-##  [9] "ramiro17"           "python-pbkdf"
+##  [1] "quinquepartitum" "Access00"        "iguatl"         
+##  [4] "VEDFHFtX65"      "ABCDXYZ"         "eye-ring"       
+##  [7] "M80M12M24"       "esrup"           "YOTAYO"         
+## [10] "NAL8300"
 ```
 
 ---
@@ -110,7 +108,7 @@ str_length(passwords_sample)
 ```
 
 ```
-##  [1]  7 10 12 13  7  6  8  7  6 12
+##  [1] 14  7  9 11  9  8 13  8  7  4
 ```
 
 ---
@@ -125,7 +123,7 @@ str_sub(passwords_sample, start=2, end = 2) # second character
 ```
 
 ```
-##  [1] "A" "l" "H" "l" "e" "Y" "R" "A" "A" " "
+##  [1] "O" "W" "e" "r" "I" "'" "Y" "h" "8" "D"
 ```
 
 
@@ -229,7 +227,7 @@ Special characters: `. \ | ( ) [ { ^ $ * + ?`
 
 - `()` are used for grouping and information capture (more on this in a bit)
 
-`|` can be used as "or" outside of `[]`  
+- `|` can be used as "or" outside of `[]`  
 
 - e.g. `abc|xyz` will match `abcdefg` and `wxyz` but not `ab` or `stuv`  
 
@@ -324,6 +322,20 @@ str_extract_all(test_str, "[A-z]{3}[^A-z]")
 ## [1] "She " "lls " "sea " "lls " "the "
 ```
 
+---
+## Extended Regular Expressions
+
+- `\w`: `[A-z0-9_]` (alphanumeric characters), `\W` for the negation
+
+- `\d`: `[0-9]` (digits), `\D` matches non-digits
+
+- `\x`: Hexadecimal numbers (`[0-9A-Fa-f]`)
+
+- `\s`: white space (tab, space, endline), `\S` for non-whitespace
+
+- `\b`: empty string at the beginning or end of a word (`\B` for the negation)
+
+Remember, in R, you have to escape `\`, so any of these are `\\w`, `\\d`, `\\s` in R
 ---
 ## POSIX Regular Expressions
 
