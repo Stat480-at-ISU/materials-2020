@@ -81,7 +81,7 @@ counties %>%
 
 ### YOUR TURN #2
 
-For this question use usa_sf() from the albersusa package to retreive a U.S. state composite map as a shapefile. (run the code below)
+For this question use `usa_sf()` from the `albersusa` package to retreive a U.S. state composite map as a shapefile. (run the code below)
 
 ```{r}
 # devtools::install_github("hrbrmstr/albersusa")

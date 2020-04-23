@@ -1,0 +1,325 @@
+---
+title: "String Manipulation"
+ratio: 16x10
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: "../extras/x-theme.css"
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE,
+	 fig.height = 4
+)
+#xaringan::inf_mr(cast_from = '..') 
+library(tidyverse)
+```
+
+## Working with strings
+
+Basic operations:  
+
+- separate a string into pieces
+
+- paste strings together
+
+- locate a search expression in a string
+
+  - does it exist? at what position?
+  
+- remove or replace parts of a string
+
+- change format: uppercase, lowercase, etc
+
+
+---
+background-image: url(https://raw.githubusercontent.com/rstudio/hex-stickers/master/PNG/stringr.png)
+background-size: 120px
+background-position: 92% 5%
+## `stringr` package
+
+Tidyverse package for string manipulation
+
+- Character manipulation:   
+
+  - functions to allow you to manipulate individual characters within the strings in character vectors.
+
+- Whitespace tools: 
+
+  - add, remove, and manipulate whitespace.
+
+- Locale sensitive operations
+
+- Pattern matching functions:  
+
+  - most common is regular expressions.
+
+---
+background-image: url(https://github.com/allisonhorst/stats-illustrations/blob/master/rstats-artwork/str_squish.png?raw=true)
+background-size: 700px
+background-position: 50% 90%
+## `stringr` package
+
+
+General format of the functions: `str_xxx(input_string, other_args)`
+
+  - `str_replace()`, `str_detect()`, `str_extract()`, `str_locate()`, `str_trim()`, `str_to_upper()`, ...
+
+
+---
+## Example data
+
+[http://bit.ly/585-passwords](http://bit.ly/585-passwords) contains a 100K sample from a database of <br> leaked passwords.
+
+```{r}
+library(stringr)
+passwords <- readLines("http://bit.ly/585-passwords") 
+head(passwords)
+passwords_sample <- sample(passwords, size = 10)
+passwords_sample
+```
+
+---
+## `str_length()`
+
+Extract the number of characters in a character vector
+
+```{r}
+passwords_sample <- sample(passwords, size = 10)
+str_length(passwords_sample)
+```
+
+---
+## `str_sub()`
+
+- `str_sub(string, start = 1L, end = -1L)` extract sub strings from start to end
+
+```{r}
+passwords_sample <- sample(passwords, size = 10)
+str_sub(passwords_sample, start=2, end = 2) # second character
+```
+
+
+---
+class: yourturn
+# Your Turn
+
+`library(stringr)`  
+`passwords <- readLines("http://bit.ly/585-passwords")`  
+
+Using functions from stringr, answer the following questions:
+
+- How many of the passwords have at least one space? 
+
+- What proportion of the passwords have ., ?, and ! characters? **Hint**: Use "\\" before the character to escape "special" characters - we'll talk about those next.
+
+- Find the length of the passwords. What is the longest password?
+
+---
+class: inverse, top, center
+background-image: url(https://imgs.xkcd.com/comics/regular_expressions.png)
+background-size: 550px
+background-position: 50% 90%
+
+## Regular Expressions
+
+---
+## Regular Expressions
+
+Regular expressions (regex, regexp) are special patterns that describe text sequences
+
+- [Quick Start Guide](https://www.regular-expressions.info/quickstart.html)
+
+- [Regex Buddy](http://www.regexbuddy.com/) - test your regular expressions
+
+- [RegExplain](https://www.garrickadenbuie.com/project/regexplain/) package and RStudio addin  
+
+  - `devtools::install_github("gadenbuie/regexplain")`
+
+---
+## Regular expressions - <br> in the `stringr` package
+
+`str_detect(strings, pattern)`  
+- binary result: is pattern in string? 
+
+`str_count(strings, pattern)`  
+- integer: how often is pattern in string? 
+
+`str_locate(strings, pattern)`  
+- matrix of two integers: start and end location of first occurrence of pattern  in string?
+
+`str_replace(strings, pattern, replacement)`  
+- replace pattern in string by replacement
+
+
+---
+## Basic Rules
+
+- Use `[]` to enclose a set of valid characters or a range of characters  
+
+  - e.g. `[A-z]` matches all letters, `[ATCG]` matches DNA bases
+
+- `^` negates a selection (inside of the square brackets)  
+
+  - e.g. `[^A-z]` matches anything that isn't a letter
+
+- `.` matches anything
+
+- To match `-`, put it first or last inside `[]`  
+
+  - e.g. `[-abcde0-9]` will match -, a-e, and 0-9.
+
+Special characters: `. \ | ( ) [ { ^ $ * + ?`
+
+---
+## Repetition operators
+
+- `[xxx]{n, m}` will match a sequence of n to m characters in the set
+
+- `[xxx]{n}` matches exactly n characters
+
+- `[xxx]{n,}` matches at least n characters
+
+- `[xxx]+` will match 1 or more characters
+
+- `[xxx]?` will match 0 or 1 optional characters
+
+- `[xxx]*` will match 0 or more characters in the set (greedy)
+
+- `[xxx]*?` will match 0 or more characters in the set (lazy/not greedy)
+
+---
+## Regular Expressions  
+
+- `^` (outside of `[]`) matches the beginning of a string  
+  - e.g. `^Hello` matches `Hello World` but not `I just called to say 'Hello!'`
+
+- `$` matches the end of a string  
+
+  - e.g. `end$` will match `The end` but not `The end is nigh`
+
+- `()` are used for grouping and information capture (more on this in a bit)
+
+`|` can be used as "or" outside of `[]`  
+
+- e.g. `abc|xyz` will match `abcdefg` and `wxyz` but not `ab` or `stuv`  
+
+---
+## Regular Expressions
+
+
+```{r}
+test_str <- "Hello World!"
+str_extract_all(test_str, "[A-z]{1,}")
+str_extract_all(test_str, "[^A-z]{1,}")
+str_remove_all(test_str, "[^A-z]")
+str_extract_all(test_str, ".")
+```
+
+---
+class: yourturn
+# Your Turn
+
+`library(stringr)`  
+`passwords <- readLines("http://bit.ly/585-passwords")`
+
+Using functions from stringr and regular expressions, answer the following questions:
+
+- How many of the passwords have at least one space, -, or _?
+
+- What proportion of the passwords have ., ?, and ! characters?
+
+- What proportion of the passwords have only lowercase letters?
+
+---
+## Chaining Regular Expressions
+
+Patterns can be combined:
+
+```{r}
+test_str <- "She sells sea shells by the seashore"
+str_extract_all(test_str, "[aeiou].")
+str_extract_all(test_str, "[^aeiou]{1,}[a-z]")
+str_extract_all(test_str, "[A-z]{3}[^A-z]")
+```
+
+---
+## POSIX Regular Expressions
+
+Another way to match multiple characters:
+
+- `[[:alnum:]]` alphanumeric characters (`[[:alpha:]]` and `[[:digit:]]`)
+
+- `[[:blank:]]` blank characters - space, tab, non-breaking space
+
+- `[[:graph:]]` graphical characters (`[[:alnum:]]` and `[[:punct:]]`)
+
+- `[[:lower:]]` and `[[:upper:]]` for letters
+
+- `[[:space:]]` whitespace (tab, newline, vertical tab, carriage return, space, etc.)
+
+- `[[:xdigit:]]` hexadecimal characters (`[0-9A-Fa-f]`)
+
+---
+class: yourturn
+# Your turn
+
+What do these regular expressions do?
+
+- `.at`
+
+- `[hc]at`
+
+- `[^t]at`
+
+- `[^hc]at`
+
+- `^[S]tat`
+
+- `[S]tat$`
+
+---
+class: yourturn
+# Your turn
+
+What do these regular expressions do?
+
+- `^s.*`
+
+- `[A-Z]\{3,\}`
+
+- `[bB]ar ?[cC]hart`
+
+- `^[0-9]{5}$`
+
+- `^(\d{3}-\d{3}-\d{4})*$`
+
+- `(\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3})`
+
+
+---
+class: yourturn
+
+# Your Turn
+
+- write out the regular expression for a valid phone number  
+
+---
+## Resources
+
+- reference/document: http://stringr.tidyverse.org/reference/
+
+- RStudio cheat sheet for [stringr](https://github.com/rstudio/cheatsheets/blob/master/strings.pdf)
+
+- Artwork by [@allison_horst](https://twitter.com/allison_horst?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor)
+
+
+
