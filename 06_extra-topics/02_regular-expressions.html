@@ -80,8 +80,7 @@ head(passwords)
 ```
 
 ```
-## [1] "_____dragons_____" "_angel"            "_babytje_"        
-## [4] "_britney23"        "_BUNDI_"           "_JUNO_"
+## [1] "_____dragons_____" "_angel"            "_babytje_"         "_britney23"        "_BUNDI_"           "_JUNO_"
 ```
 
 ```r
@@ -90,10 +89,10 @@ passwords_sample
 ```
 
 ```
-##  [1] "quinquepartitum" "Access00"        "iguatl"         
-##  [4] "VEDFHFtX65"      "ABCDXYZ"         "eye-ring"       
-##  [7] "M80M12M24"       "esrup"           "YOTAYO"         
-## [10] "NAL8300"
+##  [1] "genrad2"                           "WVPP"                              "ACAR3FAN"                         
+##  [4] "ESPECIALLY-DISRUPTIVE"             "ZIAD-FAZAH-MAN-WHO-DOES-NOT-SPEAK" "PCD&amp;BEP"                          
+##  [7] "midschi"                           "BLOOMFLELD"                        "miperroty"                        
+## [10] "JEFF537"
 ```
 
 ---
@@ -103,12 +102,22 @@ Extract the number of characters in a character vector
 
 
 ```r
-passwords_sample &lt;- sample(passwords, size = 10)
+passwords_sample 
+```
+
+```
+##  [1] "genrad2"                           "WVPP"                              "ACAR3FAN"                         
+##  [4] "ESPECIALLY-DISRUPTIVE"             "ZIAD-FAZAH-MAN-WHO-DOES-NOT-SPEAK" "PCD&amp;BEP"                          
+##  [7] "midschi"                           "BLOOMFLELD"                        "miperroty"                        
+## [10] "JEFF537"
+```
+
+```r
 str_length(passwords_sample)
 ```
 
 ```
-##  [1] 14  7  9 11  9  8 13  8  7  4
+##  [1]  7  4  8 21 33  7  7 10  9  7
 ```
 
 ---
@@ -118,12 +127,22 @@ str_length(passwords_sample)
 
 
 ```r
-passwords_sample &lt;- sample(passwords, size = 10)
+passwords_sample 
+```
+
+```
+##  [1] "genrad2"                           "WVPP"                              "ACAR3FAN"                         
+##  [4] "ESPECIALLY-DISRUPTIVE"             "ZIAD-FAZAH-MAN-WHO-DOES-NOT-SPEAK" "PCD&amp;BEP"                          
+##  [7] "midschi"                           "BLOOMFLELD"                        "miperroty"                        
+## [10] "JEFF537"
+```
+
+```r
 str_sub(passwords_sample, start=2, end = 2) # second character
 ```
 
 ```
-##  [1] "O" "W" "e" "r" "I" "'" "Y" "h" "8" "D"
+##  [1] "e" "V" "C" "S" "I" "C" "i" "L" "i" "E"
 ```
 
 
@@ -309,8 +328,7 @@ str_extract_all(test_str, "[^aeiou]{1,}[a-z]")
 
 ```
 ## [[1]]
-## [1] "She"        " se"        "lls se"     " she"      
-## [5] "lls by the" " se"        "sho"        "re"
+## [1] "She"        " se"        "lls se"     " she"       "lls by the" " se"        "sho"        "re"
 ```
 
 ```r

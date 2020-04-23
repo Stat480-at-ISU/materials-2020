@@ -93,7 +93,7 @@ passwords_sample
 Extract the number of characters in a character vector
 
 ```{r}
-passwords_sample <- sample(passwords, size = 10)
+passwords_sample 
 str_length(passwords_sample)
 ```
 
@@ -103,7 +103,7 @@ str_length(passwords_sample)
 - `str_sub(string, start = 1L, end = -1L)` extract sub strings from start to end
 
 ```{r}
-passwords_sample <- sample(passwords, size = 10)
+passwords_sample 
 str_sub(passwords_sample, start=2, end = 2) # second character
 ```
 
