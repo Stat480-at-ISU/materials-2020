@@ -80,7 +80,8 @@ head(passwords)
 ```
 
 ```
-## [1] "_____dragons_____" "_angel"            "_babytje_"         "_britney23"        "_BUNDI_"           "_JUNO_"
+## [1] "_____dragons_____" "_angel"            "_babytje_"        
+## [4] "_britney23"        "_BUNDI_"           "_JUNO_"
 ```
 
 ```r
@@ -89,10 +90,10 @@ passwords_sample
 ```
 
 ```
-##  [1] "genrad2"                           "WVPP"                              "ACAR3FAN"                         
-##  [4] "ESPECIALLY-DISRUPTIVE"             "ZIAD-FAZAH-MAN-WHO-DOES-NOT-SPEAK" "PCD&amp;BEP"                          
-##  [7] "midschi"                           "BLOOMFLELD"                        "miperroty"                        
-## [10] "JEFF537"
+##  [1] "sarahbaby16"          "romanova-krasinskaya" "wilbur06"            
+##  [4] "pacificaerospace"     "leenalawyer"          "laidlaw"             
+##  [7] "eno-byrne"            "HARAKOVA"             "john.olaf"           
+## [10] "unvodkyvacilo"
 ```
 
 ---
@@ -106,10 +107,10 @@ passwords_sample
 ```
 
 ```
-##  [1] "genrad2"                           "WVPP"                              "ACAR3FAN"                         
-##  [4] "ESPECIALLY-DISRUPTIVE"             "ZIAD-FAZAH-MAN-WHO-DOES-NOT-SPEAK" "PCD&amp;BEP"                          
-##  [7] "midschi"                           "BLOOMFLELD"                        "miperroty"                        
-## [10] "JEFF537"
+##  [1] "sarahbaby16"          "romanova-krasinskaya" "wilbur06"            
+##  [4] "pacificaerospace"     "leenalawyer"          "laidlaw"             
+##  [7] "eno-byrne"            "HARAKOVA"             "john.olaf"           
+## [10] "unvodkyvacilo"
 ```
 
 ```r
@@ -117,7 +118,7 @@ str_length(passwords_sample)
 ```
 
 ```
-##  [1]  7  4  8 21 33  7  7 10  9  7
+##  [1] 11 20  8 16 11  7  9  8  9 13
 ```
 
 ---
@@ -131,10 +132,10 @@ passwords_sample
 ```
 
 ```
-##  [1] "genrad2"                           "WVPP"                              "ACAR3FAN"                         
-##  [4] "ESPECIALLY-DISRUPTIVE"             "ZIAD-FAZAH-MAN-WHO-DOES-NOT-SPEAK" "PCD&amp;BEP"                          
-##  [7] "midschi"                           "BLOOMFLELD"                        "miperroty"                        
-## [10] "JEFF537"
+##  [1] "sarahbaby16"          "romanova-krasinskaya" "wilbur06"            
+##  [4] "pacificaerospace"     "leenalawyer"          "laidlaw"             
+##  [7] "eno-byrne"            "HARAKOVA"             "john.olaf"           
+## [10] "unvodkyvacilo"
 ```
 
 ```r
@@ -142,7 +143,7 @@ str_sub(passwords_sample, start=2, end = 2) # second character
 ```
 
 ```
-##  [1] "e" "V" "C" "S" "I" "C" "i" "L" "i" "E"
+##  [1] "a" "o" "i" "a" "e" "a" "n" "A" "o" "n"
 ```
 
 
@@ -215,7 +216,7 @@ Regular expressions (regex, regexp) are special patterns that describe text sequ
 
   - e.g. `[-abcde0-9]` will match -, a-e, and 0-9.
 
-Special characters: `. \ | ( ) [ { ^ $ * + ?`
+- **Special characters**: `. \ | ( ) [ { ^ $ * + ?`
 
 ---
 ## Repetition operators
@@ -248,7 +249,7 @@ Special characters: `. \ | ( ) [ { ^ $ * + ?`
 
 - `|` can be used as "or" outside of `[]`  
 
-- e.g. `abc|xyz` will match `abcdefg` and `wxyz` but not `ab` or `stuv`  
+  - e.g. `abc|xyz` will match `abcdefg` and `wxyz` but not `ab` or `stuv`  
 
 ---
 ## Regular Expressions
@@ -328,7 +329,8 @@ str_extract_all(test_str, "[^aeiou]{1,}[a-z]")
 
 ```
 ## [[1]]
-## [1] "She"        " se"        "lls se"     " she"       "lls by the" " se"        "sho"        "re"
+## [1] "She"        " se"        "lls se"     " she"       "lls by the" " se"       
+## [7] "sho"        "re"
 ```
 
 ```r

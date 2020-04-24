@@ -177,7 +177,7 @@ Regular expressions (regex, regexp) are special patterns that describe text sequ
 
   - e.g. `[-abcde0-9]` will match -, a-e, and 0-9.
 
-Special characters: `. \ | ( ) [ { ^ $ * + ?`
+- **Special characters**: `. \ | ( ) [ { ^ $ * + ?`
 
 ---
 ## Repetition operators
@@ -210,7 +210,7 @@ Special characters: `. \ | ( ) [ { ^ $ * + ?`
 
 - `|` can be used as "or" outside of `[]`  
 
-- e.g. `abc|xyz` will match `abcdefg` and `wxyz` but not `ab` or `stuv`  
+  - e.g. `abc|xyz` will match `abcdefg` and `wxyz` but not `ab` or `stuv`  
 
 ---
 ## Regular Expressions
